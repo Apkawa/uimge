@@ -20,7 +20,7 @@ def ru_RU():
                     '--bb-thumb':u'Вывести в ввиде BB-кода с превью',\
                     '--bb-orig':u'Вывести в ввиде BB-кода в оригинальном размере',\
                     '--direct-url':u'Прямая ссылка на картинку',\
-                    '--user-output':u'Установить свой вид вывода. \n#URL# - url к картинке оригинального размера, \n#TMB# - url к превью. \nПример: [URL=#URL#][IMG]#TMB#[/IMG][/URL]',\
+                    '--user-output':u'Установить свой вид вывода. \n%url% - url к картинке оригинального размера, \n%tmb% - url к превью. \nПример: [URL=%url%][IMG]%tmb%[/IMG][/URL]',\
                 }
     error_mesages = {'Enter option':'Нет основных опций! Введите [-i|-r|-f|-s|-t]...',\
                      'ImportError PIL':'Ошибка: Нет модуля Python Imaging Library (PIL)!\nПожалуйста установите его.\n',\
@@ -49,7 +49,7 @@ def en_EN():
                     '--bb-thumb':'Output in bb code with a preview',\
                     '--bb-orig':'Output in bb code in the original amount',\
                     '--direct-url':'The withdrawal of direct references to pictures',\
-                    '--user-output':'Set user output #URL# - original image, #TMB# - preview image   Sample: [URL=#URL#][IMG]#TMB#[/IMG][/URL]',\
+                    '--user-output':'Set user output %url% - original image, %tmb% - preview image   Sample: [URL=%url%][IMG]%tmb%[/IMG][/URL]',\
                 }
     error_mesages = {'Enter option':'Enter option [-i|-r|-f|-s|-t]...',\
                      'ImportError PIL':'Error: No module Python Imaging Library (PIL)!\nPlease install it.\n',\

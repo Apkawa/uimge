@@ -22,7 +22,7 @@ OUTPRINT={
             'default': lambda url, eva: stdout.write('%s\n'%url[0]),
             'bt_bb-thumb':  lambda url, eva: stdout.write('[url=%s][img]%s[/img][/url] ' %(url[0], url[1])),
             'bo_bb-orig':  lambda url, eva: stdout.write('[img]%s[/img]\n' %(url[0])),
-            'usr_user-output': lambda url, eva: stdout.write(sub('\\\\n','\n',sub('{tmb}',url[1],sub('{url}',url[0], eva))))
+            'usr_user-output': lambda url, eva: stdout.write(sub('\\\\n','\n',sub('%tmb%',url[1],sub('%url%',url[0], eva))))
           }
 
 class input():
