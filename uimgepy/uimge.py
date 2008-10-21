@@ -22,7 +22,7 @@ OUTPRINT={
             'default': lambda url, eva: stdout.write('%s\n'%url[0]),
             'bt_bb-thumb':  lambda url, eva: stdout.write('[url=%s][img]%s[/img][/url] ' %(url[0], url[1])),
             'bo_bb-orig':  lambda url, eva: stdout.write('[img]%s[/img]\n' %(url[0])),
-            'usr_user-output': lambda url, eva: stdout.write(sub('\\\\n','\n',sub('#TMB#',url[1],sub('#URL#',url[0], eva))))
+            'usr_user-output': lambda url, eva: stdout.write(sub('\\\\n','\n',sub('{tmb}',url[1],sub('{url}',url[0], eva))))
           }
 
 class input():
@@ -97,7 +97,7 @@ def parseopt(arg):
                 group_3.add_option('--'+sp[0],'--'+sp[1], const=key, action='store_const', \
                         default='default', dest='out', help=opt_help['--'+sp[1]])
             else: 
-                group_3.add_option('--'+sp[0],'--'+sp[1], action='store_true', \
+                group_3.add_option('--'+sp[0],'--'+sp[1], action='store', \
                         default='default', dest='out', help=opt_help['--'+sp[1]])
     parser.add_option_group(group_3)
     opt, arguments = parser.parse_args(args=arg,)
