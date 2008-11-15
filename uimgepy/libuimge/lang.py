@@ -10,6 +10,7 @@ def ru_RU():
                     '--tinypic':u'Залить на tinypic.com',\
                     '--smages':u'Залить на smages.com',\
                     '--funkyimg':u'Залить на funkyimg.com',\
+                    '--picthost':u'Залить на picthost.ru',\
                     '--photo-cod':u'Залить на avangard.photo.cod.ru',\
                     'Additional options':u'Дополнительные опции',\
                     '--name':u'Добавить свое имя в превью картинки (Требуется PIL)',\
@@ -39,6 +40,7 @@ def en_EN():
                     '--tinypic':'Upload to tinypic.com',\
                     '--smages':'Upload to smages.com',\
                     '--funkyimg':u'Upload to funkyimg.com',\
+                    '--picthost':u'Upload to picthost.ru',\
                     '--photo-cod':'Upload to avangard.photo.cod.ru',\
                     'Additional options':'Additional options',\
                     '--name':'Adding a name to preview images (Used PIL). Works with [-r|-i]',\

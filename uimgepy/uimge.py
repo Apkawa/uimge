@@ -3,6 +3,9 @@
 '''
 Разработчик: apkawa@gmail.com
 Сайт проекта: http://code.google.com/p/uimge/
+
+TODO:
+    adding http://picthost.ru/
 '''
 import optparse
 from sys import argv,exit,stderr,stdout

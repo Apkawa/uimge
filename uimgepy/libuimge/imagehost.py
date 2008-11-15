@@ -160,6 +160,29 @@ def host_u_funkyimg(send):
     url.reverse()
     return url
 
+def host_p_picthost(send):
+    file_name,label,mode=send[0],send[1],send[2]
+    ihost={\
+           'host':'picthost.ru', \
+           'post':'/upload.php', \
+           'name':'userfile[]',\
+           'cookie':''\
+           }
+    form_vaule = [\
+                  ('private_upload','1'),\
+                  ('upload','"Upload Images"'),('uptype','file'),\
+                  ('file_1',''),('maxNumber','1'),('maxId','')
+                  ]
+    #print libiu.send_file(file_name, ihost, form_vaule, (None,mode)).read()
+    url=findall('\<a href=\"viewer.php\?file=(.*?)\"',\
+                     libiu.send_file(file_name, ihost, form_vaule, (None,mode)).read())
+    t = 'http://picthost.ru/images/'
+    tumburl=url[0].split('.')
+    tumburl[-2] += '_thumb'
+    tumburl = '.'.join(tumburl)
+    return [t+url[0], t+tumburl]
+
+
 def _host_avangard_foto_cod(send):
     import urllib2
     
