@@ -171,7 +171,6 @@ def host_p_picthost(send):
     form_vaule = [\
                   ('private_upload','1'),\
                   ('upload','"Upload Images"'),('uptype','file'),\
-                  ('file_1',''),('maxNumber','1'),('maxId','')
                   ]
     #print libiu.send_file(file_name, ihost, form_vaule, (None,mode)).read()
     url=findall('\<a href=\"viewer.php\?file=(.*?)\"',\
@@ -264,5 +263,6 @@ def _host_avangard_foto_cod(send):
     
     return main(send)
 
-
+if __name__ == '__main__':
+    pass
     
