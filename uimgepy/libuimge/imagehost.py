@@ -3,7 +3,32 @@ import libiu
 from re import findall
 from urllib import urlopen
 
+'''
+class Host_e_example:
+    def __init__(self):
+        self.ihost={\
+           'host':'example.com', \
+           'post':'/upload', \
+           'name':'img',\
+           'cookie':''\
+           }
 
+        self.form_vaule = [('Submit', '')]
+
+    def send(self, send):
+        file_name,label,mode=send[0],send[1],send[2]
+        reurl = libiu.send_file(file_name, self.ihost, self.form_vaule, (None, mode) ).getheaders()
+        url,tmb = 'http://example.com/i/%s'%reurl,'http://example.com/t/%s'%reurl
+        return [url,tmb]
+
+    def en(self):
+        u'Upload to exapmle.com'
+        pass
+
+    def ru(self):
+        u'Залить на example.com'
+        pass
+'''
 class Host_m_smages:
     def __init__(self):
         self.ihost={\
@@ -31,169 +56,200 @@ class Host_m_smages:
         u'Залить на smages.com'
         pass
 
-def host_i_ipicture(send):
-    file_name,label_name,mode=send[0],send[1],send[2]
-    if not mode:
-        ihost={\
+class _Host_i_ipicture:
+    def __init__(self):
+        self.ihost={\
            'host':'ipicture.ru', \
            'post':'/Upload/', \
            'name':'userfile',\
            'cookie':''\
            }
-        form_vaule = [\
-              ('uploadtype','1'),\
-              ('method','file'),\
-              ('file','upload'),\
-              ('thumb_resize_on','on'),('thumb_resize','200'),\
-              ('submit','"Загрузить"')\
-              ]
-    elif mode:
-        ihost={\
-           'host':'ipicture.ru', \
-           'post':'/Upload/', \
-           'name':'userfile',\
-           'cookie':''\
-           }
-        form_vaule = [\
-              ('uploadtype','2'),\
-              ('method','url'),\
-              ('userurl[]',file_name),\
-              ('thumb_resize_on','on'),('thumb_resize','200'),\
-              ('submit','"Загрузить"')\
-              ]
-    if label_name != None:
-        form_vaule.insert(-1,('string_small_on','on'))
-        form_vaule.insert(-1,('string_small', label(file_name,label_name) ))
-    reurl=libiu.send_file(file_name, ihost, form_vaule, (mode,None))
-    reurl=reurl.getheaders()[-5]
-    reurl=findall('(http://.*.html)',reurl[1])
-    url=findall('\[IMG\](http://.*)\[\/IMG\]',urlopen(reurl[0]).read())
-    url=[url[0],url[2]]
-    #return ihost,form_vaule
-    return url
-
-def host_r_radikal(send):
-    file_name,label_name, mode=send[0],send[1],send[2]
-    ihost={\
-       'host':'www.radikal.ru', \
-       'post':'/action.aspx', \
-       'name':'F',\
-       'cookie':''\
-       }
-
-    form_vaule = [\
-              ('upload', 'yes'),\
-              ('VM','200'),\
-              ('CP','yes'),\
-              ('Submit', '')\
-              ]
-    if label_name != None:
-        form_vaule.insert(-1,('VE','yes'))
-        form_vaule.insert(-1,('V', label(file_name,label_name) ))
-    if mode:
-        form_vaule.insert(1,('URLF',file_name))
-    url=libiu.send_file(file_name, ihost, form_vaule, (mode,None)).read()
-    url=findall('\[IMG\](http://.*.radikal.ru.*)\[/IMG\]',url)
-    return url
-
-def host_s_imageshack(send):
-    file_name,label,mode=send[0],send[1],send[2]
-    ihost={\
-       'host':'imageshack.us', \
-       'post':'/', \
-       'name':'fileupload',\
-       'cookie':''\
-       }
-
-    form_vaule = [\
-              ('uploadtype', 'on'),\
-              ('Submit', '"host it!"')\
-              ]
-    src=libiu.send_file(file_name, ihost, form_vaule, (None, mode)).read()
-    url=findall('value=\"(http://img.[\d]+?.imageshack.us/img[\d]+?/.*?/.*?)\"', src)
-    tumburl=url[0].split('.')
-    tumburl.insert(-1,'th')
-    urls=[url[0],'.'.join(tumburl)]
-    return urls
-
-def host_t_tinypic(send):
-    file_name,label,mode=send[0],send[1],send[2]
-    ihost={\
-       'host':'s3.tinypic.com', \
-       'post':'/upload.php', \
-       'name':'the_file',\
-       'cookie':''\
-       }
-
-    form_vaule = [\
-              ('action', 'upload'),\
-              ('MAX_FILE_SIZE', '200000000'),\
-              ('action', 'upload'),\
-              ('Submit', '')\
-              ]
-    src=libiu.send_file(file_name, ihost, form_vaule , (None, mode)).read()
-    reurl=findall('http://tinypic.com/view.php\?pic=.*?\&s=[\d]',src)
-    src=urlopen(reurl[0]).read()
-    url=findall('\[IMG\](http://i[\d]+?.tinypic.com/.*?)\[/IMG\]',src)
-    tumburl=url[0].split('.')
-    tumburl[-2] += '_th'
-    tumburl = '.'.join(tumburl)
-    urls=[url[0],tumburl]
-    return urls
-
-def host_m_smages(send):
-    from re import sub
-    file_name,label,mode=send[0],send[1],send[2]
-    ihost={\
-       'host':'smages.com', \
-       'post':'/upload', \
-       'name':'img',\
-       'cookie':''\
-       }
-
-    form_vaule = [('Submit', '')]
-    reurl = sub('(\/code\/)|(\.htm)','', libiu.send_file(file_name, ihost, form_vaule , (None, mode) ).getheaders()[4][1])
-    url,tmb = 'http://smages.com/i/%s'%reurl,'http://smages.com/t/%s'%reurl
-    return [url,tmb]
-
-def host_u_funkyimg(send):
-    file_name,label,mode=send[0],send[1],send[2]
-    ihost={\
-           'host':'funkyimg.com', \
-           'post':'/up.php', \
-           'name':'file_0',\
-           'cookie':''\
-           }
-    form_vaule = [\
-                  ('addInfo','on'),\
-                  ('upload','"Upload Images"'),('uptype','file'),\
-                  ('file_1',''),('maxNumber','1'),('maxId','')
+        #if label_name != None:
+        #    self.form_vaule.insert(-1,('string_small_on','on'))
+        #    self.form_vaule.insert(-1,('string_small', label(file_name,label_name) ))
+    def send(self, send):
+        file_name,label_name,mode=send[0],send[1],send[2]
+        if not mode:
+            self.form_vaule = [\
+                  ('uploadtype','1'),\
+                  ('method','file'),\
+                  ('file','upload'),\
+                  ('thumb_resize_on','on'),('thumb_resize','200'),\
+                  ('submit','"Загрузить"')\
                   ]
-    url=findall('\[IMG\](http://funkyimg.com/.*)\[/IMG\]\[/URL\]',\
-                     libiu.send_file(file_name, ihost, form_vaule, (None,mode)).read())
-    url.reverse()
-    return url
+        elif mode:
+            self.form_vaule = [\
+                  ('uploadtype','2'),\
+                  ('method','url'),\
+                  ('userurl[]',file_name),\
+                  ('thumb_resize_on','on'),('thumb_resize','200'),\
+                  ('submit','"Загрузить"')\
+                  ]
+        reurl=libiu.send_file(file_name, self.ihost, self.form_vaule, (mode,None))
+        reurl=reurl.getheaders()[-5]
+        reurl=findall('(http://.*.html)',reurl[1])
+        print reurl
+        url=findall('\[IMG\](http://.*)\[\/IMG\]',urlopen(reurl[0]).read())
+        url=[url[0],url[2]]
+        #return self.ihost,form_vaule
+        return url
 
-def host_p_picthost(send):
-    file_name,label,mode=send[0],send[1],send[2]
-    ihost={\
-           'host':'picthost.ru', \
+    def en(self):
+        u'Upload to ipicture.ru'
+        pass
+
+    def ru(self):
+        u'Залить на ipicture.ru'
+        pass
+
+class Host_r_radikal:
+    def __init__(self):
+        self.ihost={\
+           'host':'www.radikal.ru', \
+           'post':'/action.aspx', \
+           'name':'F',\
+           'cookie':''\
+           }
+
+        self.form_vaule = [\
+                  ('upload', 'yes'),\
+                  ('VM','200'),\
+                  ('CP','yes'),\
+                  ('Submit', '')\
+                  ]
+    def send(self,send):
+        file_name,label_name, mode=send[0],send[1],send[2]
+        if label_name != None:
+            self.form_vaule.insert(-1,('VE','yes'))
+            self.form_vaule.insert(-1,('V', label(file_name,label_name) ))
+        if mode:
+            self.form_vaule.insert(1,('URLF',file_name))
+
+        url=libiu.send_file(file_name, self.ihost, self.form_vaule, (mode,None)).read()
+        url=findall('\[IMG\](http://.*.radikal.ru.*)\[/IMG\]',url)
+        return url
+    def en(self):
+        u'Upload to radikal.ru'
+        pass
+    def ru(self):
+        u'Залить на radikal.ru'
+        pass
+
+class Host_s_imageshack:
+    def __init__(self):
+        self.ihost={\
+           'host':'imageshack.us', \
+           'post':'/', \
+           'name':'fileupload',\
+           'cookie':''\
+           }
+
+        self.form_vaule = [\
+                  ('uploadtype', 'on'),\
+                  ('Submit', '"host it!"')\
+                  ]
+    def send(self,send):
+        file_name,label,mode=send[0],send[1],send[2]
+        src=libiu.send_file(file_name, self.ihost, self.form_vaule, (None, mode)).read()
+        url=findall('value=\"(http://img.[\d]+?.imageshack.us/img[\d]+?/.*?/.*?)\"', src)
+        tumburl=url[0].split('.')
+        tumburl.insert(-1,'th')
+        urls=[url[0],'.'.join(tumburl)]
+        return urls
+    def en(self):
+        u'Upload to imageshack.us'
+        pass
+    def ru(self):
+        u'Залить на imageshack.us'
+        pass
+
+class Host_t_tinypic:
+    def __init__(self):
+        self.ihost={\
+           'host':'s3.tinypic.com', \
            'post':'/upload.php', \
-           'name':'userfile[]',\
+           'name':'the_file',\
            'cookie':''\
            }
-    form_vaule = [\
-                  ('private_upload','1'),\
-                  ('upload','"Upload Images"'),('uptype','file'),\
+
+        self.form_vaule = [\
+                  ('action', 'upload'),\
+                  ('MAX_FILE_SIZE', '200000000'),\
+                  ('action', 'upload'),\
+                  ('Submit', '')\
                   ]
-    #print libiu.send_file(file_name, ihost, form_vaule, (None,mode)).read()
-    url=findall('\<a href=\"viewer.php\?file=(.*?)\"',\
-                     libiu.send_file(file_name, ihost, form_vaule, (None,mode)).read())
-    t = 'http://picthost.ru/images/'
-    tumburl=url[0].split('.')
-    tumburl[-2] += '_thumb'
-    tumburl = '.'.join(tumburl)
-    return [t+url[0], t+tumburl]
+    def send(self,send):
+        file_name,label,mode=send[0],send[1],send[2]
+        src=libiu.send_file(file_name, self.ihost, self.form_vaule , (None, mode)).read()
+        reurl=findall('http://tinypic.com/view.php\?pic=.*?\&s=[\d]',src)
+        src=urlopen(reurl[0]).read()
+        url=findall('\[IMG\](http://i[\d]+?.tinypic.com/.*?)\[/IMG\]',src)
+        tumburl=url[0].split('.')
+        tumburl[-2] += '_th'
+        tumburl = '.'.join(tumburl)
+        urls=[url[0],tumburl]
+        return urls
+    def en(self):
+        u'Upload to tinypic.com'
+        pass
+    def ru(self):
+        u'Залить на tinypic.com'
+        pass
+
+class Host_u_funkyimg:
+    def __init__(self):
+        self.ihost={\
+               'host':'funkyimg.com', \
+               'post':'/up.php', \
+               'name':'file_0',\
+               'cookie':''\
+               }
+        self.form_vaule = [\
+                      ('addInfo','on'),\
+                      ('upload','"Upload Images"'),('uptype','file'),\
+                      ('file_1',''),('maxNumber','1'),('maxId','')
+                      ]
+    def send(self, send):
+        file_name,label,mode=send[0],send[1],send[2]
+        url=findall('\[IMG\](http://funkyimg.com/.*)\[/IMG\]\[/URL\]',\
+                         libiu.send_file(file_name, self.ihost, self.form_vaule, (None,mode)).read())
+        url.reverse()
+        return url
+    def en(self):
+        u'Upload to funkyimg.com'
+        pass
+    def ru(self):
+        u'Залить на funkyimg.com'
+        pass
+
+class Host_p_picthost:
+    def __init__(self):
+        self.ihost={\
+               'host':'picthost.ru', \
+               'post':'/upload.php', \
+               'name':'userfile[]',\
+               'cookie':''\
+               }
+        self.form_vaule = [\
+                      ('private_upload','1'),\
+                      ('upload','"Upload Images"'),('uptype','file'),\
+                      ]
+    def send(self,send):
+        file_name,label,mode=send[0],send[1],send[2]
+        #print libiu.send_file(file_name, self.ihost, self.form_vaule, (None,mode)).read()
+        url=findall('\<a href=\"viewer.php\?file=(.*?)\"',\
+                         libiu.send_file(file_name, self.ihost, self.form_vaule, (None,mode)).read())
+        t = 'http://picthost.ru/images/'
+        tumburl=url[0].split('.')
+        tumburl[-2] += '_thumb'
+        tumburl = '.'.join(tumburl)
+        return [t+url[0], t+tumburl]
+    def en(self):
+        u'Upload to picthost.ru'
+        pass
+    def ru(self):
+        u'Залить на picthost.ru'
+        pass
 
 
 def _host_avangard_foto_cod(send):
@@ -246,21 +302,21 @@ def _host_avangard_foto_cod(send):
     def main(files):
         mode  = None
         cookie=auth_id_cod(email,passwd)
-        ihost={\
+        self.ihost={\
        'host':host, \
        'post':'/upload/', \
        'name':'photos[]',\
        'cookie':cookie\
        }
 
-        form_vaule = [\
+        self.form_vaule = [\
               ('action', 'photo_upload'),\
               ('album_id',album_id),\
               ('Submit', '')\
               ]
         old_urls, o= get_pages_urls(cookie, None)
         for file in files:
-            if libiu.send_file(file, ihost, form_vaule , (None, mode)).status == 302: pass
+            if libiu.send_file(file, self.ihost, self.form_vaule , (None, mode)).status == 302: pass
             else: print 'error'
         new_urls, o=get_pages_urls(cookie, o)
         upload_urls = list( set(old_urls) ^ set(new_urls) )
