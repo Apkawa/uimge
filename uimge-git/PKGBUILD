@@ -1,0 +1,41 @@
+# Contributor: Apkawa <apkawa@gmail.com>
+
+pkgname=uimge-git
+pkgver=20081130
+pkgrel=1
+pkgdesc="Python picture uploader to different imagehostings"
+arch=(any)
+url="http://code.google.com/p/uimge/"
+license=('GPL')
+depends=(python)
+provides=(uimge)
+conflicts=(uimge)
+replaces=(uimge)
+source=( )
+md5sums=( )
+
+_gitname="uimge"
+_gitroot="git://repo.or.cz/uimge.git"
+build() {
+  cd ${srcdir}
+  msg "Connecting to git.freedesktop.org GIT server...."
+
+  if [ -d ${srcdir}/$_gitname ] ; then
+  cd $_gitname && git pull origin
+  msg "The local files are updated."
+  else
+  git clone $_gitroot
+  fi
+
+  msg "GIT checkout done or server timeout"
+  msg "Starting make..."
+
+  cp -r ${srcdir}/$_gitname ${srcdir}/$_gitname-build
+  cd ${srcdir}/$_gitname-build/uimgepy
+
+  mkdir -p $startdir/pkg/usr/lib/python2.6/site-packages/libuimge
+  mkdir -p $startdir/pkg/usr/bin
+
+  install -Dm555 libuimge/* $startdir/pkg/usr/lib/python2.6/site-packages/libuimge
+  install -Dm755 uimge.py $startdir/pkg/usr/bin/uimge
+}
