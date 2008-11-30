@@ -14,17 +14,19 @@ class Lang:
     def mes(self, en='Unkown string', ru='Неизвестная запись'):
         if self.lang:
             return en
-        else: 
+        else:
             return ru
-    
     def get_string(self, key, typ=0):
         try:
             return self.dict_lang[typ][key]
         except KeyError:
             return 'Not found string. %i %s'%(typ,key)
 
-    def get_help_module(self,text):
-        pass
+    def get_help_module(self,host):
+        if self.lang:
+            return host.en.__doc__
+        else:
+            return host.ru.__doc__
 
 
 

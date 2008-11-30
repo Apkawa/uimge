@@ -3,13 +3,33 @@ import libiu
 from re import findall
 from urllib import urlopen
 
-def label(file, name):
-    from PIL import Image
-    from os import stat
-    img=Image.open(file)
-    size=stat(file).st_size/1024
-    title='%s %sx%s %s Kb' %(name,str(img.size[0]),str(img.size[1]),str(size) )
-    return title
+
+class Host_m_smages:
+    def __init__(self):
+        self.ihost={\
+           'host':'smages.com', \
+           'post':'/upload', \
+           'name':'img',\
+           'cookie':''\
+           }
+
+        self.form_vaule = [('Submit', '')]
+
+    def send(self, send):
+        from re import sub
+        file_name,label,mode=send[0],send[1],send[2]
+        reurl = sub('(\/code\/)|(\.htm)','',
+                libiu.send_file(file_name, self.ihost, self.form_vaule, (None, mode) ).getheaders()[4][1])
+        url,tmb = 'http://smages.com/i/%s'%reurl,'http://smages.com/t/%s'%reurl
+        return [url,tmb]
+
+    def en(self):
+        u'Upload to smages.com'
+        pass
+
+    def ru(self):
+        u'Залить на smages.com'
+        pass
 
 def host_i_ipicture(send):
     file_name,label_name,mode=send[0],send[1],send[2]
@@ -20,7 +40,6 @@ def host_i_ipicture(send):
            'name':'userfile',\
            'cookie':''\
            }
-    
         form_vaule = [\
               ('uploadtype','1'),\
               ('method','file'),\
@@ -34,7 +53,6 @@ def host_i_ipicture(send):
            'post':'/Upload/', \
            'name':'userfile',\
            'cookie':''\
-           
            }
         form_vaule = [\
               ('uploadtype','2'),\
@@ -46,7 +64,6 @@ def host_i_ipicture(send):
     if label_name != None:
         form_vaule.insert(-1,('string_small_on','on'))
         form_vaule.insert(-1,('string_small', label(file_name,label_name) ))
-        
     reurl=libiu.send_file(file_name, ihost, form_vaule, (mode,None))
     reurl=reurl.getheaders()[-5]
     reurl=findall('(http://.*.html)',reurl[1])
@@ -73,7 +90,6 @@ def host_r_radikal(send):
     if label_name != None:
         form_vaule.insert(-1,('VE','yes'))
         form_vaule.insert(-1,('V', label(file_name,label_name) ))
-    
     if mode:
         form_vaule.insert(1,('URLF',file_name))
     url=libiu.send_file(file_name, ihost, form_vaule, (mode,None)).read()
@@ -95,7 +111,6 @@ def host_s_imageshack(send):
               ]
     src=libiu.send_file(file_name, ihost, form_vaule, (None, mode)).read()
     url=findall('value=\"(http://img.[\d]+?.imageshack.us/img[\d]+?/.*?/.*?)\"', src)
-    
     tumburl=url[0].split('.')
     tumburl.insert(-1,'th')
     urls=[url[0],'.'.join(tumburl)]
@@ -116,7 +131,6 @@ def host_t_tinypic(send):
               ('action', 'upload'),\
               ('Submit', '')\
               ]
-    
     src=libiu.send_file(file_name, ihost, form_vaule , (None, mode)).read()
     reurl=findall('http://tinypic.com/view.php\?pic=.*?\&s=[\d]',src)
     src=urlopen(reurl[0]).read()
@@ -184,35 +198,30 @@ def host_p_picthost(send):
 
 def _host_avangard_foto_cod(send):
     import urllib2
-    
     email='nanodesu@in-mail.ru'
     passwd='splenchb'
     username='nanodesu4'
     album_id='7469727749'
     host='avangard.photo.cod.ru'
-    
+
     def auth_id_cod(user,passwd):
         cookes=str(urllib2.urlopen('https://id.cod.ru/auth?email=%s&password=%s' %(user,passwd)).info())
         cookes=findall('(codsid=.+?;)[\s\S\w\W]*(auth=YES;)[\s\S\w\W]*(modified=\d+?;)', cookes)[0]
         cookes='%s %s %s' %(cookes[0],cookes[1],cookes[2])
         return cookes
-    
     def get_pages_urls(cookie,o):
-        
         def get_pages(i,cookie):
             urlpage='http://avangard.photo.cod.ru/users/%s/%s/?page=%d' %(username,album_id,i)
             req = urllib2.Request(urlpage)
             req.add_header('Cookie', cookie)
-            return urllib2.urlopen(req).read()  
+            return urllib2.urlopen(req).read()
         i=1
         url_data= get_pages(i,cookie)
         i=findall('<td width="80%" align="center" class="f12">.*<b>(\d{1,})</b></td>',url_data)
-        
         if i and not o:
             i=int(i[0])
             url_data= get_pages(i,cookie)
             urls = findall('(http://avangard.photo.cod.ru/photos.*/w100_.*)" alt=',url_data)
-            
         elif i and o:
             i=int(i[0])
             urls=[]
@@ -220,13 +229,11 @@ def _host_avangard_foto_cod(send):
                 url_data = get_pages(i,cookie)
                 for url in findall('(http://avangard.photo.cod.ru/photos.*/w100_.*)" alt=',url_data):
                     urls.append(url)
-                    
         elif not i:
             url_data= get_pages(1,cookie)
             urls = findall('(http://avangard.photo.cod.ru/photos.*/w100_.*)" alt=',url_data)
         #print type(urls), len(urls)
         return urls,i
-    
     def output_urls(urls):
         out_url=[]
         for url in urls:
@@ -236,7 +243,6 @@ def _host_avangard_foto_cod(send):
             direct_url = '%s/%s'%(urlre[0],urlre[1])
             out_url.append((direct_url,tmb_400))
         return out_url
-    
     def main(files):
         mode  = None
         cookie=auth_id_cod(email,passwd)
@@ -252,7 +258,6 @@ def _host_avangard_foto_cod(send):
               ('album_id',album_id),\
               ('Submit', '')\
               ]
-        
         old_urls, o= get_pages_urls(cookie, None)
         for file in files:
             if libiu.send_file(file, ihost, form_vaule , (None, mode)).status == 302: pass
@@ -260,9 +265,15 @@ def _host_avangard_foto_cod(send):
         new_urls, o=get_pages_urls(cookie, o)
         upload_urls = list( set(old_urls) ^ set(new_urls) )
         return output_urls(upload_urls)
-    
     return main(send)
+
+def label(file, name):
+    from PIL import Image
+    from os import stat
+    img=Image.open(file)
+    size=stat(file).st_size/1024
+    title='%s %sx%s %s Kb' %(name,str(img.size[0]),str(img.size[1]),str(size) )
+    return title
 
 if __name__ == '__main__':
     pass
-    

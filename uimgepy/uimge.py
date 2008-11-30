@@ -34,10 +34,11 @@ VERSION = '0.06.0.2'
 #opt_help,error_mes,messages=lang.check()
 lang = lang.Lang()
 get_str = lang.get_string
+get_help = lang.get_help_module
 IMAGEHOSTS = {}
 for (name,value) in inspect.getmembers(imagehost):
-    if name.startswith('host_'):
-        IMAGEHOSTS[name[len('host_'):]]= value
+    if name.startswith('Host_'):
+        IMAGEHOSTS[name[len('Host_'):]]= value
 
 OUTPRINT={
             'default': lambda url, eva: stdout.write('%s\n'%url[0]),
@@ -73,7 +74,7 @@ class input():
             if not self.check(file):
                 continue
             send = [file,self.name,self.mode]
-            url = IMAGEHOSTS[self.host](send)
+            url = IMAGEHOSTS[self.host]().send(send)
             OUTPRINT[self.out](url,self.out_eval)
         stdout.write('\n')
     def read_list(self,filelist):
@@ -103,7 +104,7 @@ def parseopt(arg):
     for host in IMAGEHOSTS.keys():
         sp = host.split('_')
         group_1.add_option('-'+sp[0],'--'+sp[1],action='store_const', const=host, dest='check', \
-                       help=get_str('--'+sp[1]))
+                       help=get_help(IMAGEHOSTS[host]))
     parser.add_option_group(group_1)
     # Additional options
     group_2 = optparse.OptionGroup(parser, get_str('Additional options'))
@@ -117,7 +118,7 @@ def parseopt(arg):
             if key != 'usr_user-output':
                 group_3.add_option('--'+sp[0],'--'+sp[1], const=key, action='store_const', \
                         default='default', dest='out', help=get_str('--'+sp[1]))
-            else: 
+            else:
                 group_3.add_option('--'+sp[0],'--'+sp[1], action='store', \
                         default='default', dest='out', help=get_str('--'+sp[1]))
     parser.add_option_group(group_3)
