@@ -1,34 +1,10 @@
 # -*- coding: utf-8 -*-
-import libiu
+#import libiu
+from libiu import Luimge
 from re import findall
 from urllib import urlopen
 
-'''
-class Host_e_example:
-    def __init__(self):
-        self.ihost={\
-           'host':'example.com', \
-           'post':'/upload', \
-           'name':'img',\
-           'cookie':''\
-           }
 
-        self.form_vaule = [('Submit', '')]
-
-    def send(self, send):
-        file_name,label,mode=send[0],send[1],send[2]
-        reurl = libiu.send_file(file_name, self.ihost, self.form_vaule, (None, mode) ).getheaders()
-        url,tmb = 'http://example.com/i/%s'%reurl,'http://example.com/t/%s'%reurl
-        return [url,tmb]
-
-    def en(self):
-        u'Upload to exapmle.com'
-        pass
-
-    def ru(self):
-        u'Залить на example.com'
-        pass
-'''
 class Host_m_smages:
     def __init__(self):
         self.ihost={\
@@ -42,9 +18,13 @@ class Host_m_smages:
 
     def send(self, send):
         from re import sub
-        file_name,label,mode=send[0],send[1],send[2]
+        file_name,label, url_mode =send[0],send[1],send[2]
+        #reurl = sub('(\/code\/)|(\.htm)','',
+        #        Luimge().send(file_name, self.ihost, self.form_vaule,
+        #            url_mode ).getheaders()[4][1])
         reurl = sub('(\/code\/)|(\.htm)','',
-                libiu.send_file(file_name, self.ihost, self.form_vaule, (None, mode) ).getheaders()[4][1])
+                Luimge().send(file_name, self.ihost, self.form_vaule,
+                    url_mode ).getheaders()[4][1])
         url,tmb = 'http://smages.com/i/%s'%reurl,'http://smages.com/t/%s'%reurl
         return [url,tmb]
 
@@ -68,8 +48,8 @@ class _Host_i_ipicture:
         #    self.form_vaule.insert(-1,('string_small_on','on'))
         #    self.form_vaule.insert(-1,('string_small', label(file_name,label_name) ))
     def send(self, send):
-        file_name,label_name,mode=send[0],send[1],send[2]
-        if not mode:
+        file_name,label_name,url_mode=send[0],send[1],send[2]
+        if not url_mode:
             self.form_vaule = [\
                   ('uploadtype','1'),\
                   ('method','file'),\
@@ -77,7 +57,7 @@ class _Host_i_ipicture:
                   ('thumb_resize_on','on'),('thumb_resize','200'),\
                   ('submit','"Загрузить"')\
                   ]
-        elif mode:
+        elif url_mode:
             self.form_vaule = [\
                   ('uploadtype','2'),\
                   ('method','url'),\
@@ -85,7 +65,7 @@ class _Host_i_ipicture:
                   ('thumb_resize_on','on'),('thumb_resize','200'),\
                   ('submit','"Загрузить"')\
                   ]
-        reurl=libiu.send_file(file_name, self.ihost, self.form_vaule, (mode,None))
+        reurl=Luimge().send(file_name, self.ihost, self.form_vaule, url_mode)
         reurl=reurl.getheaders()[-5]
         reurl=findall('(http://.*.html)',reurl[1])
         print reurl
@@ -117,17 +97,20 @@ class Host_r_radikal:
                   ('CP','yes'),\
                   ('Submit', '')\
                   ]
+        Luimge().send = Luimge()
+
     def send(self,send):
-        file_name,label_name, mode=send[0],send[1],send[2]
+        file_name,label_name, url_mode=send[0],send[1],send[2]
         if label_name != None:
             self.form_vaule.insert(-1,('VE','yes'))
             self.form_vaule.insert(-1,('V', label(file_name,label_name) ))
-        if mode:
+        if url_mode:
             self.form_vaule.insert(1,('URLF',file_name))
 
-        url=libiu.send_file(file_name, self.ihost, self.form_vaule, (mode,None)).read()
-        url=findall('\[IMG\](http://.*.radikal.ru.*)\[/IMG\]',url)
+        url=Luimge().send(file_name, self.ihost, self.form_vaule, url_mode=url_mode)
+        url=findall('\[IMG\](http://.*.radikal.ru.*)\[/IMG\]',url.read())
         return url
+
     def en(self):
         u'Upload to radikal.ru'
         pass
@@ -149,8 +132,10 @@ class Host_s_imageshack:
                   ('Submit', '"host it!"')\
                   ]
     def send(self,send):
-        file_name,label,mode=send[0],send[1],send[2]
-        src=libiu.send_file(file_name, self.ihost, self.form_vaule, (None, mode)).read()
+        file_name,label,url_mode=send[0],send[1],send[2]
+        src=Luimge().send(file_name, self.ihost, self.form_vaule,
+                url_mode=url_mode, fake_url=True).read()
+
         url=findall('value=\"(http://img.[\d]+?.imageshack.us/img[\d]+?/.*?/.*?)\"', src)
         tumburl=url[0].split('.')
         tumburl.insert(-1,'th')
@@ -179,8 +164,10 @@ class Host_t_tinypic:
                   ('Submit', '')\
                   ]
     def send(self,send):
-        file_name,label,mode=send[0],send[1],send[2]
-        src=libiu.send_file(file_name, self.ihost, self.form_vaule , (None, mode)).read()
+        file_name,label,url_mode=send[0],send[1],send[2]
+        src=Luimge().send(file_name, self.ihost, self.form_vaule,
+                url_mode=url_mode, fake_url=True).read()
+
         reurl=findall('http://tinypic.com/view.php\?pic=.*?\&s=[\d]',src)
         src=urlopen(reurl[0]).read()
         url=findall('\[IMG\](http://i[\d]+?.tinypic.com/.*?)\[/IMG\]',src)
@@ -210,9 +197,10 @@ class Host_u_funkyimg:
                       ('file_1',''),('maxNumber','1'),('maxId','')
                       ]
     def send(self, send):
-        file_name,label,mode=send[0],send[1],send[2]
+        file_name,label,url_mode=send[0],send[1],send[2]
         url=findall('\[IMG\](http://funkyimg.com/.*)\[/IMG\]\[/URL\]',\
-                         libiu.send_file(file_name, self.ihost, self.form_vaule, (None,mode)).read())
+                         Luimge().send(file_name, self.ihost, self.form_vaule,
+                             url_mode=url_mode,fake_url=True).read())
         url.reverse()
         return url
     def en(self):
@@ -235,10 +223,12 @@ class Host_p_picthost:
                       ('upload','"Upload Images"'),('uptype','file'),\
                       ]
     def send(self,send):
-        file_name,label,mode=send[0],send[1],send[2]
-        #print libiu.send_file(file_name, self.ihost, self.form_vaule, (None,mode)).read()
+        file_name,label,url_mode=send[0],send[1],send[2]
+        #print Luimge().send(file_name, self.ihost, self.form_vaule, (None,url_mode)).read()
         url=findall('\<a href=\"viewer.php\?file=(.*?)\"',\
-                         libiu.send_file(file_name, self.ihost, self.form_vaule, (None,mode)).read())
+                Luimge().send(file_name, self.ihost, self.form_vaule,\
+                    url_mode=url_mode, fake_url=True).read())
+
         t = 'http://picthost.ru/images/'
         tumburl=url[0].split('.')
         tumburl[-2] += '_thumb'
@@ -251,6 +241,110 @@ class Host_p_picthost:
         u'Залить на picthost.ru'
         pass
 
+class _Host_v_imagevenue:
+    'Не заливает png, только jpg'
+    def __init__(self):
+        self.ihost={\
+           'host':'www.imagevenue.com', \
+           'post':'/upload.php', \
+           'name':'userfile[]',\
+           'cookie':''\
+           }
+
+        self.form_vaule = [('Submit', ''),
+                ('action','1'),
+                ('imgcontent','contentnone'),
+                ]
+
+    def send(self, send):
+        file_name,label,url_mode=send[0],send[1],send[2]
+        reurl = Luimge().send(file_name, self.ihost, self.form_vaule,url_mode )
+        print reurl.read()
+        url,tmb = 'http://example.com/i/%s'%reurl,'http://example.com/t/%s'%reurl
+        return [url,tmb]
+
+    def en(self):
+        u'Upload to exapmle.com'
+        pass
+
+    def ru(self):
+        u'Залить на example.com'
+        pass
+
+
+class _Host_a_imageshost:
+    'Пока не работает'
+    def __init__(self):
+        self.ihost={\
+           'host':'imageshost.ru', \
+           'post':'/upload.php', \
+           'name':'userimg1',\
+           'cookie':'quality=95; pvs1=250; to_angle=0;'\
+           }
+
+        self.form_vaule = [
+                ('type','1'),('dnt','1'),
+                ('imgcontent','contentnone'),
+                ('to_size_w',''),
+                ('to_size_h',''),
+                ('to_angle','0'),
+                ('noedit','on'),
+                ('pvs1','250'), ('quality','95'),
+                ('is_pr_text',''),('pr_text',''),
+                ('text',''),
+                ('description',''),
+                ('rules','on'),
+                ('submit_button','Çàãðóçèòü'),
+                ]
+
+    def send(self, send):
+        file_name,label,url_mode=send[0],send[1],send[2]
+        reurl = Luimge().send(file_name, self.ihost, self.form_vaule,url_mode )
+        print reurl.getheaders(),reurl.read()
+        url,tmb = 'http://example.com/i/%s'%reurl,'http://example.com/t/%s'%reurl
+        return [url,tmb]
+
+    def en(self):
+        u'Upload to exapmle.com'
+        pass
+
+    def ru(self):
+        u'Залить на example.com'
+        pass
+
+
+
+
+
+
+'''
+Example add Host
+#------------------------------------------------------
+class Host_e_example:
+    def __init__(self):
+        self.ihost={\
+           'host':'example.com', \
+           'post':'/upload', \
+           'name':'img',\
+           'cookie':''\
+           }
+
+        self.form_vaule = [('Submit', '')]
+
+    def send(self, send):
+        file_name,label,url_mode=send[0],send[1],send[2]
+        reurl = Luimge().send(file_name, self.ihost, self.form_vaule, (None, url_mode) ).getheaders()
+        url,tmb = 'http://example.com/i/%s'%reurl,'http://example.com/t/%s'%reurl
+        return [url,tmb]
+
+    def en(self):
+        u'Upload to exapmle.com'
+        pass
+
+    def ru(self):
+        u'Залить на example.com'
+        pass
+'''
 
 def _host_avangard_foto_cod(send):
     import urllib2
@@ -300,7 +394,7 @@ def _host_avangard_foto_cod(send):
             out_url.append((direct_url,tmb_400))
         return out_url
     def main(files):
-        mode  = None
+        url_mode  = None
         cookie=auth_id_cod(email,passwd)
         self.ihost={\
        'host':host, \
@@ -316,7 +410,7 @@ def _host_avangard_foto_cod(send):
               ]
         old_urls, o= get_pages_urls(cookie, None)
         for file in files:
-            if libiu.send_file(file, self.ihost, self.form_vaule , (None, mode)).status == 302: pass
+            if Luimge().send(file, self.ihost, self.form_vaule , (None, url_mode)).status == 302: pass
             else: print 'error'
         new_urls, o=get_pages_urls(cookie, o)
         upload_urls = list( set(old_urls) ^ set(new_urls) )

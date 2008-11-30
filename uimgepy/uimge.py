@@ -29,12 +29,13 @@ from os import stat
 from re import sub,search
 from libuimge import imagehost,lang
 import inspect
-VERSION = '0.06.0.2'
+VERSION = '0.06.1.1'
 
 #opt_help,error_mes,messages=lang.check()
 lang = lang.Lang()
 get_str = lang.get_string
 get_help = lang.get_help_module
+mes = lang.mes
 IMAGEHOSTS = {}
 for (name,value) in inspect.getmembers(imagehost):
     if name.startswith('Host_'):
@@ -44,6 +45,7 @@ OUTPRINT={
             'default': lambda url, eva: stdout.write('%s\n'%url[0]),
             'bt_bb-thumb':  lambda url, eva: stdout.write('[url=%s][img]%s[/img][/url] ' %(url[0], url[1])),
             'bo_bb-orig':  lambda url, eva: stdout.write('[img]%s[/img]\n' %(url[0])),
+            'wi_wiki':  lambda url, eva: stdout.write('[[%s|{{%s}}]] ' %(url[0],url[1])),
             'usr_user-output': lambda url, eva: stdout.write(sub('\\\\n','\n',sub('%tmb%',url[1],sub('%url%',url[0], eva))))
           }
 
@@ -60,7 +62,7 @@ class input():
         else:
             self.filenames = filenames
         self.count= 0
-        self.mode = False
+        self.url_mode = False
         self.name = None
         self.host = opt.check
         self.out = opt.out
@@ -73,20 +75,22 @@ class input():
         for file in self.filenames:
             if not self.check(file):
                 continue
-            send = [file,self.name,self.mode]
+            send = [file,self.name,self.url_mode]
             url = IMAGEHOSTS[self.host]().send(send)
             OUTPRINT[self.out](url,self.out_eval)
         stdout.write('\n')
+
     def read_list(self,filelist):
         self.filenames = []
         f = open(filelist,'r')
         files = f.readlines()
         f.close()
         for file in files: self.filenames.append(sub('\n','',file))
+
     def check(self,filename):
-        if search('^http\:\/\/',filename): self.mode = True
-        else: self.mode = False
-        if not self.mode:
+        if search('^http\:\/\/',filename): self.url_mode = True
+        else: self.url_mode = False
+        if not self.url_mode:
             try:
                 test=stat(filename)
             except OSError:
@@ -96,8 +100,10 @@ class input():
 
 def parseopt(arg):
     '''Функциия парсинга опций и вывод справки'''
-    usage = get_str('usage')
+    key_hosts = '|'.join(['-'+i.split('_')[0] for i in IMAGEHOSTS.keys()])
     version = 'uimgepy-'+VERSION
+    usage = mes(u'python %%prog [%s] picture'%key_hosts,
+            u'python %%prog [%s] картинка'%key_hosts)
     parser = optparse.OptionParser(usage=usage, version=version)
     # Major options
     group_1 = optparse.OptionGroup(parser, get_str('Major options'))
@@ -124,7 +130,8 @@ def parseopt(arg):
     parser.add_option_group(group_3)
     opt, arguments = parser.parse_args(args=arg,)
     if opt.check == None:
-        print lang.mes('Enter option [-i|-r|-f|-s|-t]...','Нет основных опций! Введите [-i|-r|-f|-s|-t]...')
+        print mes('Enter option [%s]...'%key_hosts,
+                'Нет основных опций! Введите [%s]...'%key_hosts)
         parser.print_help()
         exit()
     return opt, arguments

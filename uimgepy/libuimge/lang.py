@@ -33,14 +33,6 @@ class Lang:
     def ru_RU(self):
         options_help = {'usage':u'Использование: python %prog [-i|-r|-f|-s|-t] картинка',\
                         'Major options':u'Основные опции',\
-                        '--ipicture':u'Залить на ipicture.ru',\
-                        '--radikal':u'Залить на radikal.ru',\
-                        '--imageshack':u'Залить на imageshack.us',\
-                        '--tinypic':u'Залить на tinypic.com',\
-                        '--smages':u'Залить на smages.com',\
-                        '--funkyimg':u'Залить на funkyimg.com',\
-                        '--picthost':u'Залить на picthost.ru',\
-                        '--photo-cod':u'Залить на avangard.photo.cod.ru',\
                         'Additional options':u'Дополнительные опции',\
                         '--name':u'Добавить свое имя в превью картинки (Требуется PIL)',\
                         '--file':u'Взять список файлов или url из текстового файла.',\
@@ -63,14 +55,6 @@ class Lang:
     def en_EN():
         options_help = {'usage':'usage: python %prog [-i|-r|-f|-s|-t] picture',\
                         'Major options':'Major options',\
-                        '--ipicture':'Upload to ipicture.ru',\
-                        '--radikal':'Upload to radikal.ru',\
-                        '--imageshack':'Upload to imageshack.us',\
-                        '--tinypic':'Upload to tinypic.com',\
-                        '--smages':'Upload to smages.com',\
-                        '--funkyimg':u'Upload to funkyimg.com',\
-                        '--picthost':u'Upload to picthost.ru',\
-                        '--photo-cod':'Upload to avangard.photo.cod.ru',\
                         'Additional options':'Additional options',\
                         '--name':'Adding a name to preview images (Used PIL). Works with [-r|-i]',\
                         '--file':'Upload image from list',\
@@ -93,5 +77,4 @@ class Lang:
 
 if __name__ == '__main__':
     pass
-
 #check(getdefaultlocale()[0])
