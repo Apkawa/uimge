@@ -29,13 +29,14 @@ from os import stat
 from re import sub,search
 from libuimge import imagehost,lang
 import inspect
-VERSION = '0.06.1.1'
+VERSION = '0.06.1.2'
 
 #opt_help,error_mes,messages=lang.check()
 lang = lang.Lang()
 get_str = lang.get_string
 get_help = lang.get_help_module
 mes = lang.mes
+errmes = lang.errmes
 IMAGEHOSTS = {}
 for (name,value) in inspect.getmembers(imagehost):
     if name.startswith('Host_'):
@@ -72,11 +73,12 @@ class input():
             self.out = 'usr_user-output'
     def upload(self):
         '''функция заливки изображений или урлов с изображениями'''
-        for file in self.filenames:
-            if not self.check(file):
+        host = IMAGEHOSTS[self.host]()
+        for filename in self.filenames:
+            if not self.check(filename):
                 continue
-            send = [file,self.name,self.url_mode]
-            url = IMAGEHOSTS[self.host]().send(send)
+            #send = (filena,self.name,self.url_mode)
+            url = host.send(filename,self.url_mode)
             OUTPRINT[self.out](url,self.out_eval)
         stdout.write('\n')
 

@@ -16,6 +16,11 @@ class Lang:
             return en
         else:
             return ru
+    def errmes(self, en='Unkown string', ru='Неизвестная запись'):
+        if self.lang:
+            stderr.write(en)
+        else:
+            return ru
     def get_string(self, key, typ=0):
         try:
             return self.dict_lang[typ][key]
