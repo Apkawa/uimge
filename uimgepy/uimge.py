@@ -81,11 +81,9 @@ class input():
         stdout.write('\n')
 
     def read_list(self,filelist):
-        self.filenames = []
         f = open(filelist,'r')
-        files = f.readlines()
+        self.filenames = [ i[:-1] for i in f.xreadlines()]
         f.close()
-        for file in files: self.filenames.append(sub('\n','',file))
 
     def check(self,filename):
         if search('^http\:\/\/',filename): self.url_mode = True
@@ -94,7 +92,7 @@ class input():
             try:
                 test=stat(filename)
             except OSError:
-                stderr.write('Not file\n')
+                stderr.write( mes('Not found file\n','Файл не найден\n'))
                 return False
         return True
 
@@ -109,8 +107,10 @@ def parseopt(arg):
     group_1 = optparse.OptionGroup(parser, get_str('Major options'))
     for host in IMAGEHOSTS.keys():
         sp = host.split('_')
-        group_1.add_option('-'+sp[0],'--'+sp[1],action='store_const', const=host, dest='check', \
-                       help=get_help(IMAGEHOSTS[host]))
+        group_1.add_option('-'+sp[0],'--'+sp[1],
+                action='store_const', const=host, dest='check',
+                help=get_help(IMAGEHOSTS[host]))
+
     parser.add_option_group(group_1)
     # Additional options
     group_2 = optparse.OptionGroup(parser, get_str('Additional options'))

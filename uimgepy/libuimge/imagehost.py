@@ -4,6 +4,14 @@ from libiu import Luimge
 from re import findall
 from urllib import urlopen
 
+'''
+list image hosting http://gluek.info/free-images-hosting/
+TODO: add
+imageupper.com
+savepic.ru
+xmages.net
+'''
+
 
 class Host_m_smages:
     def __init__(self):
@@ -19,12 +27,9 @@ class Host_m_smages:
     def send(self, send):
         from re import sub
         file_name,label, url_mode =send[0],send[1],send[2]
-        #reurl = sub('(\/code\/)|(\.htm)','',
-        #        Luimge().send(file_name, self.ihost, self.form_vaule,
-        #            url_mode ).getheaders()[4][1])
-        reurl = sub('(\/code\/)|(\.htm)','',
-                Luimge().send(file_name, self.ihost, self.form_vaule,
-                    url_mode ).getheaders()[4][1])
+        src=Luimge().send(file_name, self.ihost, self.form_vaule,
+                    url_mode, fake_url=True )
+        reurl = sub('(\/code\/)|(\.htm)','',src.getheaders()[4][1] )
         url,tmb = 'http://smages.com/i/%s'%reurl,'http://smages.com/t/%s'%reurl
         return [url,tmb]
 
@@ -36,7 +41,7 @@ class Host_m_smages:
         u'Залить на smages.com'
         pass
 
-class _Host_i_ipicture:
+class Host_i_ipicture:
     def __init__(self):
         self.ihost={\
            'host':'ipicture.ru', \
@@ -68,10 +73,8 @@ class _Host_i_ipicture:
         reurl=Luimge().send(file_name, self.ihost, self.form_vaule, url_mode)
         reurl=reurl.getheaders()[-5]
         reurl=findall('(http://.*.html)',reurl[1])
-        print reurl
         url=findall('\[IMG\](http://.*)\[\/IMG\]',urlopen(reurl[0]).read())
         url=[url[0],url[2]]
-        #return self.ihost,form_vaule
         return url
 
     def en(self):
@@ -241,85 +244,84 @@ class Host_p_picthost:
         u'Залить на picthost.ru'
         pass
 
-class _Host_v_imagevenue:
-    'Не заливает png, только jpg'
+class Host_v_savepic:
     def __init__(self):
         self.ihost={\
-           'host':'www.imagevenue.com', \
-           'post':'/upload.php', \
-           'name':'userfile[]',\
+           'host':'savepic.ru', \
+           'post':'/search.php', \
+           'name':'file',\
            'cookie':''\
            }
 
-        self.form_vaule = [('Submit', ''),
-                ('action','1'),
-                ('imgcontent','contentnone'),
-                ]
-
-    def send(self, send):
-        file_name,label,url_mode=send[0],send[1],send[2]
-        reurl = Luimge().send(file_name, self.ihost, self.form_vaule,url_mode )
-        print reurl.read()
-        url,tmb = 'http://example.com/i/%s'%reurl,'http://example.com/t/%s'%reurl
-        return [url,tmb]
-
-    def en(self):
-        u'Upload to exapmle.com'
-        pass
-
-    def ru(self):
-        u'Залить на example.com'
-        pass
-
-
-class _Host_a_imageshost:
-    'Пока не работает'
-    def __init__(self):
-        self.ihost={\
-           'host':'imageshost.ru', \
-           'post':'/upload.php', \
-           'name':'userimg1',\
-           'cookie':'quality=95; pvs1=250; to_angle=0;'\
-           }
-
         self.form_vaule = [
-                ('type','1'),('dnt','1'),
-                ('imgcontent','contentnone'),
-                ('to_size_w',''),
-                ('to_size_h',''),
-                ('to_angle','0'),
-                ('noedit','on'),
-                ('pvs1','250'), ('quality','95'),
-                ('is_pr_text',''),('pr_text',''),
-                ('text',''),
-                ('description',''),
-                ('rules','on'),
-                ('submit_button','Çàãðóçèòü'),
+                ('MAX_FILE_SIZE','2097152'),
+                ('note',''),
+                ('font1','comic_bold'),
+                ('font2','20'),
+                ('orient','h'),
+                ('size2','800x600'),
+                ('size1','1'),
+                ('rotate','00'),
+                ('flip','0'),
+                ('mini','300x225'),
+                ('email',''),
+                ('subm2','Îòïðàâèòü'),
                 ]
 
     def send(self, send):
         file_name,label,url_mode=send[0],send[1],send[2]
-        reurl = Luimge().send(file_name, self.ihost, self.form_vaule,url_mode )
-        print reurl.getheaders(),reurl.read()
-        url,tmb = 'http://example.com/i/%s'%reurl,'http://example.com/t/%s'%reurl
-        return [url,tmb]
+        src = Luimge().send(file_name, self.ihost, self.form_vaule, url_mode, fake_url=True ).read()
+        reurl = findall('\"/([\d]+?).htm\"',src)[0]
+        ext = file_name.split('.')[-1].lower()
+        url,tmb = 'http://savepic.ru/%s.%s'%(reurl,ext),'http://savepic.ru/%sm.%s'%(reurl,ext)
+        return (url,tmb)
 
     def en(self):
-        u'Upload to exapmle.com'
+        u'Upload to savepic.ru'
         pass
 
     def ru(self):
-        u'Залить на example.com'
+        u'Залить на savepic.ru'
         pass
 
 
+'''
+(Request-Line)	POST /search.php HTTP/1.1
+Host	savepic.ru
+User-Agent	Mozilla/5.0 (X11; U; Linux i686; en-US; rv:1.9.0.2pre) Gecko/2008072703 Firefox/3.0.2pre (Swiftfox)
+Accept	text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8
+Accept-Language	en-us,en;q=0.5
+Accept-Encoding	gzip,deflate
+Accept-Charset	ISO-8859-1,utf-8;q=0.7,*;q=0.7
+Keep-Alive	300
+Proxy-Connection	keep-alive
+Referer	http://savepic.ru/
+Content-Type	multipart/form-data; boundary=---------------------------120199042317593872921145478277
+Content-Length	84531
 
+(MAX_FILE_SIZE','2097152'),
+file	filename="motivator387483.jpg" Content-Type: image/jpeg
+('note',''),
+('font1','comic_bold'),
+('font2','20')
+('orient','h'),
+('size2','800x600')
+('size1','1'),
+('rotate','00'),
+('flip','0'),
+('mini','300x225')
+('email',''),
+('subm2','Îòïðàâèòü')
+
+
+'''
 
 
 
 '''
 Example add Host
-#------------------------------------------------------
+
+#--------------------------------------------------------------------
 class Host_e_example:
     def __init__(self):
         self.ihost={\
@@ -344,8 +346,11 @@ class Host_e_example:
     def ru(self):
         u'Залить на example.com'
         pass
-'''
 
+
+#--------------------------------------------------------------------
+Old code.
+#--------------------------------------------------------------------
 def _host_avangard_foto_cod(send):
     import urllib2
     email='nanodesu@in-mail.ru'
@@ -424,6 +429,79 @@ def label(file, name):
     size=stat(file).st_size/1024
     title='%s %sx%s %s Kb' %(name,str(img.size[0]),str(img.size[1]),str(size) )
     return title
+
+class _Host_v_imagevenue:
+    'Не заливает png, только jpg'
+    def __init__(self):
+        self.ihost={\
+           'host':'www.imagevenue.com', \
+           'post':'/upload.php', \
+           'name':'userfile[]',\
+           'cookie':''\
+           }
+
+        self.form_vaule = [('Submit', ''),
+                ('action','1'),
+                ('imgcontent','contentnone'),
+                ]
+
+    def send(self, send):
+        file_name,label,url_mode=send[0],send[1],send[2]
+        reurl = Luimge().send(file_name, self.ihost, self.form_vaule,url_mode )
+        print reurl.read()
+        url,tmb = 'http://example.com/i/%s'%reurl,'http://example.com/t/%s'%reurl
+        return [url,tmb]
+
+    def en(self):
+        u'Upload to exapmle.com'
+        pass
+
+    def ru(self):
+        u'Залить на example.com'
+        pass
+
+
+class _Host_a_imageshost:
+    'Пока не работает'
+    def __init__(self):
+        self.ihost={\
+           'host':'imageshost.ru', \
+           'post':'/upload.php', \
+           'name':'userimg1',\
+           'cookie':'quality=95; pvs1=250; to_angle=0;'\
+           }
+
+        self.form_vaule = [
+                ('type','1'),('dnt','1'),
+                ('imgcontent','contentnone'),
+                ('to_size_w',''),
+                ('to_size_h',''),
+                ('to_angle','0'),
+                ('noedit','on'),
+                ('pvs1','250'), ('quality','95'),
+                ('is_pr_text',''),('pr_text',''),
+                ('text',''),
+                ('description',''),
+                ('rules','on'),
+                ('submit_button','Çàãðóçèòü'),
+                ]
+
+    def send(self, send):
+        file_name,label,url_mode=send[0],send[1],send[2]
+        reurl = Luimge().send(file_name, self.ihost, self.form_vaule,url_mode )
+        print reurl.getheaders(),reurl.read()
+        url,tmb = 'http://example.com/i/%s'%reurl,'http://example.com/t/%s'%reurl
+        return [url,tmb]
+
+    def en(self):
+        u'Upload to exapmle.com'
+        pass
+
+    def ru(self):
+        u'Залить на example.com'
+        pass
+#--------------------------------------------------------------------
+'''
 
 if __name__ == '__main__':
     pass

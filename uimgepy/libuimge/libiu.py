@@ -5,20 +5,22 @@ class Luimge:
     def __init__(self):
         self.USER_AGENT='Mozilla/5.0 (X11; U; Linux i686; en-US; rv:1.7.12) \
                         Gecko/20050922 Firefox/1.0.7 (Debian package 1.0.7-1)'
-    def send(self, filename, ihost, form_vaule, url_mode=False, fake_url=False):
+    def debug(self,function):
+        if self.debug:
+            print function
+        else: return None
+    def send(self, filename, ihost, form_vaule, url_mode=False, fake_url=False, debug=False):
         self.filename = filename
         self.ihost = ihost
         self.form_vaule = form_vaule
         self.url_mode = url_mode
         self.fake_url = fake_url
+        self.debug = debug
 
-        if not url_mode:
+        if not url_mode or fake_url:
             file_data = (ihost['name'], filename, self.get_file_contents(filename))
         elif url_mode and not fake_url:
             file_data = (ihost['name'], filename, None)
-        elif url_mode and fake_url:
-            from urllib import urlopen
-            file_data = (ihost['name'], filename.split('/')[-1], urlopen(filename).read())
 
         content_type, body = self.encode_multipart_formdata(file_data)
         header = httplib.HTTPConnection(ihost['host'])
@@ -29,8 +31,11 @@ class Luimge:
         header.putheader('Cookie',ihost['cookie'])
         header.putheader('User-Agent', self.USER_AGENT)
         header.endheaders()
+        if self.debug:
+            header.set_debuglevel(1)
         header.send(body)
-        #header.set_debuglevel(1)
+        if self.debug:
+            header.set_debuglevel(1)
         return header.getresponse()
 
     def encode_multipart_formdata(self, file_data):
@@ -46,7 +51,7 @@ class Luimge:
             L.append('')
             L.append(vaule)
         # add file
-        if not self.url_mode:
+        if not self.url_mode or self.fake_url:
             L.append('--' + BOUNDARY)
             L.append('Content-Disposition: form-data; name="%s"; filename="%s"' \
                     % (file_data[0], file_data[1]))
@@ -64,10 +69,15 @@ class Luimge:
         '''
         Получаем содержание файла.
         '''
-        f = open(file_name);
-        data = f.read()
-        f.close()
+        if not self.fake_url:
+            f = open(file_name,'r')
+            data = f.read()
+            f.close()
+        elif self.fake_url:
+            from urllib import urlopen
+            data = urlopen(file_name).read()
         return data
+
     def get_content_type(self,file_name):
         cont_type=mimetypes.guess_type(file_name)[0] or 'application/octet-stream'
         return cont_type
