@@ -7,12 +7,13 @@ from urllib import urlopen
 '''
 list image hosting http://gluek.info/free-images-hosting/
 TODO: add
-imageupper.com
 xmages.net
 '''
 
 
-class Host_m_smages:
+class Host_s_smages:
+    host='smages.com'
+    ''''ru':'Залить на smages.com'}'''
     def __init__(self):
         self.ihost={\
            'host':'smages.com', \
@@ -29,17 +30,12 @@ class Host_m_smages:
                     url_mode, fake_url=True )
         reurl = sub('(\/code\/)|(\.htm)','',src.getheaders()[4][1] )
         url,tmb = 'http://smages.com/i/%s'%reurl,'http://smages.com/t/%s'%reurl
-        return [url,tmb]
+        return (url,tmb)
 
-    def en(self):
-        u'Upload to smages.com'
-        pass
-
-    def ru(self):
-        u'Залить на smages.com'
-        pass
 
 class Host_i_ipicture:
+    host='ipicture.ru'
+    ''''ru':'Залить на ipicture.ru'}'''
     def __init__(self):
         self.ihost={\
            'host':'ipicture.ru', \
@@ -47,9 +43,6 @@ class Host_i_ipicture:
            'name':'userfile',\
            'cookie':''\
            }
-        #if label_name != None:
-        #    self.form_vaule.insert(-1,('string_small_on','on'))
-        #    self.form_vaule.insert(-1,('string_small', label(filename,label_name) ))
     def send(self, filename, url_mode):
         if not url_mode:
             self.form_vaule = [\
@@ -71,18 +64,13 @@ class Host_i_ipicture:
         reurl=reurl.getheaders()[-5]
         reurl=findall('(http://.*.html)',reurl[1])
         url=findall('\[IMG\](http://.*)\[\/IMG\]',urlopen(reurl[0]).read())
-        url=[url[0],url[2]]
+        url=(url[0],url[2])
         return url
 
-    def en(self):
-        u'Upload to ipicture.ru'
-        pass
-
-    def ru(self):
-        u'Залить на ipicture.ru'
-        pass
 
 class Host_r_radikal:
+    host='radikal.ru'
+    ''''ru':'Залить на radikal.ru'}'''
     def __init__(self):
         self.ihost={\
            'host':'www.radikal.ru', \
@@ -100,10 +88,6 @@ class Host_r_radikal:
         Luimge().send = Luimge()
 
     def send(self, filename,url_mode):
-        #if label_name != None:
-        #    self.form_vaule.insert(-1,('VE','yes'))
-        #    self.form_vaule.insert(-1,('V', label(filename,label_name) ))
-
         if url_mode:
             self.form_vaule.insert(1,('URLF',filename))
 
@@ -111,14 +95,9 @@ class Host_r_radikal:
         url=findall('\[IMG\](http://.*.radikal.ru.*)\[/IMG\]',url.read())
         return url
 
-    def en(self):
-        u'Upload to radikal.ru'
-        pass
-    def ru(self):
-        u'Залить на radikal.ru'
-        pass
 
-class Host_s_imageshack:
+class Host_k_imageshack:
+    host='imageshack.us'
     def __init__(self):
         self.ihost={\
            'host':'imageshack.us', \
@@ -138,16 +117,11 @@ class Host_s_imageshack:
         url=findall('value=\"(http://img.[\d]+?.imageshack.us/img[\d]+?/.*?/.*?)\"', src)
         tumburl=url[0].split('.')
         tumburl.insert(-1,'th')
-        urls=[url[0],'.'.join(tumburl)]
+        urls=(url[0],'.'.join(tumburl))
         return urls
-    def en(self):
-        u'Upload to imageshack.us'
-        pass
-    def ru(self):
-        u'Залить на imageshack.us'
-        pass
 
 class Host_t_tinypic:
+    host='tinypic.com'
     def __init__(self):
         self.ihost={\
            'host':'s3.tinypic.com', \
@@ -172,16 +146,11 @@ class Host_t_tinypic:
         tumburl=url[0].split('.')
         tumburl[-2] += '_th'
         tumburl = '.'.join(tumburl)
-        urls=[url[0],tumburl]
+        urls= (url[0],tumburl)
         return urls
-    def en(self):
-        u'Upload to tinypic.com'
-        pass
-    def ru(self):
-        u'Залить на tinypic.com'
-        pass
 
 class Host_u_funkyimg:
+    host='funkyimg.com'
     def __init__(self):
         self.ihost={\
                'host':'funkyimg.com', \
@@ -200,14 +169,9 @@ class Host_u_funkyimg:
                              url_mode=url_mode,fake_url=True).read())
         url.reverse()
         return url
-    def en(self):
-        u'Upload to funkyimg.com'
-        pass
-    def ru(self):
-        u'Залить на funkyimg.com'
-        pass
 
 class Host_p_picthost:
+    host='picthost.ru'
     def __init__(self):
         self.ihost={\
                'host':'picthost.ru', \
@@ -228,15 +192,11 @@ class Host_p_picthost:
         tumburl=url[0].split('.')
         tumburl[-2] += '_thumb'
         tumburl = '.'.join(tumburl)
-        return [t+url[0], t+tumburl]
-    def en(self):
-        u'Upload to picthost.ru'
-        pass
-    def ru(self):
-        u'Залить на picthost.ru'
-        pass
+        return (t+url[0], t+tumburl)
 
 class Host_v_savepic:
+    host='savepic.ru'
+
     def __init__(self):
         self.ihost={\
            'host':'savepic.ru', \
@@ -267,45 +227,7 @@ class Host_v_savepic:
         url,tmb = 'http://savepic.ru/%s.%s'%(reurl,ext),'http://savepic.ru/%sm.%s'%(reurl,ext)
         return (url,tmb)
 
-    def en(self):
-        u'Upload to savepic.ru'
-        pass
 
-    def ru(self):
-        u'Залить на savepic.ru'
-        pass
-
-
-'''
-(Request-Line)	POST /search.php HTTP/1.1
-Host	savepic.ru
-User-Agent	Mozilla/5.0 (X11; U; Linux i686; en-US; rv:1.9.0.2pre) Gecko/2008072703 Firefox/3.0.2pre (Swiftfox)
-Accept	text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8
-Accept-Language	en-us,en;q=0.5
-Accept-Encoding	gzip,deflate
-Accept-Charset	ISO-8859-1,utf-8;q=0.7,*;q=0.7
-Keep-Alive	300
-Proxy-Connection	keep-alive
-Referer	http://savepic.ru/
-Content-Type	multipart/form-data; boundary=---------------------------120199042317593872921145478277
-Content-Length	84531
-
-(MAX_FILE_SIZE','2097152'),
-file	filename="motivator387483.jpg" Content-Type: image/jpeg
-('note',''),
-('font1','comic_bold'),
-('font2','20')
-('orient','h'),
-('size2','800x600')
-('size1','1'),
-('rotate','00'),
-('flip','0'),
-('mini','300x225')
-('email',''),
-('subm2','Îòïðàâèòü')
-
-
-'''
 
 
 
@@ -314,6 +236,8 @@ Example add Host
 
 #--------------------------------------------------------------------
 class Host_e_example:
+    '{'en':'Upload to ',\
+    'ru':'Залить на '}'
     def __init__(self):
         self.ihost={\
            'host':'example.com', \
@@ -325,18 +249,11 @@ class Host_e_example:
         self.form_vaule = [('Submit', '')]
 
     def send(self, filename, url_mode):
-        filename,label,url_mode=send[0],send[1],send[2]
-        reurl = Luimge().send(filename, self.ihost, self.form_vaule, (None, url_mode) ).getheaders()
+        src = Luimge().send(filename, self.ihost, self.form_vaule, url_mode)
+        print src.read()
         url,tmb = 'http://example.com/i/%s'%reurl,'http://example.com/t/%s'%reurl
-        return [url,tmb]
+        return (url,tmb)
 
-    def en(self):
-        u'Upload to exapmle.com'
-        pass
-
-    def ru(self):
-        u'Залить на example.com'
-        pass
 
 
 #--------------------------------------------------------------------

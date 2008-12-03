@@ -3,15 +3,18 @@ import httplib, mimetypes
 #import sys,os
 class Luimge:
     def __init__(self):
-        self.USER_AGENT='Mozilla/5.0 (X11; U; Linux i686; en-US; rv:1.7.12) \
-                        Gecko/20050922 Firefox/1.0.7 (Debian package 1.0.7-1)'
+        self.USER_AGENT='Mozilla/5.0 (X11; U; Linux i686;\
+                en-US; rv:1.9.0.2pre) Gecko/2008072703 Firefox/3.0.2pre (Swiftfox)'
     def _debug(self,function):
         if self.debug:
             print function
         else: return None
     def send(self, filename, ihost, form_vaule,
-            url_mode=False, fake_url=False, debug=False):
-        self.filename = filename
+            url_mode=False, fake_url=False, fake_filename = False, debug=False):
+        if not fake_filename:
+            self.filename = filename
+        else:
+            self.filename = 'fakefilename.%s'%filename.split('.')[-1].lower()
         self.ihost = ihost
         self.form_vaule = form_vaule
         self.url_mode = url_mode
@@ -19,12 +22,10 @@ class Luimge:
         self.debug = debug
 
         if not url_mode or fake_url:
-#            file_data = (ihost['name'], filename, self.get_file_contents(filename))
             content_type, body = self.encode_multipart_formdata(ihost['name'], self.get_file_contents(filename))
         elif url_mode and not fake_url:
             content_type, body = self.encode_multipart_formdata(ihost['name'])
 
-        #content_type, body = self.encode_multipart_formdata(file_data)
         header = httplib.HTTPConnection(ihost['host'])
         header.putrequest('POST', ihost['post'])
         header.putheader('Content-Type', content_type)
@@ -45,7 +46,7 @@ class Luimge:
         '''
         Подготовка HTTP передачи
         '''
-        BOUNDARY = '-ApkawaA--'
+        BOUNDARY = '----------'
         # add additional form fields
         L = ['--%s\nContent-Disposition: form-data; name="%s"\n\n%s'%
                 ( BOUNDARY,key, vaule) for key,vaule in self.form_vaule]

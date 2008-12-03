@@ -4,6 +4,7 @@ from locale import getdefaultlocale
 class Lang:
 
     def __init__(self,LANG=getdefaultlocale()[0]):
+        self._LANG = LANG.split('_')[0]
         if 'ru' in LANG:
             self.lang = 0
             self.dict_lang = self.ru_RU()
@@ -28,10 +29,13 @@ class Lang:
             return 'Not found string. %i %s'%(typ,key)
 
     def get_help_module(self,host):
-        if self.lang:
-            return host.en.__doc__
+        string = eval(host.__doc__).get(self._LANG)
+        if string:
+            return unicode(string, 'utf-8')
         else:
-            return host.ru.__doc__
+            return unicode('%s %s %s'%(self.mes(),host,host.__doc__), 'utf-8')
+    def get_help_outprint(self, func):
+        return func.__doc__[self._LANG]
 
 
 
