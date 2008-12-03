@@ -31,7 +31,6 @@ from libuimge import imagehost
 import inspect
 import gettext
 
-VERSION = '0.06.1.2'
 
 i18l = gettext.translation('uimge','lang')
 _ = i18l.ugettext
@@ -79,6 +78,7 @@ class Input():
 
 
 class Main:
+    VERSION = '0.06.1.2'
     def __init__(self):
         self.Outprint = {
                 'default':{
