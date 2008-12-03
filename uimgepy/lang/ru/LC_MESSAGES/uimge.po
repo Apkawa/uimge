@@ -1,0 +1,65 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: uimge-0.6\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2008-12-03 17:15+0300\n"
+"PO-Revision-Date: \n"
+"Last-Translator: Apkawa <Apkawa@gmail.com>\n"
+"Language-Team: Apkawa <Apkawa@gmail.com>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Poedit-Language: Russian\n"
+"X-Poedit-Country: RUSSIAN FEDERATION\n"
+"X-Poedit-SourceCharset: utf-8\n"
+"X-Poedit-Basepath: .\n"
+"X-Poedit-KeywordsList: Host_\n"
+"X-Poedit-SearchPath-0: /home/apkawa/Code/uimgepy/src/uimgepy\n"
+
+#: /home/apkawa/Code/uimgepy/src/uimgepy/uimge.py:135
+#: /home/apkawa/Code/uimgepy/src/uimgepy/uimge.py:184
+#, python-format
+msgid "python %%prog [%s] picture"
+msgstr "python %%prog [%s] картинка"
+
+#: /home/apkawa/Code/uimgepy/src/uimgepy/uimge.py:144
+#: /home/apkawa/Code/uimgepy/src/uimgepy/uimge.py:187
+msgid "Major options"
+msgstr "Основные опции"
+
+#: /home/apkawa/Code/uimgepy/src/uimgepy/uimge.py:149
+#: /home/apkawa/Code/uimgepy/src/uimgepy/uimge.py:192
+msgid "Upload to"
+msgstr "Залить на"
+
+#: /home/apkawa/Code/uimgepy/src/uimgepy/uimge.py:153
+#: /home/apkawa/Code/uimgepy/src/uimgepy/uimge.py:196
+msgid "Additional options"
+msgstr "Дополнительные опции"
+
+#: /home/apkawa/Code/uimgepy/src/uimgepy/uimge.py:155
+#: /home/apkawa/Code/uimgepy/src/uimgepy/uimge.py:198
+msgid "--file"
+msgstr ""
+
+#: /home/apkawa/Code/uimgepy/src/uimgepy/uimge.py:157
+#: /home/apkawa/Code/uimgepy/src/uimgepy/uimge.py:200
+msgid "Output options"
+msgstr "Опции вывода"
+
+#: /home/apkawa/Code/uimgepy/src/uimgepy/uimge.py:175
+#: /home/apkawa/Code/uimgepy/src/uimgepy/uimge.py:214
+#, python-format
+msgid "No major option! Enter option [%s]..."
+msgstr "Нет основных опций! Введите опцию [%s]..."
+
+#: /home/apkawa/Code/uimgepy/src/uimgepy/uimge.py:206
+#: /home/apkawa/Code/uimgepy/src/uimgepy/uimge.py:209
+msgid "--"
+msgstr ""
+
+#~ msgid "English"
+#~ msgstr "Русский"
+#~ msgid "test"
+#~ msgstr "Тест"
+
