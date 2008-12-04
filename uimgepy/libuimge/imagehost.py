@@ -10,10 +10,22 @@ TODO: add
 xmages.net
 '''
 
+class Hosts:
+    def __init__(self):
+        import inspect
+        myglobals = dict()
+        myglobals.update(globals())
+        self.Imagehosts = {}
+        modules = [self.Imagehosts.update({key[len('Host_'):]:value})
+               for key, value in myglobals.items()
+               if key.startswith('Host_') ]
+    def get_hosts_list(self):
+        return self.Imagehosts
+    def get_host(self, key):
+        return self.Imagehosts.get(key)
 
 class Host_s_smages:
     host='smages.com'
-    ''''ru':'Залить на smages.com'}'''
     def __init__(self):
         self.ihost={\
            'host':'smages.com', \
@@ -35,7 +47,6 @@ class Host_s_smages:
 
 class Host_i_ipicture:
     host='ipicture.ru'
-    ''''ru':'Залить на ipicture.ru'}'''
     def __init__(self):
         self.ihost={\
            'host':'ipicture.ru', \
@@ -70,7 +81,6 @@ class Host_i_ipicture:
 
 class Host_r_radikal:
     host='radikal.ru'
-    ''''ru':'Залить на radikal.ru'}'''
     def __init__(self):
         self.ihost={\
            'host':'www.radikal.ru', \
@@ -412,4 +422,5 @@ class _Host_a_imageshost:
 '''
 
 if __name__ == '__main__':
+    a = Hosts()
     pass

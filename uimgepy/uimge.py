@@ -28,7 +28,6 @@ from sys import argv,exit,stderr,stdout
 from os import stat
 from re import sub,search
 from libuimge import imagehost
-import inspect
 import gettext
 
 
@@ -58,6 +57,7 @@ class Input():
         '''функция заливки изображений или урлов с изображениями'''
         host = self.host()
         for filename in self.filenames:
+            self.check(filename)
             yield host.send(filename,self.url_mode)
 
     def read_list(self,filelist):
@@ -80,6 +80,7 @@ class Input():
 class Main:
     VERSION = '0.06.1.2'
     def __init__(self):
+        self.Imagehosts = imagehost.Hosts().get_hosts_list()
         self.Outprint = {
                 'default':{
                     'out':'%(url_o)s\n',
@@ -98,13 +99,9 @@ class Main:
                     'help':_('Set user output #url# - original image, #tmb# - preview image   Sample: [URL=%url%][IMG]%tmb%[/IMG][/URL]')},
                 }
 
-        self.Imagehosts = {}
-        for (name,value) in inspect.getmembers(imagehost):
-            if name.startswith('Host_'):
-                self.Imagehosts[name[len('Host_'):]]= value
 
         self.key_hosts = '|'.join(['-'+i.split('_')[0] for i in self.Imagehosts.keys()])
-        self.version = 'uimgepy-'+VERSION
+        self.version = 'uimgepy-'+self.VERSION
         self.usage = _('python %%prog [%s] picture')%self.key_hosts
         pass
     def main(self, argv):
