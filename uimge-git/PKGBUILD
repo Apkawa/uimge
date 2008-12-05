@@ -33,11 +33,10 @@ build() {
   cp -r ${srcdir}/$_gitname ${srcdir}/$_gitname-build
   cd ${srcdir}/$_gitname-build/uimgepy
 
-#  mkdir -p $startdir/pkg/usr/lib/python2.6/site-packages/libuimge
-#  mkdir -p $startdir/pkg/usr/bin
 
   python setup.py build -f install -f --root $startdir/pkg --prefix=/usr || return 1
 
-  #install -Dm555 libuimge/* $startdir/pkg/usr/lib/python2.6/site-packages/libuimge
+
   install -Dm755 $startdir/pkg/usr/bin/uimge.py $startdir/pkg/usr/bin/uimge
+  rm $startdir/pkg/usr/bin/uimge.py
 }

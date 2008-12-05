@@ -9,6 +9,10 @@ setup(name='Uimge',
       url='http://code.google.com/p/uimge/',
       packages=['','libuimge',],
       license='GPLv3',
-      data_files=[('/usr/bin',['uimge.py']),],
+      data_files=[
+          ('/usr/bin',['uimge.py']),
+          ('/usr/share/locale/en/LC_MESSAGES',['locale/en/LC_MESSAGES/uimge.mo']),
+          ('/usr/share/locale/ru/LC_MESSAGES',['locale/ru/LC_MESSAGES/uimge.mo']),
+          ],
 
      )
