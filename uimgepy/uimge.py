@@ -78,9 +78,6 @@ class Input():
 class Main:
     VERSION = '0.06.1.2'
     def __init__(self):
-        i18l = gettext.translation('uimge')
-        _ = i18l.ugettext
-        global _
         self.Imagehosts = imagehost.Hosts().get_hosts_list()
         self.Outprint = {
                 'default':{
@@ -160,6 +157,8 @@ class Main:
             exit()
 
 if __name__ == '__main__':
+    i18l = gettext.translation('uimge')
+    _ = i18l.ugettext
     try:
         Main().main(argv[1:])
     except KeyboardInterrupt:
