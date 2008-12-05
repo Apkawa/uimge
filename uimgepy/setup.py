@@ -9,6 +9,6 @@ setup(name='Uimge',
       url='http://code.google.com/p/uimge/',
       packages=['','libuimge',],
       license='GPLv3',
-      data_files=[('/usr/bin/uimge',['uimge.py']),],
+      data_files=[('/usr/bin',['uimge.py']),],
 
      )
