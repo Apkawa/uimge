@@ -1,7 +1,7 @@
 # Contributor: Apkawa <apkawa@gmail.com>
 
 pkgname=uimge-git
-pkgver=20081130
+pkgver=20081206
 pkgrel=1
 pkgdesc="Python picture uploader to different imagehostings"
 arch=(any)
@@ -15,7 +15,7 @@ source=( )
 md5sums=( )
 
 _gitname="uimge"
-_gitroot="git://repo.or.cz/uimge.git"
+_gitroot="git://github.com/Apkawa/uimge.git"
 build() {
   cd ${srcdir}
   msg "Connecting to git.freedesktop.org GIT server...."
@@ -33,9 +33,11 @@ build() {
   cp -r ${srcdir}/$_gitname ${srcdir}/$_gitname-build
   cd ${srcdir}/$_gitname-build/uimgepy
 
-  mkdir -p $startdir/pkg/usr/lib/python2.6/site-packages/libuimge
-  mkdir -p $startdir/pkg/usr/bin
+#  mkdir -p $startdir/pkg/usr/lib/python2.6/site-packages/libuimge
+#  mkdir -p $startdir/pkg/usr/bin
 
-  install -Dm555 libuimge/* $startdir/pkg/usr/lib/python2.6/site-packages/libuimge
-  install -Dm755 uimge.py $startdir/pkg/usr/bin/uimge
+  python setup.py build -f install -f --root $startdir/pkg --prefix=/usr || return 1
+
+  #install -Dm555 libuimge/* $startdir/pkg/usr/lib/python2.6/site-packages/libuimge
+  install -Dm755 $startdir/pkg/usr/bin/uimge.py $startdir/pkg/usr/bin/uimge
 }
