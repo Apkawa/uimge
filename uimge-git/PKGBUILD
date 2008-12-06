@@ -2,15 +2,16 @@
 
 pkgname=uimge-git
 pkgver=20081206
-pkgrel=1
+pkgrel=5
 pkgdesc="Python picture uploader to different imagehostings"
-arch=(any)
+arch=('i686' 'x86_64')
 url="http://code.google.com/p/uimge/"
 license=('GPL')
-depends=(python)
-provides=(uimge)
-conflicts=(uimge)
-replaces=(uimge)
+makedepends=('git')
+depends=('python')
+provides=('uimge' 'uimge-svn')
+conflicts=('uimge' 'uimge-svn')
+replaces=('uimge' 'uimge-svn')
 source=( )
 md5sums=( )
 

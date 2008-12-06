@@ -120,7 +120,7 @@ class Host_k_imageshack:
                   ('uploadtype', 'on'),\
                   ('Submit', '"host it!"')\
                   ]
-    def send(self,send):
+    def send(self, filename, url_mode):
         src=Luimge().send(filename, self.ihost, self.form_vaule,
                 url_mode=url_mode, fake_url=True).read()
 
