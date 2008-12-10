@@ -103,12 +103,25 @@ class Main:
         self.key_hosts = '|'.join(['-'+i.split('_')[0] for i in self.Imagehosts.keys()])
         self.version = 'uimge-'+self.VERSION
         self.usage = _('python %%prog [%s] picture')%self.key_hosts
+
+        self.count = 0
+        self.max_count = 0
+        self.url = None
+
         pass
     def main(self, argv):
         self.parseopt(argv)
-        host =self.Imagehosts.get( self.opt.check )
+        host = self.Imagehosts.get( self.opt.check )
         urls = Input(self.opt, self.arguments, host).upload()
-        return [self.outprint(url, self.opt.out) for url in urls]
+        for url in urls:
+            stdout.write(self.outprint(url, self.opt.out))
+
+    def api(self, argv):
+        self.parseopt(argv)
+        host = self.Imagehosts.get( self.opt.check )
+        urls = Input(self.opt, self.arguments, host).upload()
+        for url in urls:
+            yield self.outprint(url, self.opt.out)
 
     def outprint(self, url, key):
         url_o = url[0]
@@ -159,7 +172,7 @@ class Main:
 
 if __name__ == '__main__':
     try:
-        print ''.join(Main().main(argv[1:]))
+        Main().main(argv[1:])
     except KeyboardInterrupt:
         pass
         #stderr.write(_('KeyboardInterrupt\n'))
