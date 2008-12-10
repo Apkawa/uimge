@@ -23,7 +23,7 @@ class Zenity:
         self.out()
 
     def sel_host(self):
-        select_host = '''echo "%s" | zenity --list --text="Test" --column="check" --column="lala" --column='None' --radiolist --hide-column='2' '''%( self.hosts)
+        select_host = '''echo "%s" | zenity --list --text="Select imagehosting" --column="*" --column="None" --column='Host' --radiolist --hide-column='2' '''%( self.hosts)
         self.key =  popen(select_host).read()[:-1]
     def sel_file(self):
         sel_file = '''zenity --file-selection --multiple '''
