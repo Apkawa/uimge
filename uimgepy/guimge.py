@@ -1,3 +1,4 @@
+#!/usr/bin/python
 from os import popen
 from libuimge import imagehost
 from sys import argv
