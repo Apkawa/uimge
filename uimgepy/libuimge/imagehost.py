@@ -194,11 +194,12 @@ class Host_p_picthost:
                       ('upload','"Upload Images"'),('uptype','file'),\
                       ]
     def send(self, filename, url_mode):
-        url=findall('\<a href=\"viewer.php\?file=(.*?)\"',\
-                Luimge().send(filename, self.ihost, self.form_vaule,\
-                    url_mode=url_mode, fake_url=True).read())
+        src = Luimge().send(filename, self.ihost, self.form_vaule,\
+                    url_mode=url_mode, fake_url=True)
+        url=findall('\<a href=\"viewer.php\?file=(.*?)\"',src.read() )
 
         t = 'http://picthost.ru/images/'
+        print url
         tumburl=url[0].split('.')
         tumburl[-2] += '_thumb'
         tumburl = '.'.join(tumburl)

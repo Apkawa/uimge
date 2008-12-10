@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 import httplib, mimetypes
-#import sys,os
+from sys import exit
+
 class Luimge:
     def __init__(self):
         self.USER_AGENT='Mozilla/5.0 (X11; U; Linux i686;\
@@ -40,7 +41,12 @@ class Luimge:
         header.send(body)
         if self.debug:
             header.set_debuglevel(1)
-        return header.getresponse()
+        response = header.getresponse()
+        status = response.status
+        if status in (200,302,):
+            return response
+        else:
+            exit('Server error %s'%status)
 
     def encode_multipart_formdata(self, ihost, filedata=None):
         '''

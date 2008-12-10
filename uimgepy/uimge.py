@@ -32,6 +32,8 @@ import gettext
 
 
 
+i18l = gettext.translation('uimge')
+_ = i18l.ugettext
 
 class Input():
     '''Usage:
@@ -76,7 +78,7 @@ class Input():
 
 
 class Main:
-    VERSION = '0.06.1.2'
+    VERSION = '0.06.1.4'
     def __init__(self):
         self.Imagehosts = imagehost.Hosts().get_hosts_list()
         self.Outprint = {
@@ -99,15 +101,14 @@ class Main:
 
 
         self.key_hosts = '|'.join(['-'+i.split('_')[0] for i in self.Imagehosts.keys()])
-        self.version = 'uimgepy-'+self.VERSION
+        self.version = 'uimge-'+self.VERSION
         self.usage = _('python %%prog [%s] picture')%self.key_hosts
         pass
     def main(self, argv):
         self.parseopt(argv)
         host =self.Imagehosts.get( self.opt.check )
         urls = Input(self.opt, self.arguments, host).upload()
-        for url in urls:
-            stdout.write( self.outprint(url, self.opt.out) )
+        return [self.outprint(url, self.opt.out) for url in urls]
 
     def outprint(self, url, key):
         url_o = url[0]
@@ -157,10 +158,8 @@ class Main:
             exit()
 
 if __name__ == '__main__':
-    i18l = gettext.translation('uimge')
-    _ = i18l.ugettext
     try:
-        Main().main(argv[1:])
+        print ''.join(Main().main(argv[1:]))
     except KeyboardInterrupt:
         pass
         #stderr.write(_('KeyboardInterrupt\n'))
