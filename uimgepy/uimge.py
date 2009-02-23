@@ -170,6 +170,10 @@ class Main:
             parser.print_help()
             exit()
 
+class Api(Main, Input):
+    def put_url_to_imagehost( url, imagehost = 'r' ):
+        pass
+
 if __name__ == '__main__':
     try:
         Main().main(argv[1:])
