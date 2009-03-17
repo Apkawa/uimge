@@ -32,7 +32,7 @@ import urllib2_file
 
 import gettext
 
-i18l = gettext.translation('uimge','../locale')
+i18l = gettext.translation('uimge','locale')
 _ = i18l.ugettext
 
 class Host:
