@@ -38,7 +38,10 @@ build() {
 
   python setup.py build -f install -f --root $startdir/pkg --prefix=/usr || return 1
 
-  #ln -sf /usr/lib/uimge/uimge.py $startdir/pkg/usr/bin/uimge
+  mkdir $startdir/pkg/usr/bin
+
+  ln -s /usr/lib/python2.6/site-packages/uimge/uimge.py $startdir/pkg/usr/bin/uimge
+  chmod +x /usr/lib/python2.6/site-packages/uimge/uimge.py
   #install -Dm755 $startdir/pkg/usr/bin/uimge.py $startdir/pkg/usr/bin/uimge
   #install -Dm755 $startdir/pkg/usr/bin/guimge.py $startdir/pkg/usr/bin/guimge
   #rm $startdir/pkg/usr/bin/uimge.py
