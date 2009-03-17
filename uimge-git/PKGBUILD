@@ -20,7 +20,7 @@ _gitname="uimge"
 _gitroot="git://github.com/Apkawa/uimge.git"
 build() {
   cd ${srcdir}
-  msg "Connecting to git.freedesktop.org GIT server...."
+  msg "Connecting to $_gitroot GIT server...."
 
   if [ -d ${srcdir}/$_gitname ] ; then
   cd $_gitname && git pull origin
