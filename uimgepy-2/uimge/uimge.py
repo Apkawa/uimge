@@ -123,7 +123,7 @@ class Uimge( Host ):
             rule = stage1.get('rule')
 
         if not rule:
-            stdout.write('%s\n'%self.img_url )
+            stdout.write('%s'%self.img_url )
             stdout.write( delim)
         else:
             stdout.write( rule%( {'img_url': self.img_url, 'img_thumb_url':self.img_thumb_url } ) )

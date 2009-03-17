@@ -2,14 +2,14 @@
 
 pkgname=uimge-git
 pkgver=20090317
-pkgrel=1
+pkgrel=3
 pkgdesc="Python picture uploader to different imagehostings"
 arch=('i686' 'x86_64')
 url="http://code.google.com/p/uimge/"
 license=('GPL')
 makedepends=('git')
 depends=('python')
-optdepends=('zenity: for work guimge')
+#optdepends=('zenity: for work guimge')
 provides=('uimge' 'uimge-svn')
 conflicts=('uimge' 'uimge-svn')
 replaces=('uimge' 'uimge-svn')
