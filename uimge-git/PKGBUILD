@@ -1,8 +1,8 @@
 # Contributor: Apkawa <apkawa@gmail.com>
 
 pkgname=uimge-git
-pkgver=20081210
-pkgrel=6
+pkgver=20090317
+pkgrel=1
 pkgdesc="Python picture uploader to different imagehostings"
 arch=('i686' 'x86_64')
 url="http://code.google.com/p/uimge/"
@@ -32,14 +32,14 @@ build() {
   msg "GIT checkout done or server timeout"
   msg "Starting make..."
 
-  cp -r ${srcdir}/$_gitname ${srcdir}/$_gitname-build
-  cd ${srcdir}/$_gitname-build/uimgepy
+  cp -r ${srcdir}/${_gitname} ${srcdir}/${_gitname}-build
+  cd ${srcdir}/${_gitname}-build/uimgepy-2
 
 
   python setup.py build -f install -f --root $startdir/pkg --prefix=/usr || return 1
 
-
-  install -Dm755 $startdir/pkg/usr/bin/uimge.py $startdir/pkg/usr/bin/uimge
-  install -Dm755 $startdir/pkg/usr/bin/guimge.py $startdir/pkg/usr/bin/guimge
-  rm $startdir/pkg/usr/bin/uimge.py
+  #ln -sf /usr/lib/uimge/uimge.py $startdir/pkg/usr/bin/uimge
+  #install -Dm755 $startdir/pkg/usr/bin/uimge.py $startdir/pkg/usr/bin/uimge
+  #install -Dm755 $startdir/pkg/usr/bin/guimge.py $startdir/pkg/usr/bin/guimge
+  #rm $startdir/pkg/usr/bin/uimge.py
 }

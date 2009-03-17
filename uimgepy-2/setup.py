@@ -1,8 +1,8 @@
 from distutils.core import setup
-from uimge import Main
+from uimge import Uimge
 
 setup(name='Uimge',
-      version=Main.VERSION,
+      version=Uimge.VERSION,
       description='uimge',
       author='Apkawa',
       author_email='apkawa@gmail.com',
