@@ -114,6 +114,7 @@ class Uimge( Host ):
         return False
 
     def outprint(self, rule_key = None , usr=None, delim='\n',):
+        rule = None
         if usr:
             rule = usr.replace('#url#','%(img_url)s').replace('#tmb#','%(img_thumb_url)s')
 
