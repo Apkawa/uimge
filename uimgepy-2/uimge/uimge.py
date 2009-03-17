@@ -20,9 +20,6 @@
 
     site project http://code.google.com/p/uimge/
 '''
-
-# напишем небольшой набросок структуры.
-#
 import os
 import urllib2
 import optparse
@@ -33,7 +30,7 @@ import urllib2_file
 
 import gettext
 
-i18l = gettext.translation('uimge','locale')
+i18l = gettext.translation('uimge')
 _ = i18l.ugettext
 
 class Host:
