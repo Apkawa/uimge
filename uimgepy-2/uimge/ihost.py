@@ -2,6 +2,7 @@
 from re import findall
 import urllib2
 import urllib2_file
+from os.path import split as path_split
 
 DEBUG =0
 
@@ -27,17 +28,20 @@ class Uploader:
     obj = None
     img_url = None
     img_thumb_url = None
+    filename = None
     def construct( self):
 
         D( self.__obj )
         self.__form = self.form.copy()
         if self.__obj.startswith('http://'):
+            self.filename = path_split(urllib2.urlparse.urlsplit(obj).path)[1]
             try:
                 self.__form.update( self.as_url( self.__obj ) )
             except AttributeError:
                 self.__form.update( self.as_file( ufopen( self.__obj ) ) )
 
         else:
+            self.filename = path_split( self.__obj )[1]
             self.__form.update( self.as_file( open( self.__obj ) ) )
         try:
             self.__form.update( self.thumb_size( str(self.__thumb_size) ) )
@@ -55,14 +59,17 @@ class Uploader:
         return self._open.headers.headers
     def get_filename(self):
         return self.__obj
-    def upload( self, __obj, __thumb_size = 200):
-        self.__obj = __obj
-        self.__thumb_size = __thumb_size
+    def upload( self, obj, thumb_size = 200):
+        self.__obj = obj
+        self.__thumb_size = thumb_size
         #self.preload()
         self.construct()
         self.send_post()
-        return self.postload()
+        self.postload()
+        return True
 
+    def get_filename( self ):
+        return self.filename
     def get_thumb_url( self ):
         return self.img_thumb_url
     def get_img_url( self):

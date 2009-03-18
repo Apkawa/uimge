@@ -30,11 +30,8 @@ import gettext
 _ = gettext.translation('uimge').ugettext
 
 class Uploaders:
-
     def __init__(self):
-        self.ihost = None
         self.Imagehosts = {}
-
         import inspect
         __myglobals = dict()
         __myglobals.update( inspect.getmembers(ihost) )
@@ -46,17 +43,55 @@ class Uploaders:
         return self.Imagehosts
     def get_host(self, key):
         return self.Imagehosts.get(key)
-    def set_host(self, key):
-        __ih = self.Imagehosts.get(key)
+
+class Uimge:
+    '''
+    API function for used as python module
+    Example:
+
+    >>> import uimge
+    >>> u = uimge.Uimge()
+    >>> u.hosts()
+    {'r_radikal': <class uimge.ihost.Host_r_radikal at 0x85d8bcc>, 'u_funkyimg': <class uimge.ihost.Host_u_funkyimg at 0x85e665c>, 'i_ipicture': <class uimge.ihost.Host_i_ipicture at 0x85e662c>, 'o_opicture': <class uimge.ihost.Host_o_opicture at 0x85d8a4c>, 'v_savepic': <class uimge.ihost.Host_v_savepic at 0x85e668c>, 's_smages': <class uimge.ihost.Host_s_smages at 0x854ea1c>}
+    >>> u.set_host('r_radikal')
+    <class uimge.ihost.Host_r_radikal at 0x85d8bcc>
+    >>> u.upload('/home/apkawa/pictres/1165711181819.jpg')
+    True
+    >>> u.img_url
+    'http://s55.radikal.ru/i149/0903/40/6a8b7f1143e8.jpg'
+
+    '''
+    def __init__(self):
+        self.ihost = None
+        self.img_url = None
+        self.img_thumb_url = None
+        self.filename = None
+        self.thumb_size = 200
+
+        self.uploaders = Uploaders()
+    def hosts(self):
+        return self.uploaders.get_hosts_list()
+    def set_host(self, key, thumb_size = None ):
+        if thumb_size and type(thumb_size) == int:
+            self.thumb_size = thumb_size
+        __ih = self.uploaders.get_host(key)
         if __ih:
             self.ihost = __ih
             return self.ihost
         else:
             return False
+    def upload(self, obj, thumb_size = None):
+        if thumb_size and type(thumb_size) == int:
+            _thumb_size = thumb_size
+        else:
+            _thumb_size = self.thumb_size
 
-#TODO: написать класс для апи 
-class Uimge:
-    pass
+        u = self.ihost()
+        u.upload( obj , _thumb_size )
+        self.img_url, self.img_thumb_url = u.get_urls()
+        self.filename = u.get_filename()
+        return True
+
 
 class UimgeApp:
     "Класс cli приложения"
@@ -64,13 +99,14 @@ class UimgeApp:
     VERSION = '0.06.1.4'
     
     def __init__(self):
-        self.__uploaders = Uploaders()
-        self.Imagehosts = self.__uploaders.Imagehosts
+        self._uimge = Uimge()
+        self.Imagehosts = self._uimge.hosts()
 
         self.key_hosts = '|'.join(['-'+i.split('_')[0] for i in self.Imagehosts.keys()])
         self.version = 'uimge-'+self.VERSION
         self.usage = _('python %%prog [%s] picture')%self.key_hosts
         self.objects = []
+
         self.outprint_rules = {
                 'bo_bb-orig': {
                     'rule': '[img]%(img_url)s[/img]',
@@ -86,7 +122,7 @@ class UimgeApp:
                     },
                 'ht_html-thumb' : {
                     'rule': '<a href="%(img_url)s"><img src="%(img_thumb_url)s" alt="" /></a>',
-                    'desc' : _('Output in bb code with a preview')
+                    'desc' : _('Output in html code with a preview')
                     },
                 'wi_wiki':{
                     'rule': '[[%(img_url)s|{{%(img_thumb_url)s}}]]',
@@ -97,12 +133,12 @@ class UimgeApp:
     def main(self, _argv):
 
         self.parseopt(_argv)
-        self.__ihost = self.__uploaders.set_host( self.opt.check )()
+        self._uimge.set_host( self.opt.check , self.opt.thumb_size)
         self.read_filelist( self.opt.filelist )
         self.objects.extend( self.arguments )
         #print self.objects
         for f in self.objects:
-            self.__ihost.upload( f )
+            self._uimge.upload( f )
             self.outprint( rule_key =  self.opt.out, usr = self.opt.out_usr, delim = self.opt.out_delim )
     def read_filelist(self, _list):
         if _list:
@@ -115,8 +151,9 @@ class UimgeApp:
 
     def outprint(self, rule_key = None , usr=None, delim='\n',):
         rule = None
-        img_url, img_thumb_url = self.__ihost.get_urls()
-        filename = ''
+        img_url = self._uimge.img_url
+        img_thumb_url = self._uimge.img_thumb_url
+        filename = self._uimge.filename
         delim = delim.replace( '\\n','\n')
 
         if usr:
@@ -137,8 +174,7 @@ class UimgeApp:
         parser = optparse.OptionParser(usage=self.usage, version=self.version)
         # Major options
         group_1 = optparse.OptionGroup(parser, _('Major options'))
-        _imagehosts_list = self.__uploaders.get_hosts_list()
-        for host in _imagehosts_list.keys():
+        for host in self.Imagehosts.keys():
             sp = host.split('_')
             group_1.add_option('-'+sp[0],'--'+sp[1],
                     action='store_const', const=host, dest='check',
@@ -148,6 +184,8 @@ class UimgeApp:
     
         # Additional options
         group_2 = optparse.OptionGroup(parser, _('Additional options'))
+        group_2.add_option('-t','--thumb_size', type="int", action='store', default=200, dest='thumb_size', \
+                           help=_('Set thumbinal size. Default = 200px'))
         group_2.add_option('-f','--file', action='store', default=None, dest='filelist', \
                            help=_('Upload image from list'))
         parser.add_option_group(group_2)
@@ -165,7 +203,7 @@ class UimgeApp:
                     help=_( 'Set user output #url# - original image, #tmb# - preview image   Sample: [URL=#url#][IMG]#tmb#[/IMG][/URL]' ))
         group_3.add_option('-d','--delimiter', action='store',
                     default='\n', dest='out_delim',
-                    help=_( 'Set delimiter. Default - "\\n"' ))
+                    help=_( 'Set delimiter. Default - "\\n"' ) )
 
         parser.add_option_group(group_3)
 
