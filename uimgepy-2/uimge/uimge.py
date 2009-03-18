@@ -209,7 +209,7 @@ class UimgeApp:
                         help= self.outprint_rules[key].get('desc') or key )
         group_3.add_option('--usr','--user-out', action='store',
                     default=None, dest='out_usr',
-                    help=_( 'Set user output #url# - original image, #tmb# - preview image   Sample: [URL=#url#][IMG]#tmb#[/IMG][/URL]' ))
+                    help=_( 'Set user output #url# - original image, #tmb# - preview image, #file# - filename   Sample: [URL=#url#][IMG]#tmb#[/IMG][/URL]' ))
         group_3.add_option('-d','--delimiter', action='store',
                     default='\n', dest='out_delim',
                     help=_( 'Set delimiter. Default - "\\n"' ) )
