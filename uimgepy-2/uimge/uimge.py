@@ -18,10 +18,9 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-    site project http://code.google.com/p/uimge/
+    site project http://wiki.github.com/Apkawa/uimge
 '''
 import os
-import urllib2
 import optparse
 from sys import argv,exit,stderr,stdout
 
@@ -55,7 +54,7 @@ class Uploaders:
         else:
             return False
 
-#TODO: написать класс для апи
+#TODO: написать класс для апи 
 class Uimge:
     pass
 
