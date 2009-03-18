@@ -156,8 +156,17 @@ class UimgeApp:
         filename = self._uimge.filename
         delim = delim.replace( '\\n','\n')
 
+        replace = (
+        ('#url#','%(img_url)s'),
+        ('#tmb#','%(img_thumb_url)s'),
+        ('#file#','%(filename)s'),
+        #TODO: Надо бы придумать потом что нить с этим...
+        #('#size#','%(size)s'),
+        #('#h#', '%(height)s'),
+        #('#w#', '%(width)s'),
+        )
         if usr:
-            rule = usr.replace('#url#','%(img_url)s').replace('#tmb#','%(img_thumb_url)s')
+            rule = usr.replace('#url#','%(img_url)s').replace('#tmb#','%(img_thumb_url)s').replace('#file#','%(filename)s')
 
         if rule_key:
             stage1 = self.outprint_rules.get( rule_key )
@@ -167,7 +176,7 @@ class UimgeApp:
             stdout.write('%s' % img_url )
             stdout.write( delim)
         else:
-            stdout.write( rule % ( {'img_url': img_url, 'img_thumb_url': img_thumb_url } ) )
+            stdout.write( rule % ( {'img_url': img_url, 'img_thumb_url': img_thumb_url ,'filename': filename } ) )
             stdout.write( delim)
 
     def parseopt(self, argv):
