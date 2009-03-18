@@ -23,10 +23,12 @@ def host_test( host, _file = '/home/apkawa/pictres/1201337718895.jpeg', _url = '
     h.upload(_file)
     h.upload(_url)
 
-
 class Uploader:
     obj = None
+    img_url = None
+    img_thumb_url = None
     def construct( self):
+
         D( self.__obj )
         self.__form = self.form.copy()
         if self.__obj.startswith('http://'):
@@ -61,7 +63,12 @@ class Uploader:
         self.send_post()
         return self.postload()
 
-        pass
+    def get_thumb_url( self ):
+        return self.img_thumb_url
+    def get_img_url( self):
+        return self.img_url
+    def get_urls( self):
+        return self.img_url, self.img_thumb_url
 
 class Host_r_radikal( Uploader ):
     host = 'radikal.ru'
@@ -79,10 +86,9 @@ class Host_r_radikal( Uploader ):
         return { 'VM': _thumb_size, }
     def postload(self):
         __url = findall('\[IMG\](http://.*.radikal.ru.*)\[/IMG\]', self.get_src() )
-        resp = { 'url': __url[0], 'thumb': __url[1] }
-        D( resp)
-        return resp
-
+        self.img_url = __url[0]
+        self.img_thumb_url =  __url[1]
+#        D( resp)
 
 class Host_o_opicture( Uploader ):
     host='opicture.ru'
@@ -99,10 +105,9 @@ class Host_o_opicture( Uploader ):
         return { 'previewwidth': _thumb_size, }
     def postload(self):
         __url = findall('showTags\(.*?\'([\d]{4}/[\d]{2}/[\d]{2}/[\d]{2}/[\d]{10,}\.[\w]{2,4})\'', self.get_src() )
-        resp = { 'url' : 'http://opicture.ru/upload/%s'% __url[0] ,
-                'thumb': 'http://opicture.ru/picture/thumbs/%s.jpg'% ''.join( __url[0].split('.')[:-1]) }
-        D( resp)
-        return resp
+        self.img_url = 'http://opicture.ru/upload/%s'% __url[0]
+        self.img_thumb_url = 'http://opicture.ru/picture/thumbs/%s.jpg'% ''.join( __url[0].split('.')[:-1])
+        #D( resp)
         
 class Host_s_smages( Uploader ):
     host='smages.com'
@@ -113,10 +118,8 @@ class Host_s_smages( Uploader ):
         return {'img': _file }
     def postload(self ):
         __url = findall('src=\'http://smages.com/i/(.*?).([\w]{2,4})\'', self.get_src() )[0]
-        resp = { 'url': 'http://smages.com/i/%s.%s'%(__url[0], __url[1]),
-                'thumb': 'http://smages.com/t/%s.jpg'%__url[0]}
-        D( resp)
-        return resp
+        self.img_url = 'http://smages.com/i/%s.%s'%(__url[0], __url[1])
+        self.img_thumb_url = 'http://smages.com/t/%s.jpg'%__url[0]
 
 class Host_i_ipicture(Uploader):
     host='ipicture.ru'
@@ -143,12 +146,8 @@ class Host_i_ipicture(Uploader):
     def postload(self):
         __reurl=findall('(http://.*.html)', self.get_headers()[-1])
         __url=findall('\[IMG\](http://.*)\[\/IMG\]',urllib2.urlopen(__reurl[0]).read())
-        resp = {'url': __url[0],'thumb': __url[2]}
-        D(resp)
-        return resp
-
-
-
+        self.img_url= __url[0]
+        self.img_thumb_url = __url[2]
 
 class Host_u_funkyimg( Uploader):
     host='funkyimg.com'
@@ -170,11 +169,10 @@ class Host_u_funkyimg( Uploader):
                 'url_1':_url,
                 }
     def postload(self):
-        url=findall('\[IMG\](http://funkyimg.com/.*)\[/IMG\]\[/URL\]', self.get_src() )
-        url.reverse()
-        resp = {'url':url[0], 'thumb':url[1] }
-        D(resp)
-        return resp
+        __url=findall('\[IMG\](http://funkyimg.com/.*)\[/IMG\]\[/URL\]', self.get_src() )
+        __url.reverse()
+        self.img_url= __url[0]
+        self.img_thumb_url = __url[1]
 
 
 class Host_v_savepic( Uploader):
@@ -199,11 +197,10 @@ class Host_v_savepic( Uploader):
         reurl = findall('\"/([\d]+?).htm\"', self.get_src() )[0]
         ext ='png'#self.get_filename().split('.')[-1].lower()
         url,tmb = 'http://savepic.ru/%s.%s'%(reurl,ext),'http://savepic.ru/%sm.%s'%(reurl,ext)
-        resp = {'url':url, 'thumb':tmb}
-        D(resp)
-        return resp
+        self.img_url = url
+        self.img_thumb_url = tmb
 
-
+#FAIL
 class __Host_t_tinypic( Uploader):
     '''
     сломана заливка. надо чинить
