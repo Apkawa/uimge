@@ -1,4 +1,24 @@
 # -*- coding: utf-8 -*-
+'''
+    This file is part of uimge.
+
+    Uploader picture to different imagehosting Copyright (C) 2008 apkawa@gmail.com
+
+    uimge is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+    site project http://wiki.github.com/Apkawa/uimge
+'''
 from re import findall
 import urllib2
 import urllib2_file
@@ -6,15 +26,21 @@ from os.path import split as path_split
 
 DEBUG =0
 
+#TODO: 
+# * add http://sharepix.ru/
+# * add http://avoreg.ru/
+# * add http://www.ii4.ru/
+# * add http://picbite.com/
+
 def debug( *_mes ):
     if DEBUG:
         for m in _mes:
             print m
 D = debug
 
-def ufopen( _url ):
+def ufopen( _url, _filename ):
     import tempfile
-    __t = tempfile.NamedTemporaryFile(suffix= urllib2.urlparse.urlsplit( _url).path.split('.')[-1])
+    __t = tempfile.NamedTemporaryFile(suffix= _filename )
     __t.write( urllib2.urlopen(_url).read() )
     __t.seek(0)
     return __t
@@ -22,7 +48,9 @@ def ufopen( _url ):
 def host_test( host, _file = '/home/apkawa/pictres/1201337718895.jpeg', _url = 'http://s41.radikal.ru/i092/0902/93/40b756930f38.png'):
     h = host()
     h.upload(_file)
+    print h.get_urls()
     h.upload(_url)
+    print h.get_urls()
 
 class Uploader:
     obj = None
@@ -34,11 +62,11 @@ class Uploader:
         D( self.__obj )
         self.__form = self.form.copy()
         if self.__obj.startswith('http://'):
-            self.filename = path_split(urllib2.urlparse.urlsplit(obj).path)[1]
+            self.filename = path_split(urllib2.urlparse.urlsplit(self.__obj).path)[1]
             try:
                 self.__form.update( self.as_url( self.__obj ) )
             except AttributeError:
-                self.__form.update( self.as_file( ufopen( self.__obj ) ) )
+                self.__form.update( self.as_file( ufopen( self.__obj, self.filename ) ) )
 
         else:
             self.filename = path_split( self.__obj )[1]
@@ -49,7 +77,13 @@ class Uploader:
             pass
     def send_post(self):
         D( self.action,self.__form )
-        self._open = urllib2.urlopen( self.action, self.__form )
+        __req = urllib2.Request( self.action, self.__form )
+        try:
+            __req.add_header('Cookie', self.cookie )
+        except AttributeError:
+            pass
+        self._open = urllib2.urlopen( __req )
+
     def get_src(self, debug = False):
         __src = self._open.read()
         if debug:
@@ -62,7 +96,10 @@ class Uploader:
     def upload( self, obj, thumb_size = 200):
         self.__obj = obj
         self.__thumb_size = thumb_size
-        #self.preload()
+        try:
+            self.preload()
+        except AttributeError:
+            pass
         self.construct()
         self.send_post()
         self.postload()
@@ -206,6 +243,50 @@ class Host_v_savepic( Uploader):
         url,tmb = 'http://savepic.ru/%s.%s'%(reurl,ext),'http://savepic.ru/%sm.%s'%(reurl,ext)
         self.img_url = url
         self.img_thumb_url = tmb
+
+class Host__upimg( Uploader ):
+    host='upimg.ru'
+    action = 'http://upimg.ru/u/'
+    form = {'Submit': 'Загрузить'}
+
+
+    def as_file(self, _file):
+        return {'img': _file }
+    def postload(self ):
+        __url = findall('value=\"http://upimg.ru/i/(.*?)\"', self.get_src() )
+        self.img_url = 'http://upimg.ru/i/%s'%(__url[0])
+        self.img_thumb_url = 'http://upimg.ru/p/%s'%__url[0]
+
+class Host__piccy( Uploader ):
+    host='piccy.info'
+    action = 'http://piccy.info/ru/upload/'
+    form = {'Submit': ''}
+    cookie = 'sid=460e033265472bd2a69b1e4cc1c50bf0'
+
+    def as_file(self, _file):
+        return {'file': _file }
+    def postload(self ):
+        _src =  self.get_src()
+        self.img_url = findall( 'value=\"(http://.*?)\"></td>', _src)[1]
+        self.img_thumb_url = findall('src=\"(http://.*?)\" alt=\"Piccy.info', _src)[0]
+
+class Host__picamatic( Uploader ):
+    host='picamatic.com'
+    action = 'http://www.picamatic.com/'
+    form = {
+            'MAX_FILE_SIZE'	:'3145728',
+            'upload':'',
+            'Submit': '',
+            }
+
+    def as_file(self, _file):
+        return {'Filedata': _file }
+    def preload(self):
+        self.action = findall('href="(http://www.picamatic.com/.*?)"', urllib2.urlopen('http://www.picamatic.com/?js&schedule').read() )[0]
+    def postload(self ):
+        _src =  self.get_src()
+        self.img_url = findall( '"js-url-direct">(http://www.picamatic.com/show/.*?)</textarea>', _src)[0]
+        self.img_thumb_url = findall('&gt;&lt;img src="(http://www.picamatic.com/show/.*?)" border="0"', _src)[0]
 
 #FAIL
 class __Host_t_tinypic( Uploader):

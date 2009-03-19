@@ -183,9 +183,10 @@ class UimgeApp:
         parser = optparse.OptionParser(usage=self.usage, version=self.version)
         # Major options
         group_1 = optparse.OptionGroup(parser, _('Major options'))
-        for host in self.Imagehosts.keys():
-            sp = host.split('_')
-            group_1.add_option('-'+sp[0],'--'+sp[1],
+        for host in sorted(self.Imagehosts.keys(), reverse=True):
+            short_key, long_key = host.split('_')
+                        
+            group_1.add_option('-'+short_key if short_key else '','--'+ long_key,
                     action='store_const', const=host, dest='check',
                     help='%s %s'%(_('Upload to'),self.Imagehosts[host].host))
 
@@ -194,7 +195,7 @@ class UimgeApp:
         # Additional options
         group_2 = optparse.OptionGroup(parser, _('Additional options'))
         group_2.add_option('-t','--thumb_size', type="int", action='store', default=200, dest='thumb_size', \
-                           help=_('Set thumbinal size. Default = 200px'))
+                           help=_('Set thumbinal size. Default = 200px (work only on radikal.ru) '))
         group_2.add_option('-f','--file', action='store', default=None, dest='filelist', \
                            help=_('Upload image from list'))
         parser.add_option_group(group_2)
