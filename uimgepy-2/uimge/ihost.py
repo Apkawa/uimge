@@ -38,18 +38,16 @@ DEBUG =0
 # * add http://www.ii4.ru/
 # * add http://picbite.com/
 #    * http://www.glowfoto.com/
-#    * http://up.li.ru/
-#    * http://www.imagehosting.us/
-#    * http://www.imgspot.com/
-#    * http://pics.net.ua/
 #
 # Epic FAIL
 #
+#    * http://up.li.ru/
 #    * http://www.imagevenue.com/
 #    * http://xs.to/
 #    * http://www.images-hosting.com/ - error php in page
 #    * http://paintedover.com/
 #    * http://imghost.extra.by/
+#    * http://www.imgspot.com/
 
 
 def debug( *_mes ):

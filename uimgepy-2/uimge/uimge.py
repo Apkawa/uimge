@@ -27,7 +27,10 @@ from sys import argv,exit,stderr,stdout
 import ihost
 import gettext
 
-_ = gettext.translation('uimge').ugettext
+try:
+    _ = gettext.translation('uimge').ugettext
+except IOError:
+    _ = gettext.translation('uimge', localedir = 'locale').ugettext
 
 class Uploaders:
     def __init__(self):
