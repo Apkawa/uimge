@@ -96,7 +96,7 @@ class Uimge:
 class UimgeApp:
     "Класс cli приложения"
 
-    VERSION = '0.06.1.4'
+    VERSION = '0.07.5.0'
     
     def __init__(self):
         self._uimge = Uimge()
