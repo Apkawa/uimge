@@ -27,10 +27,30 @@ from os.path import split as path_split
 DEBUG =0
 
 #TODO: 
+#  Будем делать
+#
+#    * http://xegami.com/
+#    * http://directupload.net/
+#
+#  Look
 # * add http://sharepix.ru/
 # * add http://avoreg.ru/
 # * add http://www.ii4.ru/
 # * add http://picbite.com/
+#    * http://www.glowfoto.com/
+#    * http://up.li.ru/
+#    * http://www.imagehosting.us/
+#    * http://www.imgspot.com/
+#    * http://pics.net.ua/
+#
+# Epic FAIL
+#
+#    * http://www.imagevenue.com/
+#    * http://xs.to/
+#    * http://www.images-hosting.com/ - error php in page
+#    * http://paintedover.com/
+#    * http://imghost.extra.by/
+
 
 def debug( *_mes ):
     if DEBUG:
@@ -139,6 +159,7 @@ class Host_o_opicture( Uploader ):
     action = 'http://opicture.ru:8080/upload/'
     form = {
                 'preview':	'on',
+                'information':'on',
                 'action':'upload',
                 }
     def as_file(self, _file):
