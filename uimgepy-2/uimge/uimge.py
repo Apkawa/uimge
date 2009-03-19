@@ -195,7 +195,7 @@ class UimgeApp:
         # Additional options
         group_2 = optparse.OptionGroup(parser, _('Additional options'))
         group_2.add_option('-t','--thumb_size', type="int", action='store', default=200, dest='thumb_size', \
-                           help=_('Set thumbinal size. Default = 200px (work only on radikal.ru) '))
+                           help=_('Set thumbinal size. Default = 200px (work only on radikal.ru and keep4u.ru) '))
         group_2.add_option('-f','--file', action='store', default=None, dest='filelist', \
                            help=_('Upload image from list'))
         parser.add_option_group(group_2)

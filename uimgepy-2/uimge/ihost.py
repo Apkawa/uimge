@@ -82,6 +82,7 @@ class Uploader:
             __req.add_header('Cookie', self.cookie )
         except AttributeError:
             pass
+        __req.add_header('Referer','http://%s/'%self.host )
         self._open = urllib2.urlopen( __req )
 
     def get_src(self, debug = False):
@@ -132,7 +133,6 @@ class Host_r_radikal( Uploader ):
         __url = findall('\[IMG\](http://.*.radikal.ru.*)\[/IMG\]', self.get_src() )
         self.img_url = __url[0]
         self.img_thumb_url =  __url[1]
-#        D( resp)
 
 class Host_o_opicture( Uploader ):
     host='opicture.ru'
@@ -288,6 +288,41 @@ class Host__picamatic( Uploader ):
         self.img_url = findall( '"js-url-direct">(http://www.picamatic.com/show/.*?)</textarea>', _src)[0]
         self.img_thumb_url = findall('&gt;&lt;img src="(http://www.picamatic.com/show/.*?)" border="0"', _src)[0]
 
+class Host__4picture( Uploader ):
+    host='4picture.ru'
+    action = 'http://4picture.ru/process.php'
+    form = {'tags1': 'uimge',
+            'picname1':'uimge',
+            'picrazdel1':'1',
+            'Submit': '',
+            }
+    def as_file(self, _file):
+        return {'image1': _file }
+    def postload(self ):
+        _src =  self.get_src()
+        _url = findall( '\[IMG\]http://www.4picture.ru/pictures/(.*?)\[/IMG\]\[/URL\]', _src)[0]
+        self.img_url = 'http://www.4picture.ru/pictures/%s'%_url
+        self.img_thumb_url = 'http://www.4picture.ru/thumbnails/%s'%_url 
+
+class Host__keep4u( Uploader ):
+    host='keep4u.ru'
+    action = 'http://keep4u.ru/'
+    form = {
+            'disable_effects':'on',
+            'preview':'yes',
+            'sbmt':'',
+            'Submit': '',
+            }
+    def as_file(self, _file):
+        return {'pfile': _file }
+    def thumb_size(self, _thumb_size):
+        return { 'preview_size': _thumb_size, }
+    def postload(self ):
+        _src =  self.get_src()
+        _url = findall( 'value=\"\[img\]http://keep4u.ru/imgs/b/(.*?)\[/img\]\"', _src)[0]
+        self.img_url = 'http://keep4u.ru/imgs/b/%s'%_url
+        self.img_thumb_url = 'http://keep4u.ru/imgs/s/%s'%_url 
+
 #FAIL
 class __Host_t_tinypic( Uploader):
     '''
@@ -335,7 +370,7 @@ class __Host_p_picthost( Uploader ):
         return resp
 
 #@host_test
-#Нестабильный хостинг. 
+#Нестабильный хостинг. закопать
 class __Host_k_imageshack(Uploader):
     host='imageshack.us'
     action = 'http://imageshack.us/'
@@ -358,36 +393,6 @@ class __Host_k_imageshack(Uploader):
         return resp
 
 if __name__ == '__main__':
-    #t = Host_r_radikal()
-    #t.as_file('/home/apkawa/pictres/1201337718895.jpeg')
-    #t.upload()
 
+    
     pass
-'''
-class Host_r_radikal:
-    host='radikal.ru'
-    action = 'http://www.radikal.ru/action.aspx'
-    form = {
-                'CP': 'yes',
-                'Submit': '',
-                'VM': '200',
-                'upload': 'yes'
-                }
-    def as_file(self, _file):
-        self.form.update( {'F': _file } )
-    def as_url(self, _url):
-        self.form.update( {'URLF': _url } )
-    def preload(self):
-        pass
-    def postload(self, __src ):
-        __url = findall('\[IMG\](http://.*.radikal.ru.*)\[/IMG\]', __src )
-        print __url
-        self.url = __url[0]
-        self.thumb = __url[1]
-
-    def upload( self ):
-        __u = Uploader()
-        __src = __u.default( self.action, self.form)
-        self.postload( __src )
-
-'''
