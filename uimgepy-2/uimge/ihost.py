@@ -31,6 +31,12 @@ DEBUG =0
 #
 #    * http://xegami.com/
 #    * http://directupload.net/
+#    * http://pixshock.net/
+#    * http://pikucha.ru/
+#    * http://www.pixhost.org/
+#    * http://www.picfront.org/
+#    * http://zikuka.ru/
+#    * http://www.hostmyjpg.com/
 #
 #  Look
 # * add http://sharepix.ru/
@@ -38,6 +44,7 @@ DEBUG =0
 # * add http://www.ii4.ru/
 # * add http://picbite.com/
 #    * http://www.glowfoto.com/
+# http://forum.ru-board.com/topic.cgi?forum=11&topic=4219#1
 #
 # Epic FAIL
 #
@@ -238,7 +245,7 @@ class Host_u_funkyimg( Uploader):
         self.img_thumb_url = __url[1]
 
 
-class Host_v_savepic( Uploader):
+class Host_sp_savepic( Uploader):
     host='savepic.ru'
     action = 'http://savepic.ru/search.php'
     form = {'MAX_FILE_SIZE': '2097152',
@@ -263,7 +270,7 @@ class Host_v_savepic( Uploader):
         self.img_url = url
         self.img_thumb_url = tmb
 
-class Host__upimg( Uploader ):
+class Host_up_upimg( Uploader ):
     host='upimg.ru'
     action = 'http://upimg.ru/u/'
     form = {'Submit': 'Загрузить'}
@@ -276,7 +283,7 @@ class Host__upimg( Uploader ):
         self.img_url = 'http://upimg.ru/i/%s'%(__url[0])
         self.img_thumb_url = 'http://upimg.ru/p/%s'%__url[0]
 
-class Host__piccy( Uploader ):
+class Host_pc_piccy( Uploader ):
     host='piccy.info'
     action = 'http://piccy.info/ru/upload/'
     form = {'Submit': ''}
@@ -289,7 +296,7 @@ class Host__piccy( Uploader ):
         self.img_url = findall( 'value=\"(http://.*?)\"></td>', _src)[1]
         self.img_thumb_url = findall('src=\"(http://.*?)\" alt=\"Piccy.info', _src)[0]
 
-class Host__picamatic( Uploader ):
+class Host_pm_picamatic( Uploader ):
     host='picamatic.com'
     action = 'http://www.picamatic.com/'
     form = {
@@ -307,7 +314,7 @@ class Host__picamatic( Uploader ):
         self.img_url = findall( '"js-url-direct">(http://www.picamatic.com/show/.*?)</textarea>', _src)[0]
         self.img_thumb_url = findall('&gt;&lt;img src="(http://www.picamatic.com/show/.*?)" border="0"', _src)[0]
 
-class Host__4picture( Uploader ):
+class Host_4p_4picture( Uploader ):
     host='4picture.ru'
     action = 'http://4picture.ru/process.php'
     form = {'tags1': 'uimge',
@@ -323,7 +330,7 @@ class Host__4picture( Uploader ):
         self.img_url = 'http://www.4picture.ru/pictures/%s'%_url
         self.img_thumb_url = 'http://www.4picture.ru/thumbnails/%s'%_url 
 
-class Host__keep4u( Uploader ):
+class Host_k4_keep4u( Uploader ):
     host='keep4u.ru'
     action = 'http://keep4u.ru/'
     form = {
@@ -342,30 +349,36 @@ class Host__keep4u( Uploader ):
         self.img_url = 'http://keep4u.ru/imgs/b/%s'%_url
         self.img_thumb_url = 'http://keep4u.ru/imgs/s/%s'%_url 
 
-#FAIL
-class __Host_t_tinypic( Uploader):
-    '''
-    сломана заливка. надо чинить
-    '''
+class Host_tp_tinypic( Uploader):
+    'to slooooy'
     host='tinypic.com'
-    action = 'http://s3.tinypic.com/upload.php'
-    form = {'MAX_FILE_SIZE': '200000000', 'Submit': '', 'action': 'upload'}
+    action = 'http://s5.tinypic.com/upload.php'
+    form = {
+            'domain_lang':'en',
+            'shareopt':'true',
+            'description':'uimge',
+            'file_type':'image',
+            'dimension':'1600',
+            'video-settings':'sd',
+            'addresses':'',
+
+            'MAX_FILE_SIZE': '500000000',
+            'Submit': '',
+            'action': 'upload'}
     def as_file(self, _file):
-        return {'name': _file} 
-    def as_url(self, _url):
-        return {'name': ufopen(_url)}
+        return {'the_file': _file} 
+    def preload(self):
+        __src = urllib2.urlopen( 'http://%s'%self.host).read()
+        __form = {
+            'UPLOAD_IDENTIFIER': findall('name="UPLOAD_IDENTIFIER" id="uid" value="(.*?)"',__src)[0] ,
+            'upk': findall( 'name="upk" value="(.*?)"', __src)[0],
+            }
+        self.form.update( __form)
     def postload(self):
         __src = self.get_src()
-        D(__src)
-        reurl=findall('http://tinypic.com/view.php\?pic=.*?\&s=[\d]', __src)
-
-        src=urlopen(reurl[0]).read()
-        url=findall('\[IMG\](http://i[\d]+?.tinypic.com/.*?)\[/IMG\]',src)
-        tumburl=url[0].split('.')
-        tumburl[-2] += '_th'
-        tumburl = '.'.join(tumburl)
-        urls= (url[0],tumburl)
-        return urls
+        key = dict( findall('name="(pic|ival|type)" value="(.*?)"', __src))
+        self.img_url = 'http://i%(ival)s.tinypic.com/%(pic)s%(type)s'%(key)
+        self.img_thumb_url = 'http://i%(ival)s.tinypic.com/%(pic)s_th%(type)s'%( key)
 
 #не работает заливка с урла.
 class __Host_p_picthost( Uploader ):
@@ -389,7 +402,7 @@ class __Host_p_picthost( Uploader ):
         return resp
 
 #@host_test
-#Нестабильный хостинг. закопать
+#Epic Fail
 class __Host_k_imageshack(Uploader):
     host='imageshack.us'
     action = 'http://imageshack.us/'
@@ -412,6 +425,4 @@ class __Host_k_imageshack(Uploader):
         return resp
 
 if __name__ == '__main__':
-
-    
     pass

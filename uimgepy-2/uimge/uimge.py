@@ -188,8 +188,12 @@ class UimgeApp:
         group_1 = optparse.OptionGroup(parser, _('Major options'))
         for host in sorted(self.Imagehosts.keys(), reverse=True):
             short_key, long_key = host.split('_')
+            if len( short_key) == 1:
+                short_key='-'+short_key
+            elif len( short_key ) >= 2:
+                short_key = '--'+short_key
                         
-            group_1.add_option('-'+short_key if short_key else '','--'+ long_key,
+            group_1.add_option(short_key,'--'+ long_key,
                     action='store_const', const=host, dest='check',
                     help='%s %s'%(_('Upload to'),self.Imagehosts[host].host))
 
