@@ -45,19 +45,21 @@ h1. Options.
 h1. Installation.
 # In Arch Linux:
 * use yaourt
+
    <code> yaourt -S uimge-git </code>
 
 * use AUR
 
   ## go to "Uimge in AUR":http://aur.archlinux.org/packages.php?ID=22033
   ## get PKGBUILD and save
-  ## enter command "makepkg"
+  ## <code>makepkg</code>
+  ## <code>pacman -U *.pkg.*</code>
 
 # In other Operating System
 * get tarball
 * unpack
 * go to catalog
-* python setup.py --help
+* <code>python setup.py --help</code>
 * enjoy!
 
 h1. License.
