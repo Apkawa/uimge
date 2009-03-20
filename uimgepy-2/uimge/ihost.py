@@ -36,7 +36,6 @@ DEBUG =0
 #    * http://www.pixhost.org/
 #    * http://www.picfront.org/
 #    * http://zikuka.ru/
-#    * http://www.hostmyjpg.com/
 #
 #  Look
 # * add http://sharepix.ru/
@@ -117,6 +116,8 @@ class Uploader:
         return __src
     def get_headers(self):
         return self._open.headers.headers
+    def get_geturl(self):
+        return self._open.geturl()
     def get_filename(self):
         return self.__obj
     def upload( self, obj, thumb_size = 200):
@@ -196,6 +197,8 @@ class Host_i_ipicture(Uploader):
     action = 'http://ipicture.ru/Upload/'
     form = {
             'thumb_resize_on':'on',
+            'ramka_off':'on',
+            'ignorAllCheck':'on',
             'submit':'"Загрузить"',
             }
     def as_file(self, _file):
@@ -379,6 +382,58 @@ class Host_tp_tinypic( Uploader):
         key = dict( findall('name="(pic|ival|type)" value="(.*?)"', __src))
         self.img_url = 'http://i%(ival)s.tinypic.com/%(pic)s%(type)s'%(key)
         self.img_thumb_url = 'http://i%(ival)s.tinypic.com/%(pic)s_th%(type)s'%( key)
+
+class Host_hm_hostmyjpg( Uploader ):
+    host='hostmyjpg.com'
+    action = 'http://www.hostmyjpg.com/'
+    form = {
+            'page':'upload',
+            'types':'0',
+            'upload':'Host Them !',
+            'Submit': '',
+            }
+
+    def as_file(self, _file):
+        return {'userfile0': _file }
+    def postload(self ):
+        _src = self.get_src()
+
+        __url = findall('\[IMG\]http://img.hostmyjpg.com/(.*?)\[/IMG\]',  _src )[0]
+        self.img_url = 'http://img.hostmyjpg.com/%s'%__url
+        self.img_thumb_url = 'http://www.hostmyjpg.com/thumbs/%s'%__url
+
+
+@host_test
+class Host_pu_pikucha( Uploader ):
+    host='pikucha.ru'
+    action = 'http://pikucha.ru/upload'
+    '''
+    MAX_FILE_SIZE	10485760
+image	filename="0000000000000editz[1600].png" Content-Type: image/png
+upload	ÐÐ°ÐºÐ°ÑÐ°ÑÑ
+album	on
+album_value	599
+album_name	ÐÐ¾Ð¹ Ð½Ð¾Ð²ÑÐ¹ Ð°Ð»ÑÐ±Ð¾Ð¼
+description	on
+description_value	uimge
+bmp2jpg	on
+    '''
+    form = {
+            'MAX_FILE_SIZE':'10485760',
+            'description':'on',
+            'description_value':'uimge',
+            'upload':'',
+            'Submit': '',
+            }
+
+    def as_file(self, _file):
+        return {'image': _file }
+    def postload(self ):
+        _src = self.get_src()
+        _url = findall('\[img\]http://pikucha.ru/([\d]{4,10})/thumbnail/(.*?)\[/img\]',_src)[0]
+        self.img_url = 'http://pikucha.ru/%s/%s'%_url
+        self.img_thumb_url = 'http://pikucha.ru/%s/thumbnail/%s'%_url
+
 
 #не работает заливка с урла.
 class __Host_p_picthost( Uploader ):
