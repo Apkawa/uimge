@@ -1,1 +1,84 @@
-Test
+h1. About.
+
+This program, named as uimge - batch uploader pictures to different imagehosting with the cli (command line interface).
+
+h1. Options.
+
+<pre>
+  --version             show program's version number and exit
+  -h, --help            show this help message and exit
+
+  Major options:
+    -v, --savepic       Upload to savepic.ru
+    -u, --funkyimg      Upload to funkyimg.com
+    -s, --smages        Upload to smages.com
+    -r, --radikal       Upload to radikal.ru
+    -o, --opicture      Upload to opicture.ru
+    -i, --ipicture      Upload to ipicture.ru
+    --upimg             Upload to upimg.ru
+    --piccy             Upload to piccy.info
+    --picamatic         Upload to picamatic.com
+    --keep4u            Upload to keep4u.ru
+    --4picture          Upload to 4picture.ru
+
+  Additional options:
+    -t THUMB_SIZE, --thumb_size=THUMB_SIZE
+                        Set thumbinal size. Default = 200px (work only on
+                        radikal.ru and keep4u.ru)
+    -f FILELIST, --file=FILELIST
+                        Upload image from list
+
+  Output options:
+    --bo, --bb-orig     Output in bb code in the original amount
+    --ho, --html-orig   Output in html code in the original amount
+    --wi, --wiki        Output in doku wiki format code with a preview
+    --bt, --bb-thumb    Output in bb code with a preview
+    --ht, --html-thumb  Output in html code with a preview
+    --usr=OUT_USR, --user-out=OUT_USR
+                        Set user output #url# - original image, #tmb# -
+                        preview image, #file# - filename   Sample:
+                        [URL=#url#][IMG]#tmb#[/IMG][/URL]
+    -d OUT_DELIM, --delimiter=OUT_DELIM
+                        Set delimiter. Default - "\n"
+</pre>
+
+h1. Installation.
+# In Arch Linux:
+* use yaourt
+   <code> yaourt -S uimge-git </code>
+
+* use AUR
+
+  ## go to "Uimge in AUR":http://aur.archlinux.org/packages.php?ID=22033
+  ## get PKGBUILD and save
+  ## enter command "makepkg"
+
+# In other Operating System
+* get tarball
+* unpack
+* go to catalog
+* python setup.py --help
+* enjoy!
+
+h1. License.
+
+<pre>
+    This project is part of uimge.
+
+    Uploader picture to different imagehosting Copyright (C) 2009 apkawa@gmail.com
+
+    uimge is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+    site project http://wiki.github.com/Apkawa/uimge
+</pre>
