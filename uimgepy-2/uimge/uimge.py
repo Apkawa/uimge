@@ -27,6 +27,10 @@ from sys import argv,exit,stderr,stdout
 import ihost
 import gettext
 
+try:
+    _ = gettext.translation('uimge').ugettext
+except IOError:
+    _ = gettext.translation('uimge', localedir = 'locale').ugettext
 
 class Uploaders:
     def __init__(self):
@@ -229,10 +233,6 @@ class UimgeApp:
 
 
 if __name__ == '__main__':
-    try:
-        _ = gettext.translation('uimge').ugettext
-    except IOError:
-        _ = gettext.translation('uimge', localedir = 'locale').ugettext
     u = UimgeApp()
     u.main(argv[1:])
     
