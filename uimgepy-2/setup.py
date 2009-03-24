@@ -1,9 +1,17 @@
 from distutils.core import setup
-from uimge import UimgeApp
+import uimge
+
+import sys
+
+_platform = sys.platform
+if _platform != 'win32':
+  _lang_path = '/usr/share/locale/%(lang)s/LC_MESSAGES'
+else:
+  _prefix = sys.prefix
+  _lang_path = _prefix+'\\share\\locale\\%(lang)s\\LC_MESSAGES'
 
 setup(name='Uimge',
-      #version='0.06.1.4',
-      version=UimgeApp.VERSION,
+      version = uimge.VERSION,
       description='uimge',
       author='Apkawa',
       author_email='apkawa@gmail.com',
@@ -11,8 +19,8 @@ setup(name='Uimge',
       packages=['uimge',],
       license='GPLv3',
       data_files=[
-          ('/usr/share/locale/en/LC_MESSAGES',['locale/en/LC_MESSAGES/uimge.mo']),
-          ('/usr/share/locale/ru/LC_MESSAGES',['locale/ru/LC_MESSAGES/uimge.mo']),
+          ( _lang_path%{'lang':'en'} ,['locale/en/LC_MESSAGES/uimge.mo']),
+          ( _lang_path%{'lang':'ru'},['locale/ru/LC_MESSAGES/uimge.mo']),
           ],
 
      )

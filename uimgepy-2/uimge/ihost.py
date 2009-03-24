@@ -24,7 +24,9 @@ import urllib2
 import urllib2_file
 from os.path import split as path_split
 
-DEBUG =0
+from sys import platform
+
+
 
 #TODO: 
 #  Будем делать
@@ -69,6 +71,15 @@ DEBUG =0
 # http://imgdb.ru/
 
 
+DEBUG =0
+
+if platform == "win32":
+    r_m = 'rb'
+    w_m = 'wb'
+else:
+    r_m = 'r'
+    w_m = 'w'
+
 def debug( *_mes ):
     if DEBUG:
         for m in _mes:
@@ -78,11 +89,11 @@ D = debug
 def ufopen( _url, _filename ):
     import tempfile
     __t = tempfile.NamedTemporaryFile(suffix= _filename )
-    __t.write( urllib2.urlopen(_url).read() )
+    __t.write( urllib2.urlopen(_url).read())
     __t.seek(0)
     return __t
 
-def host_test( host, _file = '/home/apkawa/pictres/1201337718895.jpeg', _url = 'http://s41.radikal.ru/i092/0902/93/40b756930f38.png'):
+def host_test( host, _file = '/home/apkawa/pictres/1201337718895.jpeg', _url = 'http://s41.radikal.ru/i092/0902/93/40b756930f38.png',):
     h = host()
     h.upload(_file)
     print h.get_urls()
@@ -107,11 +118,18 @@ class Uploader:
 
         else:
             self.filename = path_split( self.__obj )[1]
-            self.__form.update( self.as_file( open( self.__obj ) ) )
+
+        try:
+            self.__form.update( self.as_file( open( self.__obj, r_m ) ) )
+        except IOError:
+            return False
+
         try:
             self.__form.update( self.thumb_size( str(self.__thumb_size) ) )
         except AttributeError:
             pass
+
+        return True
     def send_post(self):
         D( self.action,self.__form )
         __req = urllib2.Request( self.action, self.__form )
@@ -140,10 +158,15 @@ class Uploader:
             self.preload()
         except AttributeError:
             pass
-        self.construct()
-        self.send_post()
-        self.postload()
-        return True
+
+        try:
+            self.construct()
+            self.send_post()
+            self.postload()
+            return True
+        except IndexError, NameError:
+            print "File %(obj)s not uploading"%{'obj': self.__obj}
+            return False
 
     def get_filename( self ):
         return self.filename

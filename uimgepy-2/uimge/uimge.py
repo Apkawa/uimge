@@ -27,10 +27,7 @@ from sys import argv,exit,stderr,stdout
 import ihost
 import gettext
 
-try:
-    _ = gettext.translation('uimge').ugettext
-except IOError:
-    _ = gettext.translation('uimge', localedir = 'locale').ugettext
+VERSION = '0.07.5.3'
 
 class Uploaders:
     def __init__(self):
@@ -89,8 +86,12 @@ class Uimge:
         else:
             _thumb_size = self.thumb_size
 
+        if not self.ihost:
+#Not select host
+            return False
         u = self.ihost()
-        u.upload( obj , _thumb_size )
+        if not u.upload( obj , _thumb_size ):
+            return False
         self.img_url, self.img_thumb_url = u.get_urls()
         self.filename = u.get_filename()
         return True
@@ -99,14 +100,13 @@ class Uimge:
 class UimgeApp:
     "Класс cli приложения"
 
-    VERSION = '0.07.5.3'
     
     def __init__(self):
         self._uimge = Uimge()
         self.Imagehosts = self._uimge.hosts()
 
         self.key_hosts = '|'.join(['-'+i.split('_')[0] for i in self.Imagehosts.keys()])
-        self.version = 'uimge-'+self.VERSION
+        self.version = 'uimge-'+VERSION
         self.usage = _('python %%prog [%s] picture')%self.key_hosts
         self.objects = []
 
@@ -233,6 +233,11 @@ class UimgeApp:
 
 
 if __name__ == '__main__':
+    try:
+        gettext.install('uimge',unicode=True)
+    except IOError:
+        gettext.install('uimge', localedir = 'locale',unicode=True)
+
     u = UimgeApp()
     u.main(argv[1:])
     

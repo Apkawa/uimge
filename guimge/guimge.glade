@@ -130,10 +130,9 @@
                   <widget class="GtkHBox" id="hbox1">
                     <property name="visible">True</property>
                     <child>
-                      <widget class="GtkComboBox" id="SelectHost1">
+                      <widget class="GtkComboBox" id="SelectHost">
                         <property name="visible">True</property>
-                        <property name="items" translatable="yes">test
-test2</property>
+                        <property name="items" translatable="yes"></property>
                         <signal name="changed" handler="SelectHost_changed_cb"/>
                       </widget>
                       <packing>
@@ -142,12 +141,13 @@ test2</property>
                       </packing>
                     </child>
                     <child>
-                      <widget class="GtkButton" id="UploadButton1">
-                        <property name="label" translatable="yes">Upload</property>
+                      <widget class="GtkButton" id="UploadButton">
+                        <property name="label" translatable="yes">gtk-connect</property>
                         <property name="visible">True</property>
                         <property name="can_focus">True</property>
                         <property name="receives_default">True</property>
                         <property name="use_underline">True</property>
+                        <property name="use_stock">True</property>
                         <property name="image_position">right</property>
                         <signal name="clicked" handler="UploadButton_clicked_cb"/>
                       </widget>
@@ -163,7 +163,7 @@ test2</property>
               </widget>
             </child>
             <child>
-              <widget class="GtkLabel" id="Sel_hosting_label1">
+              <widget class="GtkLabel" id="Sel_hosting_label">
                 <property name="visible">True</property>
                 <property name="ypad">4</property>
                 <property name="label" translatable="yes">&lt;b&gt;Select hosting and press "Upload"&lt;/b&gt;</property>
@@ -257,7 +257,7 @@ test2</property>
                             <property name="left_padding">10</property>
                             <property name="right_padding">10</property>
                             <child>
-                              <widget class="GtkTextView" id="ViewResultUrl1">
+                              <widget class="GtkTextView" id="ViewResultUrl">
                                 <property name="visible">True</property>
                                 <property name="can_focus">True</property>
                                 <property name="editable">False</property>

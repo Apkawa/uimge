@@ -18,7 +18,7 @@ class gUimge:
         __hosts = self.uimge.hosts()
         self.hosts =dict( [(host.host,key) for key, host in __hosts.items()] )
         
-        _xml = '/home/apkawa/Code/test/guimge-2.glade'
+        _xml = 'guimge.glade'
         self.windowname = "gUimge"
         self.WidgetsTree = gtk.glade.XML( _xml)
         # Словарик, задающий связи событий с функциями-обработчиками
@@ -39,17 +39,18 @@ class gUimge:
 
 
         self.File_or_URL = self.WidgetsTree.get_widget("File_or_URL")
+
         #Устанавливаем выпадающий список выбора хостингов
         self.SelectHost = self.WidgetsTree.get_widget("SelectHost")
-        list_store = gtk.ListStore(str)
-        self.SelectHost.set_model( list_store )
-        cell = gtk.CellRendererText()
-        #self.SelectHost.pack_start(cell, True)
-        self.SelectHost.add_attribute(cell, 'text', 0)
 
         for ls in self.hosts.keys():
             self.SelectHost.append_text( ls )
-        self.SelectHost.set_active( self.hosts.values().index('r_radikal') )
+        _active = self.hosts.values().index('r_radikal')
+        self.SelectHost.set_active( _active  )
+
+        upload_button = self.WidgetsTree.get_widget("UploadButton")
+        print upload_button.get_children()[0].get_children()[0].get_children()[0].set_label("Upload")
+        #upload_button.set_label("Upload")
 
 
     def FileOpen(self, widget):
@@ -57,6 +58,20 @@ class gUimge:
         chooser = gtk.FileChooserDialog(title=None,action=gtk.FILE_CHOOSER_ACTION_OPEN,
                                   buttons=(gtk.STOCK_CANCEL,gtk.RESPONSE_CANCEL,gtk.STOCK_OPEN,gtk.RESPONSE_OK))
 #http://www.pygtk.org/pygtk2tutorial/sec-FileChoosers.html
+#TODO: adding filter
+
+        _filter = gtk.FileFilter()
+        _filter.set_name("Images")
+        _filter.add_mime_type("image/png")
+        _filter.add_mime_type("image/jpeg")
+        _filter.add_mime_type("image/gif")
+        _filter.add_pattern("*.png")
+        _filter.add_pattern("*.jpg")
+        _filter.add_pattern("*.gif")
+        _filter.add_pattern("*.tif")
+        _filter.add_pattern("*.bmp")
+        chooser.add_filter(_filter)
+
         resp = chooser.run()
         if resp == gtk.RESPONSE_OK:
             __file =  chooser.get_filename()
@@ -66,36 +81,34 @@ class gUimge:
             print 'Closed, no files selected'
         chooser.destroy()
 
-        '''
-        FileChooserDialog = self.WidgetsTree.get_widget("FileChooserDialog")
-        resp2 = FileChooserDialog.run()
-        
-        if resp2 == gtk.RESPONSE_OK:
-            print FileChooserDialog.get_filename(), 'selected'
-        elif resp2 == gtk.RESPONSE_CANCEL:
-            print 'Closed, no files selected'
-        FileChooserDialog.destroy()
-        '''
     def SelectHost_changed_cb(self, widget):
         print "sel host"
         print widget.get_active(),widget.get_active_text(), widget.name
         self.uimge.set_host( self.hosts.get(widget.get_active_text()) )
 
     def UploadButton_clicked_cb(self, widget):
-        print "Upload!"
         obj = self.File_or_URL.get_text()
         if obj:
+            print "Upload!"
             if self.uimge.upload( obj ):
                 self.result = self.uimge.img_url
                 textbuffer = gtk.TextBuffer()
                 textbuffer.set_text( self.result )
                 self.ViewResultUrl = self.WidgetsTree.get_widget("ViewResultUrl")
-                self.ViewResultUrl.set_buffer(textbuffer)
+                self.ViewResultUrl.set_buffer( textbuffer )
     def Clipboard_clicked_cb(self, widget):
         print widget
         _clip = gtk.Clipboard()
         _clip.clear()
         _clip.set_text( self.result )
+
+    def close_app(self, widget):
+        gtk.main_quit()
+
+if __name__ == "__main__":
+    app = gUimge()
+    gtk.main()
+
     '''
     def text_operation(self,widget):
         "Функция, которая перебрасывает текст туда-сюда"
@@ -116,13 +129,3 @@ class gUimge:
         source_text_buffer.set_text('')
 
     '''
-    def test(self, widget):
-
-        pass
-    def close_app(self, widget):
-        gtk.main_quit()
-
-if __name__ == "__main__":
-    app = gUimge()
-    gtk.main()
-
