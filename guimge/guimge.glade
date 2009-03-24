@@ -148,7 +148,6 @@
                         <property name="receives_default">True</property>
                         <property name="use_underline">True</property>
                         <property name="use_stock">True</property>
-                        <property name="image_position">right</property>
                         <signal name="clicked" handler="UploadButton_clicked_cb"/>
                       </widget>
                       <packing>
@@ -209,7 +208,6 @@
                         <child>
                           <widget class="GtkButton" id="ReloadOut1">
                             <property name="label" translatable="yes">gtk-refresh</property>
-                            <property name="visible">True</property>
                             <property name="sensitive">False</property>
                             <property name="can_focus">True</property>
                             <property name="receives_default">True</property>
@@ -258,9 +256,14 @@
                             <property name="right_padding">10</property>
                             <child>
                               <widget class="GtkTextView" id="ViewResultUrl">
+                                <property name="height_request">40</property>
                                 <property name="visible">True</property>
                                 <property name="can_focus">True</property>
+                                <property name="tooltip" translatable="yes">Nya!</property>
                                 <property name="editable">False</property>
+                                <property name="left_margin">5</property>
+                                <property name="right_margin">5</property>
+                                <property name="cursor_visible">False</property>
                               </widget>
                             </child>
                           </widget>
@@ -336,7 +339,6 @@
               <widget class="GtkButton" id="About">
                 <property name="label" translatable="yes">gtk-about</property>
                 <property name="visible">True</property>
-                <property name="sensitive">False</property>
                 <property name="can_focus">True</property>
                 <property name="receives_default">True</property>
                 <property name="use_stock">True</property>
@@ -408,11 +410,14 @@
   </widget>
   <widget class="GtkAboutDialog" id="About">
     <property name="border_width">5</property>
-    <property name="type">popup</property>
     <property name="resizable">False</property>
     <property name="modal">True</property>
     <property name="window_position">center-on-parent</property>
+    <property name="destroy_with_parent">True</property>
     <property name="type_hint">normal</property>
+    <property name="skip_taskbar_hint">True</property>
+    <property name="skip_pager_hint">True</property>
+    <property name="transient_for">gUimge</property>
     <property name="program_name">gUimge</property>
     <property name="version">0.0.02</property>
     <property name="copyright" translatable="yes">Copyright &#xA9; 2007-2009 Apkawa Inc.</property>

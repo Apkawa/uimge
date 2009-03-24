@@ -28,6 +28,7 @@ class gUimge:
                 'UploadButton_clicked_cb': self.UploadButton_clicked_cb,
                 'SelectHost_changed_cb': self.SelectHost_changed_cb,
                 'Clipboard_clicked_cb': self.Clipboard_clicked_cb,
+                'About_clicked_cb':self.About_clicked_cb,
                 'Exit_clicked_cb': gtk.main_quit,
                 }
         # Магическая команда, соединяющая сигналы с обработчиками
@@ -49,7 +50,7 @@ class gUimge:
         self.SelectHost.set_active( _active  )
 
         upload_button = self.WidgetsTree.get_widget("UploadButton")
-        print upload_button.get_children()[0].get_children()[0].get_children()[0].set_label("Upload")
+        print upload_button.get_children()[0].get_children()[0].get_children()[1].set_label("Upload")
         #upload_button.set_label("Upload")
 
 
@@ -71,10 +72,12 @@ class gUimge:
         _filter.add_pattern("*.tif")
         _filter.add_pattern("*.bmp")
         chooser.add_filter(_filter)
+        #chooser.set_select_multiple(True)
 
         resp = chooser.run()
         if resp == gtk.RESPONSE_OK:
             __file =  chooser.get_filename()
+            print __file
             self.File_or_URL.set_text(__file)
 
         elif resp == gtk.RESPONSE_CANCEL:
@@ -101,6 +104,10 @@ class gUimge:
         _clip = gtk.Clipboard()
         _clip.clear()
         _clip.set_text( self.result )
+    def About_clicked_cb(self, widget):
+        about = self.WidgetsTree.get_widget('About')
+        about.run()
+        about.hide()
 
     def close_app(self, widget):
         gtk.main_quit()

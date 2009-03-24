@@ -29,6 +29,11 @@ import gettext
 
 VERSION = '0.07.5.3'
 
+try:
+    gettext.install('uimge',unicode=True)
+except IOError:
+    gettext.install('uimge', localedir = 'locale',unicode=True)
+
 class Uploaders:
     def __init__(self):
         self.Imagehosts = {}
@@ -43,6 +48,62 @@ class Uploaders:
         return self.Imagehosts
     def get_host(self, key):
         return self.Imagehosts.get(key)
+
+class Outprint:
+    def __init__(self):
+        self.outprint_rules = {
+                'bo_bb-orig': {
+                    'rule': '[img]%(img_url)s[/img]',
+                    'desc' : _('Output in bb code in the original amount')
+                    },
+                'bt_bb-thumb' : {
+                    'rule': '[url=%(img_url)s][img]%(img_thumb_url)s[/img][/url]',
+                    'desc' : _('Output in bb code with a preview')
+                    },
+                'ho_html-orig' : {
+                    'rule': '<img src="%(img_url)s" alt="" />',
+                    'desc' : _('Output in html code in the original amount')
+                    },
+                'ht_html-thumb' : {
+                    'rule': '<a href="%(img_url)s"><img src="%(img_thumb_url)s" alt="" /></a>',
+                    'desc' : _('Output in html code with a preview')
+                    },
+                'wi_wiki':{
+                    'rule': '[[%(img_url)s|{{%(img_thumb_url)s}}]]',
+                    'desc' : _('Output in doku wiki format code with a preview')
+                    },
+                
+                }
+        self.rule = None
+        pass
+    def set_rules(self, key=None, usr=None):
+        if key:
+            self.rule = self.outprint_rules.get(key)
+            if not self.rule:
+                return False
+            else:
+                self.rule = self.rule.get('rule')
+                return True
+        elif usr:
+            replace = (
+            ('#url#','%(img_url)s'),
+            ('#tmb#','%(img_thumb_url)s'),
+            ('#file#','%(filename)s'),
+            #TODO: Надо бы придумать потом что нить с этим...
+            #('#size#','%(size)s'),
+            #('#h#', '%(height)s'),
+            #('#w#', '%(width)s'),
+            )
+            self.rule = usr.replace('#url#','%(img_url)s').replace('#tmb#','%(img_thumb_url)s').replace('#file#','%(filename)s')
+            return True
+        else:
+            return None
+
+    def get_out(self, img_url='', img_thumb_url='', filename=''):
+        if not self.rule:
+            return '%s'%img_url
+        else:
+            return self.rule%({'img_url': img_url, 'img_thumb_url': img_thumb_url ,'filename': filename })
 
 class Uimge:
     '''
@@ -102,6 +163,8 @@ class UimgeApp:
 
     
     def __init__(self):
+        self.out = Outprint()
+        self.outprint_rules = self.out.outprint_rules
         self._uimge = Uimge()
         self.Imagehosts = self._uimge.hosts()
 
@@ -110,39 +173,17 @@ class UimgeApp:
         self.usage = _('python %%prog [%s] picture')%self.key_hosts
         self.objects = []
 
-        self.outprint_rules = {
-                'bo_bb-orig': {
-                    'rule': '[img]%(img_url)s[/img]',
-                    'desc' : _('Output in bb code in the original amount')
-                    },
-                'bt_bb-thumb' : {
-                    'rule': '[url=%(img_url)s][img]%(img_thumb_url)s[/img][/url]',
-                    'desc' : _('Output in bb code with a preview')
-                    },
-                'ho_html-orig' : {
-                    'rule': '<img src="%(img_url)s" alt="" />',
-                    'desc' : _('Output in html code in the original amount')
-                    },
-                'ht_html-thumb' : {
-                    'rule': '<a href="%(img_url)s"><img src="%(img_thumb_url)s" alt="" /></a>',
-                    'desc' : _('Output in html code with a preview')
-                    },
-                'wi_wiki':{
-                    'rule': '[[%(img_url)s|{{%(img_thumb_url)s}}]]',
-                    'desc' : _('Output in doku wiki format code with a preview')
-                    },
-                
-                }
     def main(self, _argv):
 
         self.parseopt(_argv)
         self._uimge.set_host( self.opt.check , self.opt.thumb_size)
         self.read_filelist( self.opt.filelist )
         self.objects.extend( self.arguments )
+        self.out.set_rules( key=self.opt.out, usr=self.opt.out_usr )
         #print self.objects
         for f in self.objects:
             self._uimge.upload( f )
-            self.outprint( rule_key =  self.opt.out, usr = self.opt.out_usr, delim = self.opt.out_delim )
+            self.outprint( delim = self.opt.out_delim )
     def read_filelist(self, _list):
         if _list:
             #print _list
@@ -152,35 +193,14 @@ class UimgeApp:
             return True
         return False
 
-    def outprint(self, rule_key = None , usr=None, delim='\n',):
-        rule = None
+    def outprint(self, delim='\n',):
         img_url = self._uimge.img_url
         img_thumb_url = self._uimge.img_thumb_url
         filename = self._uimge.filename
         delim = delim.replace( '\\n','\n')
-
-        replace = (
-        ('#url#','%(img_url)s'),
-        ('#tmb#','%(img_thumb_url)s'),
-        ('#file#','%(filename)s'),
-        #TODO: Надо бы придумать потом что нить с этим...
-        #('#size#','%(size)s'),
-        #('#h#', '%(height)s'),
-        #('#w#', '%(width)s'),
-        )
-        if usr:
-            rule = usr.replace('#url#','%(img_url)s').replace('#tmb#','%(img_thumb_url)s').replace('#file#','%(filename)s')
-
-        if rule_key:
-            stage1 = self.outprint_rules.get( rule_key )
-            rule = stage1.get('rule')
-
-        if not rule:
-            stdout.write('%s' % img_url )
-            stdout.write( delim)
-        else:
-            stdout.write( rule % ( {'img_url': img_url, 'img_thumb_url': img_thumb_url ,'filename': filename } ) )
-            stdout.write( delim)
+        _out = self.out.get_out( img_url, img_thumb_url, filename )
+        stdout.write( _out )
+        stdout.write( delim)
 
     def parseopt(self, argv):
         parser = optparse.OptionParser(usage=self.usage, version=self.version)
@@ -233,10 +253,6 @@ class UimgeApp:
 
 
 if __name__ == '__main__':
-    try:
-        gettext.install('uimge',unicode=True)
-    except IOError:
-        gettext.install('uimge', localedir = 'locale',unicode=True)
 
     u = UimgeApp()
     u.main(argv[1:])
