@@ -195,9 +195,9 @@
                       <widget class="GtkHBox" id="hbox5">
                         <property name="visible">True</property>
                         <child>
-                          <widget class="GtkComboBoxEntry" id="SelectModeOutView1">
+                          <widget class="GtkComboBoxEntry" id="SelectModeOutView">
                             <property name="visible">True</property>
-                            <property name="sensitive">False</property>
+                            <property name="items" translatable="yes"></property>
                             <signal name="changed" handler="SelectModeOutView_changed_cb"/>
                           </widget>
                           <packing>
@@ -206,7 +206,7 @@
                           </packing>
                         </child>
                         <child>
-                          <widget class="GtkButton" id="ReloadOut1">
+                          <widget class="GtkButton" id="ReloadOut">
                             <property name="label" translatable="yes">gtk-refresh</property>
                             <property name="sensitive">False</property>
                             <property name="can_focus">True</property>
@@ -222,7 +222,7 @@
                           </packing>
                         </child>
                         <child>
-                          <widget class="GtkButton" id="Clipboard1">
+                          <widget class="GtkButton" id="Clipboard">
                             <property name="label" translatable="yes">gtk-copy</property>
                             <property name="visible">True</property>
                             <property name="can_focus">True</property>
@@ -261,6 +261,7 @@
                                 <property name="can_focus">True</property>
                                 <property name="tooltip" translatable="yes">Nya!</property>
                                 <property name="editable">False</property>
+                                <property name="wrap_mode">char</property>
                                 <property name="left_margin">5</property>
                                 <property name="right_margin">5</property>
                                 <property name="cursor_visible">False</property>
