@@ -75,7 +75,9 @@ import httplib
 import urllib
 import urllib2
 
-CHUNK_SIZE = 65536
+#CHUNK_SIZE = 65536
+CHUNK_SIZE = 2048
+PROGRESS = 0
 
 def get_content_type(filename):
     return mimetypes.guess_type(filename)[0] or 'application/octet-stream'
@@ -107,12 +109,17 @@ def send_data(v_vars, v_files, boundary, sock=None):
         buffer += '\r\n'
 
         l += len(buffer)
+        
+        sent = 0
         if sock:
             sock.send(buffer)
             if hasattr(fd, 'seek'):
                 fd.seek(0)
             while True:
                 chunk = fd.read(CHUNK_SIZE)
+                sent += len(chunk)
+                PROGRESS = int(float(sent)/ float(file_size)*100)
+                #global PROGRESS
                 if not chunk: break
                 sock.send(chunk)
 

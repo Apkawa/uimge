@@ -23,9 +23,11 @@
 import os
 import optparse
 from sys import argv,exit,stderr,stdout
-
-import ihost
 import gettext
+
+from ihost import Uploaders
+
+
 
 VERSION = '0.07.5.3'
 
@@ -34,20 +36,8 @@ try:
 except IOError:
     gettext.install('uimge', localedir = 'locale',unicode=True)
 
-class Uploaders:
-    def __init__(self):
-        self.Imagehosts = {}
-        import inspect
-        __myglobals = dict()
-        __myglobals.update( inspect.getmembers(ihost) )
-        for key, value in __myglobals.items():
-            if key.startswith('Host_'):
-                self.Imagehosts.update({key[len('Host_'):]:value})
 
-    def get_hosts_list(self):
-        return self.Imagehosts
-    def get_host(self, key):
-        return self.Imagehosts.get(key)
+
 
 class Outprint:
     def __init__(self):
@@ -122,6 +112,7 @@ class Uimge:
     'http://s55.radikal.ru/i149/0903/40/6a8b7f1143e8.jpg'
 
     '''
+    progress = 0
     def __init__(self):
         self.ihost = None
         self.img_url = None
@@ -160,6 +151,7 @@ class Uimge:
 
 class UimgeApp:
     "Класс cli приложения"
+            
 
     
     def __init__(self):
@@ -182,6 +174,8 @@ class UimgeApp:
         self.out.set_rules( key=self.opt.out, usr=self.opt.out_usr )
         #print self.objects
         for f in self.objects:
+            #_p = self.Progress()
+            #_p.start()
             self._uimge.upload( f )
             self.outprint( delim = self.opt.out_delim )
     def read_filelist(self, _list):
@@ -253,7 +247,6 @@ class UimgeApp:
 
 
 if __name__ == '__main__':
-
     u = UimgeApp()
     u.main(argv[1:])
     

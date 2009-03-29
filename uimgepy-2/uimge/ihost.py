@@ -23,10 +23,9 @@ from re import findall
 import urllib2
 import urllib2_file
 from os.path import split as path_split
-
-from sys import platform
-
-
+#import os
+#import sys
+#from uploader import Uploader
 
 #TODO: 
 #  Будем делать
@@ -71,27 +70,6 @@ from sys import platform
 # http://imgdb.ru/
 
 
-DEBUG =0
-
-if platform == "win32":
-    r_m = 'rb'
-    w_m = 'wb'
-else:
-    r_m = 'r'
-    w_m = 'w'
-
-def debug( *_mes ):
-    if DEBUG:
-        for m in _mes:
-            print m
-D = debug
-
-def ufopen( _url, _filename ):
-    import tempfile
-    __t = tempfile.NamedTemporaryFile(suffix= _filename )
-    __t.write( urllib2.urlopen(_url).read())
-    __t.seek(0)
-    return __t
 
 def host_test( host, _file = '/home/apkawa/pictres/1201337718895.jpeg', _url = 'http://s41.radikal.ru/i092/0902/93/40b756930f38.png',):
     h = host()
@@ -100,14 +78,32 @@ def host_test( host, _file = '/home/apkawa/pictres/1201337718895.jpeg', _url = '
     h.upload(_url)
     print h.get_urls()
 
+
+from sys import platform
+
+if platform == "win32":
+    r_m = 'rb'
+    w_m = 'wb'
+else:
+    r_m = 'r'
+    w_m = 'w'
+
+
 class Uploader:
     obj = None
     img_url = None
     img_thumb_url = None
     filename = None
-    def construct( self):
+    progress = 0
 
-        D( self.__obj )
+    def construct( self):
+        def ufopen( _url, _filename ):
+            import tempfile
+            __t = tempfile.NamedTemporaryFile(suffix= _filename )
+            __t.write( urllib2.urlopen(_url).read())
+            __t.seek(0)
+            return __t
+
         self.__form = self.form.copy()
         if self.__obj.startswith('http://'):
             self.filename = path_split(urllib2.urlparse.urlsplit(self.__obj).path)[1]
@@ -131,7 +127,7 @@ class Uploader:
 
         return True
     def send_post(self):
-        D( self.action,self.__form )
+        self.action,self.__form
         __req = urllib2.Request( self.action, self.__form )
         try:
             __req.add_header('Cookie', self.cookie )
@@ -161,6 +157,8 @@ class Uploader:
 
         try:
             self.construct()
+            #progress = UploaderProgress()
+            #progress.start()
             self.send_post()
             self.postload()
             return True
@@ -177,6 +175,23 @@ class Uploader:
     def get_urls( self):
         return self.img_url, self.img_thumb_url
 
+
+class Uploaders:
+    def __init__(self):
+        self.Imagehosts = {}
+        import inspect
+        __myglobals = dict()
+        __myglobals.update( globals()  )
+        for key, value in __myglobals.items():
+            if key.startswith('Host_'):
+                self.Imagehosts.update({key[len('Host_'):]:value})
+
+    def get_hosts_list(self):
+        return self.Imagehosts
+    def get_host(self, key):
+        return self.Imagehosts.get(key)
+
+#@host_test
 class Host_r_radikal( Uploader ):
     host = 'radikal.ru'
     action = 'http://www.radikal.ru/action.aspx' 
