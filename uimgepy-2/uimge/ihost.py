@@ -192,28 +192,42 @@ class Uploaders:
         return self.Imagehosts.get(key)
 
 #@host_test
+#secret api
 class Host_r_radikal( Uploader ):
     host = 'radikal.ru'
-    action = 'http://www.radikal.ru/action.aspx' 
+    #action = 'http://www.radikal.ru/action.aspx' 
+    #action = 'http://www.radikal.ru/fotodesktop/PostImgH.ashx' 
+    action = ''
     form = {
                 'CP': 'yes',
                 'Submit': '',
                 'upload': 'yes'
                 }
     def as_file(self, _file):
+        self.url = False
+        self.action = 'http://www.radikal.ru/fotodesktop/PostImgH.ashx' 
         return {'F': _file }
     def as_url(self, _url):
+        self.url = True
+        self.action = 'http://www.radikal.ru/action.aspx' 
         return {'URLF': _url }
     def thumb_size(self, _thumb_size):
         return { 'VM': _thumb_size, }
     def postload(self):
-        __url = findall('\[IMG\](http://.*.radikal.ru.*)\[/IMG\]', self.get_src() )
-        self.img_url = __url[0]
-        self.img_thumb_url =  __url[1]
+        if self.url:
+            __url = findall('\[IMG\](http://.*.radikal.ru.*)\[/IMG\]', self.get_src() )
+            self.img_url = __url[0]
+            self.img_thumb_url =  __url[1]
+        else:
+            from xml.dom import minidom
+            _xml = minidom.parseString( self.get_src() )
+            self.img_url = _xml.getElementsByTagName('rurl')[0].firstChild.data
+            self.img_thumb_url =  _xml.getElementsByTagName('rurlt')[0].firstChild.data
 
+#secret api
 class Host_o_opicture( Uploader ):
     host='opicture.ru'
-    action = 'http://opicture.ru:8080/upload/'
+    action = 'http://opicture.ru:8080/upload/?api=true'
     form = {
                 'preview':	'on',
                 'information':'on',
@@ -226,9 +240,15 @@ class Host_o_opicture( Uploader ):
     def thumb_size(self, _thumb_size):
         return { 'previewwidth': _thumb_size, }
     def postload(self):
-        __url = findall('showTags\(.*?\'([\d]{4}/[\d]{2}/[\d]{2}/[\d]{2}/[\d]{10,}\.[\w]{2,4})\'', self.get_src() )
-        self.img_url = 'http://opicture.ru/upload/%s'% __url[0]
-        self.img_thumb_url = 'http://opicture.ru/picture/thumbs/%s.jpg'% ''.join( __url[0].split('.')[:-1])
+        from xml.dom import minidom
+        src = self.get_src()
+        _xml = minidom.parseString(src)
+        self.img_url = _xml.getElementsByTagName('image')[0].firstChild.data
+        self.img_thumb_url =  _xml.getElementsByTagName('preview')[0].firstChild.data
+
+        #__url = findall('showTags\(.*?\'([\d]{4}/[\d]{2}/[\d]{2}/[\d]{2}/[\d]{10,}\.[\w]{2,4})\'',  )
+        #self.img_url = 'http://opicture.ru/upload/%s'% __url[0]
+        #self.img_thumb_url = 'http://opicture.ru/picture/thumbs/%s.jpg'% ''.join( __url[0].split('.')[:-1])
         #D( resp)
         
 class Host_s_smages( Uploader ):
@@ -243,16 +263,32 @@ class Host_s_smages( Uploader ):
         self.img_url = 'http://smages.com/i/%s.%s'%(__url[0], __url[1])
         self.img_thumb_url = 'http://smages.com/t/%s.jpg'%__url[0]
 
+#@host_test
+#secret api
 class Host_i_ipicture(Uploader):
     host='ipicture.ru'
-    action = 'http://ipicture.ru/Upload/'
+    action = ''
     form = {
             'thumb_resize_on':'on',
             'ramka_off':'on',
             'ignorAllCheck':'on',
             'submit':'"Загрузить"',
             }
+    '''
+    POST /api HTTP/1.1
+User-Agent: iPicture ImageUploader
+Accept: text/html
+Content-Type: multipart/form-data; boundary=995997794
+Host: ipicture.ru
+Content-Length: 830394
+Expect: 100-continue
+Connection: Keep-Alive
+
+
+    '''
     def as_file(self, _file):
+        self.action = 'http://ipicture.ru/api/'
+        self.url = False
         return {
             'uploadtype':'1',
             'method':'file',
@@ -260,6 +296,8 @@ class Host_i_ipicture(Uploader):
             'userfile': _file
             } 
     def as_url(self, _url):
+            self.action = 'http://ipicture.ru/Upload/'
+            self.url = True
             return {
             'uploadtype':'2',
             'method':'url',
@@ -268,10 +306,13 @@ class Host_i_ipicture(Uploader):
     def thumb_size(self, _thumb_size):
         return {'thumb_resize':_thumb_size,}
     def postload(self):
-        __reurl=findall('(http://.*.html)', self.get_headers()[-1])
-        __url=findall('\[IMG\](http://.*)\[\/IMG\]',urllib2.urlopen(__reurl[0]).read())
-        self.img_url= __url[0]
-        self.img_thumb_url = __url[2]
+        if self.url:
+            __reurl=findall('(http://.*.html)', self.get_headers()[-1])
+            __url=findall('\[IMG\](http://.*)\[\/IMG\]',urllib2.urlopen(__reurl[0]).read())
+            self.img_url= __url[0]
+            self.img_thumb_url = __url[2]
+        else:
+            self.img_url, self.img_thumb_url = findall('<(?:image|thumb)path>(.*?)</(?:image|thumb)path>', self.get_src() )
 
 class Host_u_funkyimg( Uploader):
     host='funkyimg.com'
