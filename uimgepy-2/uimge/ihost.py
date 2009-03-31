@@ -23,6 +23,7 @@ from re import findall
 import urllib2
 import urllib2_file
 from os.path import split as path_split
+import httplib
 #import os
 #import sys
 #from uploader import Uploader
@@ -35,6 +36,7 @@ from os.path import split as path_split
 #    * http://pixshock.net/
 #    * http://www.picfront.org/
 #    * http://zikuka.ru/
+#    * http://www.pict.com/
 #
 #  Look
 # http://xpichost.net/
@@ -127,12 +129,21 @@ class Uploader:
 
         return True
     def send_post(self):
+        httplib.HTTPConnection.debug = 1
         self.action,self.__form
         __req = urllib2.Request( self.action, self.__form )
         try:
             __req.add_header('Cookie', self.cookie )
         except AttributeError:
             pass
+
+        try:
+            for key, val in self.headers.items():
+                __req.add_header(key, val)
+
+        except AttributeError:
+            pass
+
         __req.add_header('Referer','http://%s/'%self.host )
         self._open = urllib2.urlopen( __req )
 
@@ -191,8 +202,6 @@ class Uploaders:
     def get_host(self, key):
         return self.Imagehosts.get(key)
 
-#@host_test
-#secret api
 class Host_r_radikal( Uploader ):
     host = 'radikal.ru'
     #action = 'http://www.radikal.ru/action.aspx' 
@@ -224,7 +233,6 @@ class Host_r_radikal( Uploader ):
             self.img_url = _xml.getElementsByTagName('rurl')[0].firstChild.data
             self.img_thumb_url =  _xml.getElementsByTagName('rurlt')[0].firstChild.data
 
-#secret api
 class Host_o_opicture( Uploader ):
     host='opicture.ru'
     action = 'http://opicture.ru:8080/upload/?api=true'
@@ -263,8 +271,6 @@ class Host_s_smages( Uploader ):
         self.img_url = 'http://smages.com/i/%s.%s'%(__url[0], __url[1])
         self.img_thumb_url = 'http://smages.com/t/%s.jpg'%__url[0]
 
-#@host_test
-#secret api
 class Host_i_ipicture(Uploader):
     host='ipicture.ru'
     action = ''
@@ -512,6 +518,49 @@ class Host_pu_pikucha( Uploader ):
         _url = findall('\[img\]http://pikucha.ru/([\d]{4,10})/thumbnail/(.*?)\[/img\]',_src)[0]
         self.img_url = 'http://pikucha.ru/%s/%s'%_url
         self.img_thumb_url = 'http://pikucha.ru/%s/thumbnail/%s'%_url
+
+#@host_test
+class Host_pi_pict( Uploader ):
+    '''example add new host'''
+    host='www.pict.com'
+    action = 'http://www.pict.com/upload/'
+    #action = 'http://www.pict.com/api/upload/?auth=m5q9u1vbk0d5v137s8k2sl1nr2'
+    headers = {
+            #'Accept':'application/json',
+            #'User-Agent':'Pict.com Uploader v.1.0.4',
+            #'Cookie':'PHPSESSID=s55ebesdc4i328mmq12i8grmh3; auth=s55ebesdc4i328mmq12i8grmh3; index_visit=%7B%22time%22%3A1238481373%2C%22pid%22%3A0%7D; localset=%7B%22first_tooltip%22%3A%22false%22%7D',
+            #'X-Requested-With':'XMLHttpRequest',
+            #'X-Request':'JSON',
+            }
+    
+
+    form = {
+            'cell_id':'30',
+            'cellId':'30',
+            'album_id':'30',
+            'pid':'30',
+            #'Submit': '',
+            }
+
+    def as_file(self, _file):
+        #self.action = 'http://pict.com/api/upload/?auth=m5q9u1vbk0d5v137s8k2sl1nr2'
+        self.url = False
+        return {'Datafile': _file }
+    def as_url(self, _url):
+        self.action = 'http://www.pict.com/upload/url/cellid/1/albumid/0'
+        self.url = True
+        return {'url': _url}
+    def postload(self ):
+        _src = self.get_src(True).replace('\/','/')
+        if self.url:
+            _regx = r'\":\"(http://.*?/)[\d]{3}/([\w]{10,100}\.[\w]{3,4})\"}'
+
+        else:
+            _regx = r'\'(http://.*?/)[\d]{3}/([\w]{10,100}\.[\w]{3,4})\'\)\;\<\/script\>'
+
+        _url = findall(_regx ,_src)[0]
+        self.img_url = ''.join(_url)
+        self.img_thumb_url = '150/'.join(_url)
 
 #не работает заливка с урла.
 class __Host_p_picthost( Uploader ):

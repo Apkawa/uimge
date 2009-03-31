@@ -187,6 +187,7 @@
             <property name="fraction">0.5</property>
             <property name="pulse_step">0.050000000000000003</property>
             <property name="text" translatable="yes">Uploading...</property>
+            <property name="discrete_blocks">20</property>
           </widget>
           <packing>
             <property name="position">4</property>

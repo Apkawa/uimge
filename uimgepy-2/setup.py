@@ -10,9 +10,9 @@ else:
   _prefix = sys.prefix
   _lang_path = _prefix+'\\share\\locale\\%(lang)s\\LC_MESSAGES'
 
-setup(name='Uimge',
+setup(name='uimge',
       version = uimge.VERSION,
-      description='uimge',
+      description='uimge - uploader on 14 imagehosting',
       author='Apkawa',
       author_email='apkawa@gmail.com',
       url='http://code.google.com/p/uimge/',
