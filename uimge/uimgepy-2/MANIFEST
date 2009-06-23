@@ -1,7 +1,0 @@
-setup.py
-uimge/__init__.py
-uimge/ihost.py
-uimge/uimge.py
-uimge/urllib2_file.py
-locale/en/LC_MESSAGES/uimge.mo
-locale/ru/LC_MESSAGES/uimge.mo
