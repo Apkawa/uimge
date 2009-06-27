@@ -4,16 +4,17 @@
   <!-- interface-naming-policy toplevel-contextual -->
   <widget class="GtkAboutDialog" id="About">
     <property name="border_width">5</property>
+    <property name="type">popup</property>
     <property name="title" translatable="yes">About gUimge</property>
     <property name="resizable">False</property>
     <property name="modal">True</property>
     <property name="window_position">center-on-parent</property>
     <property name="destroy_with_parent">True</property>
-    <property name="type_hint">normal</property>
+    <property name="type_hint">dialog</property>
     <property name="skip_taskbar_hint">True</property>
     <property name="skip_pager_hint">True</property>
     <property name="program_name">gUimge</property>
-    <property name="version">0.0.02</property>
+    <property name="version">0.1.1</property>
     <property name="copyright" translatable="yes">Copyright &#xA9; 2007-2009 Apkawa Inc.</property>
     <property name="comments" translatable="yes">Uploader in different imagehosting</property>
     <property name="website">http://wiki.github.com/Apkawa/uimge</property>
