@@ -6,13 +6,19 @@ import os
 #import time
 
 
-import pygtk
-pygtk.require('2.0')
+if not sys.platform == 'win32':
+    import pygtk
+    pygtk.require('2.0')
+    HOME = 'file:///'+os.environ['HOME']+os.path.sep
+else:
+    HOME = 'file:///'+os.environ['HOMEDRIVE']+os.environ['HOMEPATH']+os.path.sep
 
 import gtk
 import gtk.glade
 import gobject
 #gtk.gdk.threads_init()
+
+#TODO: Сделать относительные пути импорта
 
 from uimge import Uimge, Outprint
 
@@ -35,7 +41,7 @@ HOSTS =dict( [(host.host,key) for key, host in __hosts.items()] )
 OUTPRINT = Outprint()
 
 class gUimge:
-    lastdir = 'file:///'+os.environ['HOME']+os.path.sep
+    lastdir = HOME
     result = []
 
     def __init__(self):
@@ -114,7 +120,7 @@ class gUimge:
         #Устанавливаем список outprint'a
         result_out = self.WidgetsTree.get_widget('SelectModeOutView')
         result_out.set_model( gtk.ListStore( str, str) )
-        result_out.append_text('Direct url')
+        result_out.get_model().append(['Direct url','False'])
         for k in OUTPRINT.outprint_rules.keys():
             result_out.get_model().append( [OUTPRINT.outprint_rules[k]['desc'].replace('Output in ',''),k ])
         result_out.set_active( 0 )
@@ -132,7 +138,6 @@ class gUimge:
             for f in __file:
                 try:
                     pixbuf = gtk.gdk.pixbuf_new_from_file_at_size( f, 100, 100)
-                    image_info = gtk.gdk.pixbuf_get_file_info(f)
                 except:
                     'Stock pixbuf'
                     _t = gtk.TreeView()
@@ -140,19 +145,26 @@ class gUimge:
                             gtk.STOCK_MISSING_IMAGE,
                             gtk.ICON_SIZE_DIALOG,
                             None)
+
                 title =  os.path.split(f)[1]
-                if len(title) > 31:
-                    title = '%s...%s\n %sx%s, %s'%(
-                            title[0:15],title[-15:],
+
+                image_info = gtk.gdk.pixbuf_get_file_info(f)
+                if image_info:
+                    image_info_str = ' %sx%s, %s'%(
                             image_info[1], image_info[2],
-                            ' '.join( image_info [0]['mime_types']),
+                            ' '.join( image_info [0]['mime_types']) )
+                else:
+                    image_info_str = ''
+
+                if len(title) > 31:
+                    title = '%s...%s\n %s'%(
+                            title[0:15],title[-15:],image_info_str,
                             )
                 else:
-                    title = '%s\n %sx%s, %s'%(
-                            title,
-                            image_info[1], image_info[2],
-                            ' '.join( image_info [0]['mime_types']),
+                    title = '%s\n %s'%(
+                            title, image_info_str,
                             )
+
 
                 size = '%.2f Kb'%(os.stat(f).st_size/float(1024))
                 self.store.append([f, pixbuf, title,size])
