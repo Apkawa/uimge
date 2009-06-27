@@ -16,7 +16,16 @@ import gobject
 
 from uimge import Uimge, Outprint
 
-GLADE_FILE = 'guimge.glade'
+DEV = False
+if not DEV:
+    try:
+        os.listdir('/usr/share/guimge')
+        GLADE_FILE = '/usr/share/guimge/guimge.glade'
+    except OSError:
+        GLADE_FILE = 'guimge.glade'
+else:
+    GLADE_FILE = 'guimge.glade'
+
 
 UIMGE = Uimge()
 
