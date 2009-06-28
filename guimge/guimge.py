@@ -32,7 +32,8 @@ else:
 
 
 UIMGE = Uimge()
-GUIMGE = {'version':'0.1.1-5'}
+GUIMGE = {'version':'0.1.1-5',}
+ICONS = 'icons'
 __hosts = UIMGE.hosts()
 HOSTS =dict( [(host.host,key) for key, host in __hosts.items()] )
 
@@ -108,8 +109,47 @@ class gUimge:
 
         #Устанавливаем выпадающий список выбора хостингов
         self.SelectHost = self.WidgetsTree.get_widget("SelectHost")
+        list_store = gtk.ListStore( gtk.gdk.Pixbuf, str)
+        self.SelectHost.set_model( list_store)
+
+        crp = gtk.CellRendererPixbuf()
+        self.SelectHost.pack_start(crp,False,)
+        self.SelectHost.add_attribute(crp, 'pixbuf', 0)
+        crt = gtk.CellRendererText()
+        self.SelectHost.pack_start(crt,False)
+        #self.SelectHost.add_attribute(crt, 'xalign', 1)
+        self.SelectHost.add_attribute(crt, 'text', 1)
+
+#        self.combo.set_active(3)
+
+        import tempfile
+        import urllib
+        import glib
         for ls in HOSTS.keys():
-            self.SelectHost.append_text( ls )
+
+            ico_name = ls+'.ico'
+            ico_dir = ICONS+os.path.sep+'hosts'
+            ico_path = ico_dir+os.path.sep+ico_name
+            print ico_path
+            if not ico_name in os.listdir( ico_dir ):
+                u = urllib.urlopen('http://%s/favicon.ico'%ls)
+                print ls
+#            t = tempfile.NamedTemporaryFile()
+                t = open( ico_path, 'w+b')
+                t.write(u.read())
+                t.close()
+            else:
+                pass
+            try:
+                ico = gtk.gdk.pixbuf_new_from_file_at_size( ico_path, 16,16)
+            except glib.GError:
+                _t = gtk.TreeView()
+                ico = _t.render_icon(
+                        gtk.STOCK_MISSING_IMAGE,
+                        gtk.ICON_SIZE_MENU,
+                        None)
+
+            self.SelectHost.get_model().append( [ico,ls] )
         _active = HOSTS.values().index('r_radikal')
         self.SelectHost.set_active( _active  )
 
@@ -186,9 +226,9 @@ class gUimge:
 
     def SelectHost_changed_cb(self, widget):
         #print "sel host"
-        print widget.get_active(),widget.get_active_text(), widget.name
-        self.current_host = widget.get_active_text()
-        UIMGE.set_host( HOSTS.get(widget.get_active_text()) )
+        #print widget.get_active(),widget.get_model()[widget.get_active()][1], widget.name
+        self.current_host = widget.get_model()[widget.get_active()][1]
+        UIMGE.set_host( HOSTS.get( self.current_host ))
 
     def SelectModeOutView_changed_cb( self, widget):
         #print widget.get_active(),widget.get_active_text(), widget.name
@@ -241,12 +281,16 @@ class gUimge:
                         ) )
                     print self.result
                     self.update_result_text()
-                    self.WidgetsTree.get_widget('ResultFrame').show()
+                    self.WidgetsTree.get_widget('ResultExpander').set_sensitive(True)
                     self.WidgetsTree.get_widget('Clipboard').set_sensitive(True)
 
     def update_result_text(self, widget=None):
-        self.result_text.get_buffer().set_text( self.make_result())
-        return True
+        _result = self.make_result()
+        if _result:
+            self.result_text.get_buffer().set_text( _result)
+            return True
+        else:
+            return False
 
     def make_result(self):
         _delim = self.delim.get_active_text().replace('\\n','\n')

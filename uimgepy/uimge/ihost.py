@@ -522,7 +522,7 @@ class Host_pu_pikucha( Uploader ):
 #@host_test
 class Host_pi_pict( Uploader ):
     '''example add new host'''
-    host='www.pict.com'
+    host='pict.com'
     action = 'http://www.pict.com/upload/'
     #action = 'http://www.pict.com/api/upload/?auth=m5q9u1vbk0d5v137s8k2sl1nr2'
     headers = {
