@@ -2,8 +2,6 @@
 # coding: utf-8
 import sys
 import os
-#import threading
-#import time
 
 
 if not sys.platform == 'win32':
@@ -22,7 +20,7 @@ import gobject
 
 from uimge import Uimge, Outprint
 
-DEV = False
+DEV = True
 if not DEV:
     try:
         os.listdir('/usr/share/guimge')
@@ -34,7 +32,7 @@ else:
 
 
 UIMGE = Uimge()
-
+GUIMGE = {'version':'0.1.1-5'}
 __hosts = UIMGE.hosts()
 HOSTS =dict( [(host.host,key) for key, host in __hosts.items()] )
 
@@ -51,7 +49,8 @@ class gUimge:
             'UploadButton_clicked_cb': self.UploadButton_clicked_cb,
             'SelectHost_changed_cb': self.SelectHost_changed_cb,
             'SelectModeOutView_changed_cb': self.SelectModeOutView_changed_cb,
-            'SelectModeOutView_editing_done_cb': self.SelectModeOutView_changed_cb,
+            #'SelectModeOutView_editing_done_cb': self.SelectModeOutView_changed_cb,
+            'DelimiterSelect_changed_cb': self.update_result_text,
             'Clipboard_clicked_cb': self.Clipboard_clicked_cb,
             'SettingsToggle_toggled_cb': self.SettingsToggle_toggled_cb,
             'About_clicked_cb': self.About_clicked_cb,
@@ -125,6 +124,13 @@ class gUimge:
             result_out.get_model().append( [OUTPRINT.outprint_rules[k]['desc'].replace('Output in ',''),k ])
         result_out.set_active( 0 )
 
+        #Устанавливаем разделитель.
+        self.delim = self.WidgetsTree.get_widget('DelimiterSelect')
+        self.delim.append_text('\\n')
+        self.delim.set_active(0)
+
+        self.result_text = self.WidgetsTree.get_widget('ResultText')
+
     def FileOpen_clicked_cb(self, widget):
         print self.lastdir
         chooser = FileChooser(self.lastdir)
@@ -136,6 +142,7 @@ class gUimge:
             self.lastdir = chooser.get_current_folder_uri()
             print __file
             for f in __file:
+                f = unicode(f,'utf-8')
                 try:
                     pixbuf = gtk.gdk.pixbuf_new_from_file_at_size( f, 100, 100)
                 except:
@@ -192,9 +199,9 @@ class gUimge:
         else:
             #print widget.get_active_text()
             OUTPRINT.set_rules(usr=widget.get_active_text())
+        self.update_result_text()
 
-
-# Key event
+    # Key event
     def FileList_event_cb(self,widget, event):
         #print event.hardware_keycode
         #print event.keyval
@@ -225,7 +232,7 @@ class gUimge:
                 #gtk.gdk.threads_enter()
                 #progress.show()
                 #gtk.gdk.threads_leave()
-                state = UIMGE.upload( obj )
+                state = UIMGE.upload( unicode(obj, 'utf-8') )
                 if state:
                     self.result.append( (
                         UIMGE.img_url,
@@ -233,13 +240,23 @@ class gUimge:
                         UIMGE.filename
                         ) )
                     print self.result
+                    self.update_result_text()
+                    self.WidgetsTree.get_widget('ResultFrame').show()
                     self.WidgetsTree.get_widget('Clipboard').set_sensitive(True)
+
+    def update_result_text(self, widget=None):
+        self.result_text.get_buffer().set_text( self.make_result())
+        return True
+
+    def make_result(self):
+        _delim = self.delim.get_active_text().replace('\\n','\n')
+        return _delim.join([OUTPRINT.get_out( r[0], r[1], r[2]) for r in self.result] )
 
     def Clipboard_clicked_cb(self, widget):
         #print widget
         #print self.result
-        result = '\n'.join([OUTPRINT.get_out( r[0], r[1], r[2]) for r in self.result] )
         #print result
+        result = self.make_result()
         _clip = gtk.Clipboard()
         _clip.clear()
         _clip.set_text( result )

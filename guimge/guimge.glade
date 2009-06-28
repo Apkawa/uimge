@@ -4,13 +4,11 @@
   <!-- interface-naming-policy toplevel-contextual -->
   <widget class="GtkAboutDialog" id="About">
     <property name="border_width">5</property>
-    <property name="type">popup</property>
     <property name="title" translatable="yes">About gUimge</property>
     <property name="resizable">False</property>
     <property name="modal">True</property>
-    <property name="window_position">center-on-parent</property>
     <property name="destroy_with_parent">True</property>
-    <property name="type_hint">dialog</property>
+    <property name="type_hint">normal</property>
     <property name="skip_taskbar_hint">True</property>
     <property name="skip_pager_hint">True</property>
     <property name="program_name">gUimge</property>
@@ -39,6 +37,7 @@
     site project http://wiki.github.com/Apkawa/uimge
 </property>
     <property name="authors">Apkawa</property>
+    <property name="logo">/home/apkawa/Code/uimgepy/src/guimge/icons/guimge.png</property>
     <child internal-child="vbox">
       <widget class="GtkVBox" id="dialog-vbox2">
         <property name="visible">True</property>
@@ -75,7 +74,6 @@
               <widget class="GtkToolButton" id="FileOpen">
                 <property name="visible">True</property>
                 <property name="tooltip" translatable="yes">Select file to add in uploading list.</property>
-                <property name="label" translatable="yes">Open</property>
                 <property name="use_underline">True</property>
                 <property name="stock_id">gtk-open</property>
                 <signal name="clicked" handler="FileOpen_clicked_cb"/>
@@ -105,7 +103,6 @@
                 <property name="visible">True</property>
                 <property name="sensitive">False</property>
                 <property name="tooltip" translatable="yes">Copy result urls in clipboard.</property>
-                <property name="label" translatable="yes">Copy</property>
                 <property name="use_underline">True</property>
                 <property name="stock_id">gtk-copy</property>
                 <signal name="clicked" handler="Clipboard_clicked_cb"/>
@@ -128,7 +125,6 @@
               <widget class="GtkToggleToolButton" id="SettingsToggle">
                 <property name="visible">True</property>
                 <property name="tooltip" translatable="yes">Open setting</property>
-                <property name="label" translatable="yes">Settings</property>
                 <property name="use_underline">True</property>
                 <property name="stock_id">gtk-preferences</property>
                 <signal name="toggled" handler="SettingsToggle_toggled_cb"/>
@@ -142,7 +138,6 @@
               <widget class="GtkToolButton" id="AboutButton">
                 <property name="visible">True</property>
                 <property name="tooltip" translatable="yes">About gUimge.</property>
-                <property name="label" translatable="yes">About</property>
                 <property name="use_underline">True</property>
                 <property name="stock_id">gtk-about</property>
                 <signal name="clicked" handler="About_clicked_cb"/>
@@ -156,7 +151,6 @@
               <widget class="GtkToolButton" id="toolbutton1">
                 <property name="visible">True</property>
                 <property name="tooltip" translatable="yes">Quit of gUimge.</property>
-                <property name="label" translatable="yes">Quit</property>
                 <property name="use_underline">True</property>
                 <property name="stock_id">gtk-quit</property>
                 <signal name="clicked" handler="gtk_main_quit"/>
@@ -187,7 +181,7 @@
                   </widget>
                   <packing>
                     <property name="expand">False</property>
-                    <property name="padding">9</property>
+                    <property name="padding">10</property>
                     <property name="position">0</property>
                   </packing>
                 </child>
@@ -199,7 +193,7 @@
                   </widget>
                   <packing>
                     <property name="expand">False</property>
-                    <property name="padding">4</property>
+                    <property name="padding">5</property>
                     <property name="position">1</property>
                   </packing>
                 </child>
@@ -282,6 +276,85 @@ Custom view help:
                 <property name="position">1</property>
               </packing>
             </child>
+            <child>
+              <widget class="GtkHBox" id="hbox2">
+                <property name="visible">True</property>
+                <child>
+                  <widget class="GtkFrame" id="frame1">
+                    <property name="visible">True</property>
+                    <property name="label_xalign">0</property>
+                    <property name="shadow_type">none</property>
+                    <child>
+                      <widget class="GtkAlignment" id="alignment1">
+                        <property name="visible">True</property>
+                        <child>
+                          <widget class="GtkComboBoxEntry" id="DelimiterSelect">
+                            <property name="visible">True</property>
+                            <property name="items" translatable="yes"></property>
+                            <signal name="changed" handler="DelimiterSelect_changed_cb"/>
+                          </widget>
+                        </child>
+                      </widget>
+                    </child>
+                    <child>
+                      <widget class="GtkLabel" id="label2">
+                        <property name="visible">True</property>
+                        <property name="label" translatable="yes">Delimeter</property>
+                      </widget>
+                      <packing>
+                        <property name="type">label_item</property>
+                      </packing>
+                    </child>
+                  </widget>
+                  <packing>
+                    <property name="expand">False</property>
+                    <property name="fill">False</property>
+                    <property name="padding">5</property>
+                    <property name="position">0</property>
+                  </packing>
+                </child>
+              </widget>
+              <packing>
+                <property name="position">2</property>
+              </packing>
+            </child>
+            <child>
+              <widget class="GtkHButtonBox" id="hbuttonbox1">
+                <property name="spacing">5</property>
+                <property name="layout_style">end</property>
+                <child>
+                  <widget class="GtkButton" id="button1">
+                    <property name="label" translatable="yes">gtk-clear</property>
+                    <property name="visible">True</property>
+                    <property name="can_focus">True</property>
+                    <property name="receives_default">True</property>
+                    <property name="use_stock">True</property>
+                  </widget>
+                  <packing>
+                    <property name="expand">False</property>
+                    <property name="fill">False</property>
+                    <property name="position">0</property>
+                  </packing>
+                </child>
+                <child>
+                  <widget class="GtkButton" id="button2">
+                    <property name="label" translatable="yes">gtk-save</property>
+                    <property name="visible">True</property>
+                    <property name="can_focus">True</property>
+                    <property name="receives_default">True</property>
+                    <property name="use_stock">True</property>
+                  </widget>
+                  <packing>
+                    <property name="expand">False</property>
+                    <property name="fill">False</property>
+                    <property name="position">1</property>
+                  </packing>
+                </child>
+              </widget>
+              <packing>
+                <property name="position">3</property>
+              </packing>
+            </child>
           </widget>
           <packing>
             <property name="expand">False</property>
@@ -295,6 +368,71 @@ Custom view help:
           <packing>
             <property name="expand">False</property>
             <property name="position">2</property>
+          </packing>
+        </child>
+        <child>
+          <widget class="GtkFrame" id="ResultFrame">
+            <property name="label_xalign">0</property>
+            <property name="shadow_type">none</property>
+            <child>
+              <widget class="GtkAlignment" id="alignment2">
+                <property name="visible">True</property>
+                <property name="left_padding">5</property>
+                <child>
+                  <widget class="GtkScrolledWindow" id="scrolledwindow2">
+                    <property name="visible">True</property>
+                    <property name="can_focus">True</property>
+                    <property name="hscrollbar_policy">never</property>
+                    <property name="vscrollbar_policy">automatic</property>
+                    <child>
+                      <widget class="GtkTextView" id="ResultText">
+                        <property name="height_request">100</property>
+                        <property name="visible">True</property>
+                        <property name="can_focus">True</property>
+                        <property name="editable">False</property>
+                        <property name="wrap_mode">char</property>
+                      </widget>
+                    </child>
+                  </widget>
+                </child>
+              </widget>
+            </child>
+            <child>
+              <widget class="GtkHBox" id="hbox3">
+                <property name="visible">True</property>
+                <child>
+                  <widget class="GtkImage" id="image2">
+                    <property name="visible">True</property>
+                    <property name="stock">gtk-save</property>
+                    <property name="icon-size">4</property>
+                  </widget>
+                  <packing>
+                    <property name="padding">10</property>
+                    <property name="position">0</property>
+                  </packing>
+                </child>
+                <child>
+                  <widget class="GtkLabel" id="label3">
+                    <property name="visible">True</property>
+                    <property name="label" translatable="yes">&lt;b&gt;Result&lt;/b&gt;</property>
+                    <property name="use_markup">True</property>
+                  </widget>
+                  <packing>
+                    <property name="padding">5</property>
+                    <property name="position">1</property>
+                  </packing>
+                </child>
+              </widget>
+              <packing>
+                <property name="type">label_item</property>
+              </packing>
+            </child>
+          </widget>
+          <packing>
+            <property name="expand">False</property>
+            <property name="fill">False</property>
+            <property name="padding">5</property>
+            <property name="position">3</property>
           </packing>
         </child>
         <child>
@@ -320,7 +458,7 @@ Select one or some files and press "Delete" key for delete file of list.
             </child>
           </widget>
           <packing>
-            <property name="position">3</property>
+            <property name="position">4</property>
           </packing>
         </child>
         <child>
@@ -332,7 +470,34 @@ Select one or some files and press "Delete" key for delete file of list.
           <packing>
             <property name="expand">False</property>
             <property name="fill">False</property>
-            <property name="position">4</property>
+            <property name="position">5</property>
+          </packing>
+        </child>
+      </widget>
+    </child>
+  </widget>
+  <widget class="GtkAboutDialog" id="aboutdialog1">
+    <property name="border_width">5</property>
+    <property name="type_hint">normal</property>
+    <property name="has_separator">False</property>
+    <property name="program_name">Glade</property>
+    <child internal-child="vbox">
+      <widget class="GtkVBox" id="dialog-vbox4">
+        <property name="visible">True</property>
+        <property name="orientation">vertical</property>
+        <property name="spacing">2</property>
+        <child>
+          <placeholder/>
+        </child>
+        <child internal-child="action_area">
+          <widget class="GtkHButtonBox" id="dialog-action_area4">
+            <property name="visible">True</property>
+            <property name="layout_style">end</property>
+          </widget>
+          <packing>
+            <property name="expand">False</property>
+            <property name="pack_type">end</property>
+            <property name="position">0</property>
           </packing>
         </child>
       </widget>
