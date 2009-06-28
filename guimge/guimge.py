@@ -30,10 +30,16 @@ if not DEV:
 else:
     GLADE_FILE = 'guimge.glade'
 
+CONF_FILE = 'guimge.conf'
 
 UIMGE = Uimge()
 GUIMGE = {'version':'0.1.1-5',}
+
 ICONS = 'icons'
+
+
+
+
 __hosts = UIMGE.hosts()
 HOSTS =dict( [(host.host,key) for key, host in __hosts.items()] )
 
@@ -43,7 +49,25 @@ class gUimge:
     lastdir = HOME
     result = []
 
+
     def __init__(self):
+        from ConfigParser import ConfigParser
+        self.conf = ConfigParser( )#
+        self.conf_default_section = 'defaults'
+        try:
+            self.conf.read( CONF_FILE)
+        except IOError:
+            #self.conf.write( open(CONF_FILE, 'w+b'))
+            #self.conf.read( open(CONF_FILE, 'r+b'))
+            _defaults={'host':'radikal.ru', 'modeout': ''}
+            self.conf.add_section( self.conf_default_section )
+            for key, val in _defaults.items():
+                self.conf.set( self.conf_default_section, key, val)
+        self.default_host = self.conf.get( self.conf_default_section, 'host')
+        self.default_modeout = self.conf.get( self.conf_default_section, 'modeout')
+        print self.conf.items( self.conf_default_section)
+
+
         self.WidgetsTree = gtk.glade.XML( GLADE_FILE )
         conn = {
             'FileOpen_clicked_cb': self.FileOpen_clicked_cb ,
@@ -54,6 +78,7 @@ class gUimge:
             'DelimiterSelect_changed_cb': self.update_result_text,
             'Clipboard_clicked_cb': self.Clipboard_clicked_cb,
             'SettingsToggle_toggled_cb': self.SettingsToggle_toggled_cb,
+            'SaveSettings_clicked_cb':self.SaveSettings_clicked_cb,
             'About_clicked_cb': self.About_clicked_cb,
             'FileList_button_press_event_cb':self.FileList_event_cb,
             'FileList_key_press_event_cb':self.FileList_event_cb,
@@ -107,7 +132,7 @@ class gUimge:
         #col.add_attribute(render_text, 'text', )
         #tree.append_column(col)
 
-        #Устанавливаем выпадающий список выбора хостингов
+        #Устанавливаем выпадающий список выбора хостингов c иконостасом
         self.SelectHost = self.WidgetsTree.get_widget("SelectHost")
         list_store = gtk.ListStore( gtk.gdk.Pixbuf, str)
         self.SelectHost.set_model( list_store)
@@ -130,7 +155,7 @@ class gUimge:
             ico_name = ls+'.ico'
             ico_dir = ICONS+os.path.sep+'hosts'
             ico_path = ico_dir+os.path.sep+ico_name
-            print ico_path
+            #print ico_path
             if not ico_name in os.listdir( ico_dir ):
                 u = urllib.urlopen('http://%s/favicon.ico'%ls)
                 print ls
@@ -150,7 +175,8 @@ class gUimge:
                         None)
 
             self.SelectHost.get_model().append( [ico,ls] )
-        _active = HOSTS.values().index('r_radikal')
+        _active = HOSTS.keys().index( self.default_host)
+        print self.default_host
         self.SelectHost.set_active( _active  )
 
         self.upload_progress = self.WidgetsTree.get_widget( "UploadProgress")
@@ -161,8 +187,15 @@ class gUimge:
         result_out.set_model( gtk.ListStore( str, str) )
         result_out.get_model().append(['Direct url','False'])
         for k in OUTPRINT.outprint_rules.keys():
-            result_out.get_model().append( [OUTPRINT.outprint_rules[k]['desc'].replace('Output in ',''),k ])
-        result_out.set_active( 0 )
+            result_out.get_model().append(
+                    [OUTPRINT.outprint_rules[k]['desc'].replace('Output in ',''),k ]
+                    )
+
+        if not self.default_modeout:
+            result_out.set_active( 0 )
+        else:
+            _active = OUTPRINT.outprint_rules.keys().index( self.default_modeout )
+            result_out.set_active( _active )
 
         #Устанавливаем разделитель.
         self.delim = self.WidgetsTree.get_widget('DelimiterSelect')
@@ -226,8 +259,9 @@ class gUimge:
 
     def SelectHost_changed_cb(self, widget):
         #print "sel host"
-        #print widget.get_active(),widget.get_model()[widget.get_active()][1], widget.name
+        print widget.get_active(),widget.get_model()[widget.get_active()][1], widget.name
         self.current_host = widget.get_model()[widget.get_active()][1]
+        print self.current_host
         UIMGE.set_host( HOSTS.get( self.current_host ))
 
     def SelectModeOutView_changed_cb( self, widget):
@@ -235,9 +269,11 @@ class gUimge:
         if widget.get_active() != -1:
             key_out = widget.get_model()[widget.get_active()][1]
             #print key_out
+            self.current_modeout = key_out
             OUTPRINT.set_rules(key_out)
         else:
             #print widget.get_active_text()
+            self.current_modeout = ''
             OUTPRINT.set_rules(usr=widget.get_active_text())
         self.update_result_text()
 
@@ -312,6 +348,12 @@ class gUimge:
             settings_vbox.show()
         else:
             settings_vbox.hide()
+    def SaveSettings_clicked_cb(self, widget):
+        self.conf.set( self.conf_default_section ,'host',self.current_host)
+        self.conf.set( self.conf_default_section ,'modeout',self.current_modeout)
+        self.conf.write( open(CONF_FILE, 'w+b') )
+        pass
+
 
     def About_clicked_cb(self, widget):
         about = self.WidgetsTree.get_widget('About')
