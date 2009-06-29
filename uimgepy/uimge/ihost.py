@@ -30,6 +30,7 @@ import httplib
 
 #TODO: 
 #  Будем делать
+#    *http://imgby.com/ - японский хостинг
 #
 #    * http://directupload.net/
 #    * http://pixshock.net/
@@ -75,7 +76,7 @@ import httplib
 
 
 
-def host_test( host, _file = 'c:\\1.jpg', _url = 'http://s41.radikal.ru/i092/0902/93/40b756930f38.png',):
+def host_test( host, _file = '/home/apkawa/1237325744193.jpg', _url = 'http://s41.radikal.ru/i092/0902/93/40b756930f38.png',):
     h = host()
     h.upload(_file)
     print h.get_urls()
@@ -251,7 +252,6 @@ class Host_r_radikal( Uploader ):
             self.img_url = _xml.getElementsByTagName('rurl')[0].firstChild.data
             self.img_thumb_url =  _xml.getElementsByTagName('rurlt')[0].firstChild.data
 
-#@host_test
 class Host_o_opicture( Uploader ):
     host='opicture.ru'
     action = 'http://opicture.ru/upload/?api=true'
@@ -276,7 +276,7 @@ class Host_o_opicture( Uploader ):
         #__url = findall('showTags\(.*?\'([\d]{4}/[\d]{2}/[\d]{2}/[\d]{2}/[\d]{10,}\.[\w]{2,4})\'',  )
         #self.img_url = 'http://opicture.ru/upload/%s'% __url[0]
         #self.img_thumb_url = 'http://opicture.ru/picture/thumbs/%s.jpg'% ''.join( __url[0].split('.')[:-1])
-        
+
 class Host_s_smages( Uploader ):
     host='smages.com'
     action = 'http://smages.com/upload'
@@ -291,7 +291,7 @@ class Host_s_smages( Uploader ):
 
 class Host_i_ipicture(Uploader):
     host='ipicture.ru'
-    action = ''
+    action = 'http://ipicture.ru/Upload/'
     form = {
             'thumb_resize_on':'on',
             'ramka_off':'on',
@@ -311,32 +311,32 @@ Connection: Keep-Alive
 
     '''
     def as_file(self, _file):
-        self.action = 'http://ipicture.ru/api/'
-        self.url = False
+        #self.action = 'http://ipicture.ru/api/'
         return {
             'uploadtype':'1',
             'method':'file',
             'file':'upload',
             'userfile': _file
-            } 
+            }
     def as_url(self, _url):
-            self.action = 'http://ipicture.ru/Upload/'
-            self.url = True
             return {
             'uploadtype':'2',
             'method':'url',
             'userurl[]': _url
-            } 
+            }
     def thumb_size(self, _thumb_size):
         return {'thumb_resize':_thumb_size,}
     def postload(self):
-        if self.url:
-            __reurl=findall('(http://.*.html)', self.get_headers()[-1])
-            __url=findall('\[IMG\](http://.*)\[\/IMG\]',urllib2.urlopen(__reurl[0]).read())
-            self.img_url= __url[0]
-            self.img_thumb_url = __url[2]
+        __reurl=findall('(http://.*.html)', self.get_headers()[-1])
+        __url=findall('\[IMG\](http://.*)\[\/IMG\]',urllib2.urlopen(__reurl[0]).read())
+        self.img_url= __url[0]
+        self.img_thumb_url = __url[2]
+        '''
         else:
-            self.img_url, self.img_thumb_url = findall('<(?:image|thumb)path>(.*?)</(?:image|thumb)path>', self.get_src() )
+            _src = self.get_src()
+            print _src
+            self.img_url, self.img_thumb_url = findall('<(?:image|thumb)path>(.*?)</(?:image|thumb)path>', _src )
+        '''
 
 class Host_u_funkyimg( Uploader):
     host='funkyimg.com'
@@ -362,7 +362,6 @@ class Host_u_funkyimg( Uploader):
         __url.reverse()
         self.img_url= __url[0]
         self.img_thumb_url = __url[1]
-
 
 class Host_sp_savepic( Uploader):
     host='savepic.ru'
@@ -536,49 +535,6 @@ class Host_pu_pikucha( Uploader ):
         _url = findall('\[img\]http://pikucha.ru/([\d]{4,10})/thumbnail/(.*?)\[/img\]',_src)[0]
         self.img_url = 'http://pikucha.ru/%s/%s'%_url
         self.img_thumb_url = 'http://pikucha.ru/%s/thumbnail/%s'%_url
-#fail
-class __Host_pi_pict( Uploader ):
-    '''example add new host'''
-    host='pict.com'
-    #action = 'http://www.pict.com/upload/'
-    #action = 'http://www.pict.com/api/upload/?auth=m5q9u1vbk0d5v137s8k2sl1nr2'
-    action = 'http://www.pict.com/upload/url/cellid/1/albumid/0'
-    headers = {
-            #'Accept':'application/json',
-            #'User-Agent':'Pict.com Uploader v.1.0.4',
-            #'Cookie':'PHPSESSID=s55ebesdc4i328mmq12i8grmh3; auth=s55ebesdc4i328mmq12i8grmh3; index_visit=%7B%22time%22%3A1238481373%2C%22pid%22%3A0%7D; localset=%7B%22first_tooltip%22%3A%22false%22%7D',
-            #'X-Requested-With':'XMLHttpRequest',
-            #'X-Request':'JSON',
-            }
-    
-
-    form = {
-            'cell_id':'30',
-            'cellId':'30',
-            'album_id':'30',
-            'pid':'30',
-            #'Submit': '',
-            }
-
-    def as_file(self, _file):
-        #self.action = 'http://pict.com/api/upload/?auth=m5q9u1vbk0d5v137s8k2sl1nr2'
-        self.url = False
-        return {'Datafile': _file }
-    def as_url(self, _url):
-        self.action = 'http://www.pict.com/upload/url/cellid/1/albumid/0'
-        self.url = True
-        return {'url': _url}
-    def postload(self ):
-        _src = self.get_src(True).replace('\/','/')
-        if self.url:
-            _regx = r'\":\"(http://.*?/)[\d]{3}/([\w]{10,100}\.[\w]{3,4})\"}'
-
-        else:
-            _regx = r'\'(http://.*?/)[\d]{3}/([\w]{10,100}\.[\w]{3,4})\'\)\;\<\/script\>'
-
-        _url = findall(_regx ,_src)[0]
-        self.img_url = ''.join(_url)
-        self.img_thumb_url = '150/'.join(_url)
 
 class Host_ba_bayimg( Uploader ):
     host='bayimg.com'
@@ -661,6 +617,50 @@ class Host_xe_xegami( Uploader ):
 
 ############################################################
 #old
+
+class __Host_pi_pict( Uploader ):
+    '''example add new host'''
+    host='pict.com'
+    #action = 'http://www.pict.com/upload/'
+    #action = 'http://www.pict.com/api/upload/?auth=m5q9u1vbk0d5v137s8k2sl1nr2'
+    action = 'http://www.pict.com/upload/url/cellid/1/albumid/0'
+    headers = {
+            #'Accept':'application/json',
+            #'User-Agent':'Pict.com Uploader v.1.0.4',
+            #'Cookie':'PHPSESSID=s55ebesdc4i328mmq12i8grmh3; auth=s55ebesdc4i328mmq12i8grmh3; index_visit=%7B%22time%22%3A1238481373%2C%22pid%22%3A0%7D; localset=%7B%22first_tooltip%22%3A%22false%22%7D',
+            #'X-Requested-With':'XMLHttpRequest',
+            #'X-Request':'JSON',
+            }
+    
+
+    form = {
+            'cell_id':'30',
+            'cellId':'30',
+            'album_id':'30',
+            'pid':'30',
+            #'Submit': '',
+            }
+
+    def as_file(self, _file):
+        #self.action = 'http://pict.com/api/upload/?auth=m5q9u1vbk0d5v137s8k2sl1nr2'
+        self.url = False
+        return {'Datafile': _file }
+    def as_url(self, _url):
+        self.action = 'http://www.pict.com/upload/url/cellid/1/albumid/0'
+        self.url = True
+        return {'url': _url}
+    def postload(self ):
+        _src = self.get_src(True).replace('\/','/')
+        if self.url:
+            _regx = r'\":\"(http://.*?/)[\d]{3}/([\w]{10,100}\.[\w]{3,4})\"}'
+
+        else:
+            _regx = r'\'(http://.*?/)[\d]{3}/([\w]{10,100}\.[\w]{3,4})\'\)\;\<\/script\>'
+
+        _url = findall(_regx ,_src)[0]
+        self.img_url = ''.join(_url)
+        self.img_thumb_url = '150/'.join(_url)
+
 
 #Example
 class __Host_ex_example( Uploader ):

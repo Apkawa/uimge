@@ -337,7 +337,10 @@ class gUimge:
             return False
 
     def make_result(self):
-        _delim = self.delim.get_active_text().replace('\\n','\n')
+        try:
+            _delim = self.delim.get_active_text().replace('\\n','\n')
+        except AttributeError:
+            _delim = '\n'
         return _delim.join([OUTPRINT.get_out( r[0], r[1], r[2]) for r in self.result] )
 
     def Clipboard_clicked_cb(self, widget):
