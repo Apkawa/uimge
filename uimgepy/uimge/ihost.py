@@ -31,7 +31,6 @@ import httplib
 #TODO: 
 #  Будем делать
 #
-#    * http://xegami.com/
 #    * http://directupload.net/
 #    * http://pixshock.net/
 #    * http://www.picfront.org/
@@ -49,6 +48,9 @@ import httplib
 # http://hostpix.ru/
 # http://getpic.ru/
 # http://www.10pix.ru/
+
+# in http://zenden.ws/imageuploader
+
 #
 # * add http://sharepix.ru/
 # * add http://avoreg.ru/
@@ -73,12 +75,28 @@ import httplib
 
 
 
-def host_test( host, _file = '/home/apkawa/pictres/1201337718895.jpeg', _url = 'http://s41.radikal.ru/i092/0902/93/40b756930f38.png',):
+def host_test( host, _file = 'c:\\1.jpg', _url = 'http://s41.radikal.ru/i092/0902/93/40b756930f38.png',):
     h = host()
     h.upload(_file)
     print h.get_urls()
     h.upload(_url)
     print h.get_urls()
+def host_test_all(_file = 'c:\\1.jpg', _url = 'http://s41.radikal.ru/i092/0902/93/40b756930f38.png'):
+    u=Uploaders()
+    for h in u.get_hosts_list():
+        _h = u.get_host(h)()
+        print _h.host
+        try:
+            _h.upload( _file )
+            print _h.get_urls()
+        except:
+            print _h.host,' file fail'
+        try:
+            _h.upload(_url)
+            print _h.get_urls()
+        except:
+            print _h.host,' url fail'
+
 
 
 from sys import platform
@@ -233,9 +251,10 @@ class Host_r_radikal( Uploader ):
             self.img_url = _xml.getElementsByTagName('rurl')[0].firstChild.data
             self.img_thumb_url =  _xml.getElementsByTagName('rurlt')[0].firstChild.data
 
+#@host_test
 class Host_o_opicture( Uploader ):
     host='opicture.ru'
-    action = 'http://opicture.ru:8080/upload/?api=true'
+    action = 'http://opicture.ru/upload/?api=true'
     form = {
                 'preview':	'on',
                 'information':'on',
@@ -257,7 +276,6 @@ class Host_o_opicture( Uploader ):
         #__url = findall('showTags\(.*?\'([\d]{4}/[\d]{2}/[\d]{2}/[\d]{2}/[\d]{10,}\.[\w]{2,4})\'',  )
         #self.img_url = 'http://opicture.ru/upload/%s'% __url[0]
         #self.img_thumb_url = 'http://opicture.ru/picture/thumbs/%s.jpg'% ''.join( __url[0].split('.')[:-1])
-        #D( resp)
         
 class Host_s_smages( Uploader ):
     host='smages.com'
@@ -518,13 +536,13 @@ class Host_pu_pikucha( Uploader ):
         _url = findall('\[img\]http://pikucha.ru/([\d]{4,10})/thumbnail/(.*?)\[/img\]',_src)[0]
         self.img_url = 'http://pikucha.ru/%s/%s'%_url
         self.img_thumb_url = 'http://pikucha.ru/%s/thumbnail/%s'%_url
-
-#@host_test
-class Host_pi_pict( Uploader ):
+#fail
+class __Host_pi_pict( Uploader ):
     '''example add new host'''
     host='pict.com'
-    action = 'http://www.pict.com/upload/'
+    #action = 'http://www.pict.com/upload/'
     #action = 'http://www.pict.com/api/upload/?auth=m5q9u1vbk0d5v137s8k2sl1nr2'
+    action = 'http://www.pict.com/upload/url/cellid/1/albumid/0'
     headers = {
             #'Accept':'application/json',
             #'User-Agent':'Pict.com Uploader v.1.0.4',
@@ -562,30 +580,29 @@ class Host_pi_pict( Uploader ):
         self.img_url = ''.join(_url)
         self.img_thumb_url = '150/'.join(_url)
 
-#не работает заливка с урла.
-class __Host_p_picthost( Uploader ):
-    host='picthost.ru'
-    action = 'http://picthost.ru/upload.php'
-    form = {'private_upload': '1', 'upload': '"Upload Images"', }
+class Host_ba_bayimg( Uploader ):
+    host='bayimg.com'
+    action = 'http://upload.%s/upload'%host
+    form = {
+            'code':'666',
+            'tags':'guimge',
+            'Submit': '',
+            }
+
     def as_file(self, _file):
-        return {'userfile[]': _file}
-    def as_url(self, _url):
-        action = 'http://picthost.ru/upload.php?url=1'
-        return {'userfile[]': _url}
-    def postload(self):
-        url=findall('\<a href=\"viewer.php\?file=(.*?)\"', self.get_src() )
+        return {'file': _file }
+    #def as_url(self, _url):
+    #    return {'url': _url}
+    #def thumb_size(self, _thumb_size):
+    #    return { 'thumb_size': _thumb_size, }
+    def postload(self ):
+        _src = self.get_src()
+        _regx = r'img src="http://bayimg.com/thumb/(.+?)"'
+        _url = findall(_regx ,_src)[0]
+        self.img_url = 'http://bayimg.com/image/%s'%_url
+        self.img_thumb_url = 'http://bayimg.com/thumb/%s'%_url
 
-        t = 'http://picthost.ru/images/'
-        tumburl=url[0].split('.')
-        tumburl[-2] += '_thumb'
-        tumburl = '.'.join(tumburl)
-        resp = {'url':t+url[0], 'thumb':t+tumburl}
-        D(resp)
-        return resp
-
-#@host_test
-#Epic Fail
-class __Host_k_imageshack(Uploader):
+class Host_k_imageshack(Uploader):
     host='imageshack.us'
     action = 'http://imageshack.us/'
     form = {'uploadtype': 'on', 'Submit':'"host it!"'}
@@ -601,10 +618,49 @@ class __Host_k_imageshack(Uploader):
         url=findall('value=\"(http://img.[\d]+?.imageshack.us/img[\d]+?/.*?/.*?)\"', self.get_src() )
         tumburl=url[0].split('.')
         tumburl.insert(-1,'th')
-        urls=(url[0],'.'.join(tumburl))
-        resp = { 'url': urls[0], 'thumb': urls[1]}
-        D(resp)
-        return resp
+        self.img_url = url[0]
+        self.img_thumb_url = '.'.join(tumburl)
+
+class Host_p_picthost( Uploader ):
+    host='picthost.ru'
+    action = 'http://picthost.ru/upload.php'
+    form = {'private_upload': '1', 'upload': '"Upload Images"', }
+    def as_file(self, _file):
+        return {'userfile[]': _file}
+    def as_url(self, _url):
+        action = 'http://picthost.ru/upload.php?url=1'
+        return {'userfile[]': _url}
+    def postload(self):
+        url=findall('\<a href=\"viewer.php\?file=(.*?)\"', self.get_src() )
+
+        t = 'http://picthost.ru/images/'
+        tumburl=url[0].split('.')
+        tumburl[-2] += '_thumb'
+        tumburl = '.'.join(tumburl)
+        self.img_url = t+url[0]
+        self.img_thumb_url = t+tumburl
+
+class Host_xe_xegami( Uploader ):
+    host='xegami.com'
+    action = 'http://%s/upload.php'%host
+    form = {
+            'description_a':'checked',
+            'description':'uimge',
+            'password':'',
+            'Submit': '',
+            }
+
+    def as_file(self, _file):
+        return {'upload_image': _file }
+    def postload(self ):
+        _src = self.get_src()
+        _regx = r'img src=\"http://xegami.com/thumbs/(.+?)\"'
+        _url = findall(_regx ,_src)[0]
+        self.img_url = 'http://xegami.com/uploads/%s'%_url
+        self.img_thumb_url = 'http://xegami.com/thumbs/%s'%_url
+
+############################################################
+#old
 
 #Example
 class __Host_ex_example( Uploader ):
@@ -629,4 +685,5 @@ class __Host_ex_example( Uploader ):
         self.img_thumb_url = '%s'%_url
 
 if __name__ == '__main__':
+    #host_test_all()
     pass
