@@ -1,9 +1,5 @@
 # -*- coding: utf-8 -*-
 from base_host import test_host, findall
-def test(host):
-    if __name__ == '__main__':
-        test_host( host)
-@test
 class Host_ib_imgby:
     host='imgby.com'
     action = 'http://%s/'%host

@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 from base_host import test_host, findall
+@test_host(__name__)
 class Host_o_opicture:
     host='opicture.ru'
     action = 'http://opicture.ru/upload/?api=true'
@@ -25,5 +26,3 @@ class Host_o_opicture:
         #self.img_url = 'http://opicture.ru/upload/%s'% __url[0]
         #self.img_thumb_url = 'http://opicture.ru/picture/thumbs/%s.jpg'% ''.join( __url[0].split('.')[:-1])
 
-if __name__ == '__main__':
-    test_host( Host_r_radikal )

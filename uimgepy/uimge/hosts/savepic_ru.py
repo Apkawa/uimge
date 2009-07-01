@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 from base_host import test_host, findall
+@test_host(__name__)
 class Host_sp_savepic:
     host='savepic.ru'
     action = 'http://savepic.ru/search.php'
@@ -24,5 +25,3 @@ class Host_sp_savepic:
         url,tmb = 'http://savepic.ru/%s.%s'%(reurl,ext),'http://savepic.ru/%sm.%s'%(reurl,ext)
         self.img_url = url
         self.img_thumb_url = tmb
-if __name__ == '__main__':
-    test_host( Host_r_radikal )

@@ -1,9 +1,6 @@
 # -*- coding: utf-8 -*-
 from base_host import test_host, findall
-def test(host):
-    if __name__ == '__main__':
-        test_host( host)
-@test
+@test_host(__name__)
 class __Host_ex_example:
     host='example.org'
     action = 'http://example.org/upload'

@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 from base_host import test_host, findall
+@test_host(__name__)
 
 class Host_u_funkyimg:
     host='funkyimg.com'
@@ -28,5 +29,3 @@ class Host_u_funkyimg:
 
 
 
-if __name__ == '__main__':
-    test_host( Host_r_radikal )

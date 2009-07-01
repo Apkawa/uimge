@@ -1,9 +1,6 @@
 # -*- coding: utf-8 -*-
 from base_host import test_host, findall
-def test(host):
-    if __name__ == '__main__':
-        test_host( host)
-@test
+@test_host(__name__)
 class Host_pm_picamatic:
     host='picamatic.com'
     action = 'http://www.picamatic.com/'

@@ -172,7 +172,7 @@ class Uploaders:
             if fname.endswith('.py') and not fname.startswith('__init__'):
                 #print fname
                 module_name = fname[:-3]
-                str_module = hosts+'.'+module_name 
+                str_module = hosts+'.'+module_name
                 #print str_module
                 package = __import__(str_module)
                 modules.append( module_name )
@@ -182,9 +182,11 @@ class Uploaders:
                 obj = getattr( module_obj, elem)
                 if inspect.isclass(obj):
                     obj_name = obj.__name__
+                    print obj_name
                     if obj_name.startswith('Host_'):
+                        print obj
+                        print '---'
                         self.Imagehosts.update({ obj_name[len('Host_'):] : compile_host( obj ) })
-                    
     def get_hosts_list(self):
         return self.Imagehosts
     def get_host(self, key):
@@ -193,30 +195,13 @@ class Uploaders:
 from new import classobj
 def compile_host( host):
     return classobj( host.host, (Uploader, host,),{})
-    
-
-#################################################################################################
-#################################################################################################
-#################################################################################################
 
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
+#old
 
 ############################################################
-#old
 
 class __Host_pi_pict:
     '''example add new host'''
