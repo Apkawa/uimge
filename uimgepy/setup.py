@@ -16,7 +16,7 @@ setup(name='uimge',
       author='Apkawa',
       author_email='apkawa@gmail.com',
       url='http://code.google.com/p/uimge/',
-      packages=['uimge',],
+      packages=['uimge','uimge.hosts'],
       license='GPLv3',
       data_files=[
           ( _lang_path%{'lang':'en'} ,['locale/en/LC_MESSAGES/uimge.mo']),
