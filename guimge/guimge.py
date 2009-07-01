@@ -42,21 +42,19 @@ import gobject
 sys.path.insert(0, os.path.abspath('..'+os.path.sep+'uimgepy') )
 from uimge import Uimge, Outprint
 
-GLADE_FILE = 'guimge.glade'
 
-if os.path.exists(GLADE_FILE):
-    GLADE_PATH = GLADE_FILE
+if __file__.startswith('/usr/bin/'):
+    DATA_DIR = '/usr/share/guimge/'
 else:
-    if sys.platform != 'win32':
-        GLADE_PATH = '/usr/share/guimge/'+GLADE_FILE
-print GLADE_PATH
+    DATA_DIR = ''
 
-CONF_FILE = 'guimge.conf'
+GLADE_FILE = '%sguimge.glade'%DATA_DIR
+CONF_FILE = '%sguimge.conf'%DATA_DIR
+ICONS_DIR = '%sicons'%DATA_DIR
 
 UIMGE = Uimge()
 GUIMGE = {'version':'0.1.2-0',}
 
-ICONS = 'icons'
 
 
 
@@ -69,8 +67,8 @@ OUTPRINT = Outprint()
 class gUimge:
     lastdir = HOME
     result = []
-    guimge_icon_ico = gtk.gdk.pixbuf_new_from_file( ICONS+os.path.sep+'guimge.ico')
-    guimge_icon_png = gtk.gdk.pixbuf_new_from_file( ICONS+os.path.sep+'guimge.png')
+    guimge_icon_ico = gtk.gdk.pixbuf_new_from_file( ICONS_DIR+os.path.sep+'guimge.ico')
+    guimge_icon_png = gtk.gdk.pixbuf_new_from_file( ICONS_DIR+os.path.sep+'guimge.png')
 
 
     def __init__(self):
@@ -92,7 +90,7 @@ class gUimge:
         print self.conf.items( self.conf_default_section)
 
 
-        self.WidgetsTree = gtk.glade.XML( GLADE_PATH )
+        self.WidgetsTree = gtk.glade.XML( GLADE_FILE )
         conn = {
             'FileOpen_clicked_cb': self.FileOpen_clicked_cb ,
             'UploadButton_clicked_cb': self.UploadButton_clicked_cb,
@@ -170,7 +168,7 @@ class gUimge:
 
             for ls in HOSTS.keys():
                 ico_name = ls+'.ico'
-                ico_dir = ICONS+os.path.sep+'hosts'
+                ico_dir = ICONS_DIR+os.path.sep+'hosts'
                 ico_path = ico_dir+os.path.sep+ico_name
                 #print ico_path
                 if not os.path.exists(ico_path):
