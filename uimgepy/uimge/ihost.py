@@ -23,38 +23,33 @@ import urllib2
 import urllib2_file
 from os.path import split as path_split
 import httplib
+import os
 
 
 def host_test_all(_file = 'c:\\1.jpg', _url = 'http://s41.radikal.ru/i092/0902/93/40b756930f38.png'):
     u=Uploaders()
     for h in u.get_hosts_list():
-        _h = u.get_host(h)()
-        print _h.host
-        try:
-            _h.upload( _file )
-            print _h.get_urls()
-        except:
-            print _h.host,' file fail'
-        try:
-            _h.upload(_url)
-            print _h.get_urls()
-        except:
-            print _h.host,' url fail'
+        _h = u.get_host(h)
+        test_host(_h)
 
 
-def test_host( host,  _url = 'http://s41.radikal.ru/i092/0902/93/40b756930f38.png',):
-    import sys
-    if sys.platform != 'win32':
+def test_host( host, compiled=False):
+    _url = 'http://s41.radikal.ru/i092/0902/93/40b756930f38.png'
+    if os.sys.platform != 'win32':
         _file = '/home/apkawa/1237325744193.jpg'
     else:
         _file = 'C:\\1.jpg'
-    h = compile_host(host)()
+    if compiled:
+        h = host
+    else:
+        h = compile_host(host)()
+    print h.host
     h.upload(_file)
     print h.get_urls()
     h.upload(_url)
     print h.get_urls()
+    print '--'
 
-import os
 if os.sys.platform == "win32":
     r_m = 'rb'
     w_m = 'wb'
@@ -69,8 +64,6 @@ class Uploader:
     img_thumb_url = None
     filename = None
     progress = 0
-
-
     def construct( self):
         def ufopen( _url, _filename ):
             import tempfile
@@ -119,19 +112,6 @@ class Uploader:
 
         __req.add_header('Referer','http://%s/'%self.host )
         self._open = urllib2.urlopen( __req )
-
-
-    def get_src(self, debug = False):
-        __src = self._open.read()
-        if debug:
-            print __src
-        return __src
-    def get_headers(self):
-        return self._open.headers.headers
-    def get_geturl(self):
-        return self._open.geturl()
-    def get_filename(self):
-        return self.__obj
     def upload( self, obj, thumb_size = 200):
         self.__obj = obj
         self.__thumb_size = thumb_size
@@ -150,7 +130,17 @@ class Uploader:
         except IndexError, NameError:
             print "File %(obj)s not uploading"%{'obj': self.__obj}
             return False
-
+    def get_src(self, debug = False):
+        __src = self._open.read()
+        if debug:
+            print __src
+        return __src
+    def get_headers(self):
+        return self._open.headers.headers
+    def get_geturl(self):
+        return self._open.geturl()
+    def get_filename(self):
+        return self.__obj
     def get_filename( self ):
         return self.filename
     def get_thumb_url( self ):
@@ -165,27 +155,29 @@ class Uploaders:
         import inspect
         hosts = 'hosts'
         this_dir = os.path.split(__file__)[0]
+        if this_dir:
+            list_hosts = os.listdir(this_dir+os.path.sep+hosts)
+        else:
+            list_hosts = os.listdir( hosts)
         os.sys.path.append( this_dir )
         modules= []
         self.Imagehosts = {}
-        for fname in os.listdir( this_dir+os.path.sep+hosts):
+        for fname in os.listdir( hosts ):
             if fname.endswith('.py') and not fname.startswith('__init__'):
-                #print fname
                 module_name = fname[:-3]
                 str_module = hosts+'.'+module_name
-                #print str_module
                 package = __import__(str_module)
                 modules.append( module_name )
         for module_name in modules:
             module_obj = getattr( package, module_name)
+
             for elem in dir(module_obj):
                 obj = getattr( module_obj, elem)
+
                 if inspect.isclass(obj):
                     obj_name = obj.__name__
-                    print obj_name
+
                     if obj_name.startswith('Host_'):
-                        print obj
-                        print '---'
                         self.Imagehosts.update({ obj_name[len('Host_'):] : compile_host( obj ) })
     def get_hosts_list(self):
         return self.Imagehosts

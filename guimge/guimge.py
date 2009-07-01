@@ -25,12 +25,6 @@ import sys
 import os
 
 
-if not sys.platform == 'win32':
-    import pygtk
-    pygtk.require('2.0')
-    HOME = 'file:///'+os.environ['HOME']+os.path.sep
-else:
-    HOME = 'file:///'+os.environ['HOMEDRIVE']+os.environ['HOMEPATH']+os.path.sep
 
 import gtk
 import gtk.glade
@@ -43,13 +37,24 @@ sys.path.insert(0, os.path.abspath('..'+os.path.sep+'uimgepy') )
 from uimge import Uimge, Outprint
 
 
+if not sys.platform == 'win32':
+    import pygtk
+    pygtk.require('2.0')
+    HOME = os.environ['HOME']+os.path.sep
+
+else:
+    HOME = os.environ['HOMEDRIVE']+os.environ['HOMEPATH']+os.path.sep
+    CONF_FILE = 'guimge.conf'
+
+
 if __file__.startswith('/usr/bin/'):
     DATA_DIR = '/usr/share/guimge/'
+    CONF_FILE = '%sguimge.conf'%HOME
 else:
     DATA_DIR = ''
+    CONF_FILE = 'guimge.conf'
 
 GLADE_FILE = '%sguimge.glade'%DATA_DIR
-CONF_FILE = '%sguimge.conf'%DATA_DIR
 ICONS_DIR = '%sicons'%DATA_DIR
 
 UIMGE = Uimge()
@@ -65,7 +70,7 @@ HOSTS =dict( [(host.host,key) for key, host in __hosts.items()] )
 OUTPRINT = Outprint()
 
 class gUimge:
-    lastdir = HOME
+    lastdir = 'file://'+HOME
     result = []
     guimge_icon_ico = gtk.gdk.pixbuf_new_from_file( ICONS_DIR+os.path.sep+'guimge.ico')
     guimge_icon_png = gtk.gdk.pixbuf_new_from_file( ICONS_DIR+os.path.sep+'guimge.png')
@@ -78,16 +83,14 @@ class gUimge:
         if os.path.exists( CONF_FILE ):
             self.conf.read( CONF_FILE)
         else:
-            #self.conf.write( open(CONF_FILE, 'w+b'))
-            #self.conf.read( open(CONF_FILE, 'r+b'))
-            print 'NoConfig'
+            print 'Not found config'
             _defaults={'host':'radikal.ru', 'modeout': ''}
             self.conf.add_section( self.conf_default_section )
             for key, val in _defaults.items():
                 self.conf.set( self.conf_default_section, key, val)
         self.default_host = self.conf.get( self.conf_default_section, 'host')
         self.default_modeout = self.conf.get( self.conf_default_section, 'modeout')
-        print self.conf.items( self.conf_default_section)
+        #print self.conf.items( self.conf_default_section)
 
 
         self.WidgetsTree = gtk.glade.XML( GLADE_FILE )
@@ -237,19 +240,15 @@ class gUimge:
                             gtk.STOCK_MISSING_IMAGE,
                             gtk.ICON_SIZE_DIALOG,
                             None)
-
                 filename =  os.path.split(f)[1]
-
                 image_info = gtk.gdk.pixbuf_get_file_info(f)
-
                 size = '%.2f Kb'%(os.stat(f).st_size/float(1024))
                 if image_info:
                     image_size = ' %sx%s'%( image_info[1], image_info[2],)
-                    image_mime=   ' '.join( image_info [0]['mime_types']) 
+                    image_mime=   ' '.join( image_info [0]['mime_types'])
                 else:
                     image_size = ''
                     image_mime=   ''
-
                 if len(filename) > 31:
                     filename = '%s...%s'%(
                             filename[0:15],filename[-15:],
@@ -259,12 +258,9 @@ class gUimge:
                             filename,
                             )
                 title = '%s %s %s\n%s'%( image_size, image_mime, size, filename)
-
-
                 self.store.append([f, pixbuf, title, size])
         elif resp == gtk.RESPONSE_CANCEL:
             print 'Closed, no files selected'
-
         if [s for s in self.store]:
             self.WidgetsTree.get_widget('UploadButton').set_sensitive(True)
             self.WidgetsTree.get_widget('ClearFileList').set_sensitive(True)
@@ -381,6 +377,9 @@ class gUimge:
     def SaveSettings_clicked_cb(self, widget):
         self.conf.set( self.conf_default_section ,'host',self.current_host)
         self.conf.set( self.conf_default_section ,'modeout',self.current_modeout)
+        conf_dir = os.path.split( CONF_FILE)[0]
+        if conf_dir:
+            os.makedirs( conf_dir)
         self.conf.write( open(CONF_FILE, 'w+b') )
         pass
 

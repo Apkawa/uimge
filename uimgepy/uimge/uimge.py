@@ -29,7 +29,7 @@ from ihost import Uploaders
 
 
 
-VERSION = '0.07.6.1'
+VERSION = '0.07.6.4'
 
 try:
     gettext.install('uimge',unicode=True)
