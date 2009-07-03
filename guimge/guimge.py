@@ -206,7 +206,7 @@ class gUimge:
                     [OUTPRINT.outprint_rules[k]['desc'].replace('Output in ',''),k ]
                     )
 
-        if not self.default_modeout:
+        if self.default_modeout == 'False':
             result_out.set_active( 0 )
         else:
             _active = OUTPRINT.outprint_rules.keys().index( self.default_modeout )
