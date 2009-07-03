@@ -49,7 +49,7 @@ else:
 
 if __file__.startswith('/usr/bin/'):
     DATA_DIR = '/usr/share/guimge/'
-    CONF_FILE = '%sguimge.conf'%HOME
+    CONF_FILE = os.path.join(HOME,'.guimge','guimge.conf')
 else:
     DATA_DIR = ''
     CONF_FILE = 'guimge.conf'
@@ -294,17 +294,9 @@ class gUimge:
         #print event.keyval
         if event.keyval == 65535:
             selection = widget.get_selected_items()
-            print selection
+            #print selection
             for s in selection:
                 self.store.remove( widget.get_model().get_iter( s[0] ) )
-            '''
-            #selection = widget.get_selection()
-            #rows = selection.get_selected_rows()
-            #print rows
-            #rows_1 = rows[1]
-            rows_1.reverse()
-            [ rows[0].remove( rows[0][r].iter ) for r in rows_1]
-            '''
             if not [s for s in self.store]:
                 self.WidgetsTree.get_widget('UploadButton').set_sensitive(False)
                 self.WidgetsTree.get_widget('ClearFileList').set_sensitive(False)
@@ -359,16 +351,12 @@ class gUimge:
         return _delim.join([OUTPRINT.get_out( r[0], r[1], r[2]) for r in self.result] )
 
     def Clipboard_clicked_cb(self, widget):
-        #print widget
-        #print self.result
-        #print result
         result = self.make_result()
         _clip = gtk.Clipboard()
         _clip.clear()
         _clip.set_text( result )
 
     def SettingsToggle_toggled_cb(self, widget):
-        #print widget
         settings_vbox = self.WidgetsTree.get_widget('SettingVBox')
         if widget.get_active():
             settings_vbox.show()
@@ -394,17 +382,29 @@ class gUimge:
 
 
 def FileChooser(lastdir=False):
-    chooser = gtk.FileChooserDialog(title="Select image",action=gtk.FILE_CHOOSER_ACTION_OPEN,
-                              buttons=(gtk.STOCK_CANCEL,gtk.RESPONSE_CANCEL,gtk.STOCK_OPEN,gtk.RESPONSE_OK),
+    chooser = gtk.FileChooserDialog(
+            title="Select image",
+            action=gtk.FILE_CHOOSER_ACTION_OPEN,
+            buttons=(
+                gtk.STOCK_CANCEL,gtk.RESPONSE_CANCEL,
+                gtk.STOCK_OPEN,gtk.RESPONSE_OK),
                               )
 #http://www.pygtk.org/pygtk2tutorial/sec-FileChoosers.html
 #        http://pygtk.org/docs/pygtk/class-gtkfilechooser.html
     #Set filters
     list_filters = (
-            ("Images",( ("image/png","image/jpeg", "image/gif"), ("*.png","*.jpg","*.jpeg","*.gif","*.tif","*.tiff","*.bmp") ) ),
-            ("PNG",( ("image/png",), ("*.png",) ) ),
-            ("JPG/JPEG",( ("image/jpeg",), ("*.jpg","*.jpeg",) ) ),
-            ("GIF",( ("image/gif",), ("*.gif",) ) ),
+            ("Images",(
+                ("image/png","image/jpeg", "image/gif"),
+                ("*.png","*.jpg","*.jpeg","*.gif","*.tif","*.tiff","*.bmp") ) ),
+            ("PNG",(
+                ("image/png",),
+                ("*.png",) ) ),
+            ("JPG/JPEG",(
+                ("image/jpeg",),
+                ("*.jpg","*.jpeg",) ) ),
+            ("GIF",(
+                ("image/gif",),
+                ("*.gif",) ) ),
             )
 
     for f_name, filtr in list_filters:
@@ -426,7 +426,6 @@ def FileChooser(lastdir=False):
             have_preview = False
         file_chooser.set_preview_widget_active(have_preview)
         return
-
     if lastdir:
         chooser.set_current_folder_uri( lastdir )
 
@@ -434,15 +433,6 @@ def FileChooser(lastdir=False):
     chooser.set_preview_widget( preview )
     chooser.connect("update-preview", update_preview ,preview )
     return chooser
-
-#experimental
-
-
-
-
-
-
-
 
 
 if __name__ == "__main__":

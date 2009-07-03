@@ -1,8 +1,8 @@
 # Contributor: Apkawa <apkawa@gmail.com>
 
 pkgname=uimge-git
-pkgver=20090701
-pkgrel=2
+pkgver=20090704
+pkgrel=1
 pkgdesc="Python picture uploader to different imagehostings"
 arch=('i686' 'x86_64')
 url="http://code.google.com/p/uimge/"
@@ -17,7 +17,8 @@ source=( )
 md5sums=( )
 
 _gitname="uimge"
-_gitroot="git://github.com/Apkawa/uimge.git"
+_gitroot="/home/apkawa/Code/uimgepy/src/"
+#_gitroot="git://github.com/Apkawa/uimge.git"
 build() {
   cd ${srcdir}
   msg "Connecting to $_gitroot GIT server...."
@@ -33,6 +34,7 @@ build() {
   msg "Starting make..."
 
   cp -r ${srcdir}/${_gitname} ${srcdir}/${_gitname}-build
+  cp -r ${srcdir}/src ${srcdir}/${_gitname}-build
   cd ${srcdir}/${_gitname}-build/uimgepy
 
 
