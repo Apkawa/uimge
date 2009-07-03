@@ -3,14 +3,16 @@ from base_host import test_host, findall
 @test_host(__name__)
 class __Host_ex_example:
     host='pixshock.net'
-    action = 'http://%s/upfile.html'%host
+    action = 'http://www.%s/upfile.html'%host
     form = {
             'MAX_FILE_SIZE':'10000000',
             'title1':'uimge',
             'smallsize1':'640',
             'catname':'1',
-            'Submit': '',
             }
+    headers = {
+        'Cookie':'PHPSESSID=fgp6gheaeja3gjebd5jlq41cm5; path=/',
+    }
 
     def as_file(self, _file):
         return {'apic1': _file }
@@ -20,6 +22,7 @@ class __Host_ex_example:
         return { 'size1': _thumb_size, }
     def postload(self ):
         _src = self.get_src()
+        print _src
 #http://www.pixshock.net/pic_b/280a9fb689f39a13f1c3217e6634a486.png
         _regx = r'\[img\]http://www.pixshock.net/pic_b/(.*)\[/img\]'
         _url = findall(_regx ,_src)[0]

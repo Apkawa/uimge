@@ -162,7 +162,7 @@ class Uploaders:
         os.sys.path.append( this_dir )
         modules= []
         self.Imagehosts = {}
-        for fname in os.listdir( hosts ):
+        for fname in list_hosts:
             if fname.endswith('.py') and not fname.startswith('__init__'):
                 module_name = fname[:-3]
                 str_module = hosts+'.'+module_name

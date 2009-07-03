@@ -1,20 +1,13 @@
 TODO: 
  Будем делать
 * http://directupload.net/
-* http://pixshock.net/
-* http://www.picfront.org/
-* http://zikuka.ru/
 
  Look
-http://xpichost.net/
 http://depositimages.com/
-http://image-bits.ro/
-http://hfimg.com/
 http://imageban.ru/
 http://twinpix.nu/
 http://sendpic.ru/
 http://hostpix.ru/
-http://getpic.ru/
 http://www.10pix.ru/
 
 in http://zenden.ws/imageuploader
@@ -27,10 +20,12 @@ in http://zenden.ws/imageuploader
    * http://www.glowfoto.com/
 
 List image hostings
-http://forum.ru-board.com/topic.cgi?forum=11&topic=42191
+http://forum.ru-board.com/topic.cgi?forum=11&topic=4219#1
 
 Epic FAIL
 
+http://getpic.ru/
+http://hfimg.com/
    * http://up.li.ru/
    * http://www.imagevenue.com/
    * http://xs.to/
@@ -40,3 +35,33 @@ Epic FAIL
    * http://www.imgspot.com/
    * http://www.pixhost.org/
 http://imgdb.ru/
+
+
+############################################
+Current
+############################################
+
+    --zi, --zikuka      Залить на zikuka.ru
+    --xp, --xpichost    Залить на xpichost.net
+    --xe, --xegami      Залить на xegami.com
+    --up, --upimg       Залить на upimg.ru
+    -u, --funkyimg      Залить на funkyimg.com
+    --tp, --tinypic     Залить на tinypic.com
+    --sp, --savepic     Залить на savepic.ru
+    -s, --smages        Залить на smages.com
+    -r, --radikal       Залить на radikal.ru
+    --pu, --pikucha     Залить на pikucha.ru
+    --pm, --picamatic   Залить на picamatic.com
+    --pf, --picfront    Залить на picfront.org
+    --pc, --piccy       Залить на piccy.info
+    -p, --picthost      Залить на picthost.ru
+    -o, --opicture      Залить на opicture.ru
+    -k, --imageshack    Залить на imageshack.us
+    --k4, --keep4u      Залить на keep4u.ru
+    --it, --itrash      Залить на itrash.ru
+    --ir, --imagebits   Залить на image-bits.ro
+    --ib, --imgby       Залить на imgby.com
+    -i, --ipicture      Залить на ipicture.ru
+    --hm, --hostmyjpg   Залить на hostmyjpg.com
+    --ba, --bayimg      Залить на bayimg.com
+
