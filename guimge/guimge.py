@@ -379,7 +379,7 @@ class gUimge:
         self.conf.set( self.conf_default_section ,'host',self.current_host)
         self.conf.set( self.conf_default_section ,'modeout',self.current_modeout)
         conf_dir = os.path.split( CONF_FILE)[0]
-        if conf_dir:
+        if conf_dir and not os.path.exists(conf_dir):
             os.makedirs( conf_dir)
         self.conf.write( open(CONF_FILE, 'w+b') )
         pass
