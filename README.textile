@@ -9,17 +9,30 @@ h1. Options.
   -h, --help            show this help message and exit
 
   Major options:
-    -v, --savepic       Upload to savepic.ru
-    -u, --funkyimg      Upload to funkyimg.com
-    -s, --smages        Upload to smages.com
-    -r, --radikal       Upload to radikal.ru
-    -o, --opicture      Upload to opicture.ru
+    --ba, --bayimg      Upload to bayimg.com
+    --hm, --hostmyjpg   Upload to hostmyjpg.com
     -i, --ipicture      Upload to ipicture.ru
-    --upimg             Upload to upimg.ru
-    --piccy             Upload to piccy.info
-    --picamatic         Upload to picamatic.com
-    --keep4u            Upload to keep4u.ru
-    --4picture          Upload to 4picture.ru
+    --ib, --imgby       Upload to imgby.com
+    --ir, --imagebits   Upload to image-bits.ro
+    --it, --itrash      Upload to itrash.ru
+    --k4, --keep4u      Upload to keep4u.ru
+    -k, --imageshack    Upload to imageshack.us
+    -o, --opicture      Upload to opicture.ru
+    -p, --picthost      Upload to picthost.ru
+    --pc, --piccy       Upload to piccy.info
+    --pf, --picfront    Upload to picfront.org
+    --pm, --picamatic   Upload to picamatic.com
+    --pu, --pikucha     Upload to pikucha.ru
+    -r, --radikal       Upload to radikal.ru
+    -s, --smages        Upload to smages.com
+    --sp, --savepic     Upload to savepic.ru
+    --tp, --tinypic     Upload to tinypic.com
+    -u, --funkyimg      Upload to funkyimg.com
+    --up, --upimg       Upload to upimg.ru
+    --xe, --xegami      Upload to xegami.com
+    --xp, --xpichost    Upload to xpichost.net
+    --zi, --zikuka      Upload to zikuka.ru
+
 
   Additional options:
     -t THUMB_SIZE, --thumb_size=THUMB_SIZE
@@ -30,10 +43,10 @@ h1. Options.
 
   Output options:
     --bo, --bb-orig     Output in bb code in the original amount
-    --ho, --html-orig   Output in html code in the original amount
-    --wi, --wiki        Output in doku wiki format code with a preview
     --bt, --bb-thumb    Output in bb code with a preview
+    --ho, --html-orig   Output in html code in the original amount
     --ht, --html-thumb  Output in html code with a preview
+    --wi, --wiki        Output in doku wiki format code with a preview
     --usr=OUT_USR, --user-out=OUT_USR
                         Set user output #url# - original image, #tmb# -
                         preview image, #file# - filename   Sample:

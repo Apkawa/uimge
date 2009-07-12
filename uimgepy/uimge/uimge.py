@@ -27,17 +27,12 @@ import gettext
 
 from ihost import Uploaders
 
-
-
 VERSION = '0.07.6.4'
 
 try:
     gettext.install('uimge',unicode=True)
 except IOError:
     gettext.install('uimge', localedir = 'locale',unicode=True)
-
-
-
 
 class Outprint:
     def __init__(self):
@@ -148,12 +143,8 @@ class Uimge:
         self.filename = u.get_filename()
         return True
 
-
 class UimgeApp:
     "Класс cli приложения"
-            
-
-    
     def __init__(self):
         self.out = Outprint()
         self.outprint_rules = self.out.outprint_rules
@@ -164,7 +155,6 @@ class UimgeApp:
         self.version = 'uimge-'+VERSION
         self.usage = _('python %%prog [%s] picture')%self.key_hosts
         self.objects = []
-
     def main(self, _argv):
 
         self.parseopt(_argv)
@@ -186,7 +176,6 @@ class UimgeApp:
             f.close()
             return True
         return False
-
     def outprint(self, delim='\n',):
         img_url = self._uimge.img_url
         img_thumb_url = self._uimge.img_thumb_url
@@ -195,24 +184,22 @@ class UimgeApp:
         _out = self.out.get_out( img_url, img_thumb_url, filename )
         stdout.write( _out )
         stdout.write( delim)
-
     def parseopt(self, argv):
         parser = optparse.OptionParser(usage=self.usage, version=self.version)
         # Major options
         group_1 = optparse.OptionGroup(parser, _('Major options'))
-        for host in sorted(self.Imagehosts.keys(), reverse=True):
+        for host in sorted(self.Imagehosts.keys()):
             short_key, long_key = host.split('_')
             if len( short_key) == 1:
                 short_key='-'+short_key
             elif len( short_key ) >= 2:
                 short_key = '--'+short_key
-                        
             group_1.add_option(short_key,'--'+ long_key,
                     action='store_const', const=host, dest='check',
                     help='%s %s'%(_('Upload to'),self.Imagehosts[host].host))
 
         parser.add_option_group(group_1)
-    
+
         # Additional options
         group_2 = optparse.OptionGroup(parser, _('Additional options'))
         group_2.add_option('-t','--thumb_size', type="int", action='store', default=200, dest='thumb_size', \
@@ -222,7 +209,7 @@ class UimgeApp:
         parser.add_option_group(group_2)
 
         group_3 = optparse.OptionGroup(parser, _('Output options'))
-        for key in self.outprint_rules:
+        for key in sorted(self.outprint_rules):
             _short_key, _long_key = key.split('_')
             #if key != 'usr_user-out':
             group_3.add_option('--'+ _short_key,'--'+ _long_key,
@@ -245,8 +232,6 @@ class UimgeApp:
             parser.print_help()
             exit()
 
-
 if __name__ == '__main__':
     u = UimgeApp()
     u.main(argv[1:])
-    
