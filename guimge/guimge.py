@@ -58,7 +58,7 @@ GLADE_FILE = '%sguimge.glade'%DATA_DIR
 ICONS_DIR = '%sicons'%DATA_DIR
 
 UIMGE = Uimge()
-GUIMGE = {'version':'0.1.2-0',}
+GUIMGE = {'version':'0.1.3-0',}
 
 
 
@@ -84,7 +84,7 @@ class gUimge:
             self.conf.read( CONF_FILE)
         else:
             print 'Not found config'
-            _defaults={'host':'radikal.ru', 'modeout': ''}
+            _defaults={'host':'radikal.ru', 'modeout': 'False'}
             self.conf.add_section( self.conf_default_section )
             for key, val in _defaults.items():
                 self.conf.set( self.conf_default_section, key, val)
@@ -305,8 +305,6 @@ class gUimge:
         self.WidgetsTree.get_widget('UploadButton').set_sensitive(False)
         self.WidgetsTree.get_widget('ClearFileList').set_sensitive(False)
 
-
-
     def exit_event(self, widget, event):
         print widget
         print event.keyval
@@ -314,15 +312,28 @@ class gUimge:
             gtk.main_quit()
 
     def UploadButton_clicked_cb(self, widget):
-        #progress = self.WidgetsTree.get_widget('progressbar1')
+        def progress_set(text, fraction):
+            progress.set_text(text)
+            progress.set_fraction( fraction)
+
+        progress = self.WidgetsTree.get_widget('progressbar1')
         objects = [ s[0] for s in self.store]
         self.result = []
         if objects:
             print "Upload!"
+            __current_n_obj = 1
+            __all_n_obj = len(objects)
             for obj in objects:
-                #gtk.gdk.threads_enter()
-                #progress.show()
-                #gtk.gdk.threads_leave()
+
+                progress.show()
+                progress_set(
+                        'Uploading %i file of %i files'%( __current_n_obj, __all_n_obj),
+                        float(__current_n_obj)/__all_n_obj)
+                __current_n_obj +=1
+
+                while gtk.events_pending():
+                    gtk.main_iteration()
+
                 state = UIMGE.upload( unicode(obj, 'utf-8') )
                 if state:
                     self.result.append( (
@@ -334,6 +345,7 @@ class gUimge:
                     self.update_result_text()
                     self.WidgetsTree.get_widget('ResultExpander').set_sensitive(True)
                     self.WidgetsTree.get_widget('Clipboard').set_sensitive(True)
+            progress.hide()
 
     def update_result_text(self, widget=None):
         _result = self.make_result()
@@ -362,6 +374,7 @@ class gUimge:
             settings_vbox.show()
         else:
             settings_vbox.hide()
+
     def SaveSettings_clicked_cb(self, widget):
         self.conf.set( self.conf_default_section ,'host',self.current_host)
         self.conf.set( self.conf_default_section ,'modeout',self.current_modeout)
@@ -370,7 +383,6 @@ class gUimge:
             os.makedirs( conf_dir)
         self.conf.write( open(CONF_FILE, 'w+b') )
         pass
-
 
     def About_clicked_cb(self, widget):
         about = self.WidgetsTree.get_widget('About')
