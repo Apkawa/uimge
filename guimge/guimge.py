@@ -353,7 +353,8 @@ class gUimge:
                         ) )
                     print self.result
                     self.update_result_text()
-                    self._filelist_state( noclear=True )
+                    self.WidgetsTree.get_widget('ResultExpander').set_sensitive(True)
+                    self.WidgetsTree.get_widget('Clipboard').set_sensitive(True)
             progress.hide()
 
     def update_result_text(self, widget=None):
