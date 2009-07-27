@@ -7,5 +7,5 @@ Terminal=false
 Name=Guimge - picture uploader to imagehostings
 Name[ru]=Guimge - загрузчик изображений на хостинги изображений
 Comment=Python picture uploader to different imagehostings
-Exec=webhttrack
+Exec=guimge
 Icon=/usr/share/guimge/icons/guimge.png
