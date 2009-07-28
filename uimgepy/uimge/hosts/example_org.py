@@ -1,7 +1,10 @@
 # -*- coding: utf-8 -*-
 from base_host import test_host, findall
-@test_host(__name__)
-class __Host_ex_example:
+#@test_host(__name__)
+class __Host:
+    short_key = 'ex'
+    long_key = 'example'
+
     host='example.org'
     action = 'http://example.org/upload'
     form = {

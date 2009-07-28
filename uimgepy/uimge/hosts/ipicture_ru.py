@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 from base_host import test_host, findall
-@test_host(__name__)
+#@test_host(__name__)
 class Host_i_ipicture:
     host='ipicture.ru'
     action = 'http://ipicture.ru/Upload/'

@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 from base_host import test_host, findall
-@test_host(__name__)
+#@test_host(__name__)
 class Host_k4_keep4u:
     host='keep4u.ru'
     action = 'http://keep4u.ru/'

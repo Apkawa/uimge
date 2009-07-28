@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 from base_host import test_host, findall
-@test_host(__name__)
+#@test_host(__name__)
 class __Host_ex_example:
     host='pixshock.net'
     action = 'http://www.%s/upfile.html'%host

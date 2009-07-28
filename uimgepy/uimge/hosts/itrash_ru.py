@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 from base_host import test_host, findall
-@test_host(__name__)
+#@test_host(__name__)
 class Host_it_itrash:
     host='itrash.ru'
     action = 'http://itrash.ru/module/ib_news/ibn_processor.ajax.php?JsHttpRequest=12466100369162-form'
