@@ -1,0 +1,12 @@
+uimge (20090727-1ubuntu1) jaunty; urgency=low
+
+  * make for ubuntu
+
+ -- uimge <uimge@uimge-desktop>  Tue, 28 Jul 2009 22:46:27 +0400
+
+uimge (20090727-1) unstable; urgency=low
+
+  * Initial release 
+
+ -- uimge <apkawa@gmail.com>  Tue, 28 Jul 2009 19:28:52 +0400
+

@@ -1,0 +1,13 @@
+uimge (20090728-1) unstable; urgency=low
+
+  * Fixed for python 2.5
+  * 
+
+ -- uimge <uimge@uimge-debian.debian>  Tue, 28 Jul 2009 21:56:02 +0400
+
+uimge (20090727-1) unstable; urgency=low
+
+  * Initial release 
+
+ -- uimge <apkawa@gmail.com>  Tue, 28 Jul 2009 19:28:52 +0400
+

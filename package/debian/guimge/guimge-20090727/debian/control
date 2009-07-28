@@ -1,0 +1,12 @@
+Source: guimge
+Section: World Wide Web
+Priority: extra
+Maintainer: apkawa <apkawa@gmail.com>
+Build-Depends: debhelper (>= 7)
+Standards-Version: 3.7.3
+Homepage: 
+
+Package: guimge
+Architecture: any
+Depends: ${python:Depends} python (>=2.5), ${uimge:Depends} uimge
+Description: gtk picture uploader to different imagehostings written on python

@@ -1,0 +1,2 @@
+?package(guimge):needs="X11|text|vc|wm" section="Applications/see-menu-manual"\
+  title="guimge" command="/usr/bin/guimge"

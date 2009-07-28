@@ -1,0 +1,14 @@
+Source: uimge
+Section: World Wide Web
+Priority: extra
+Maintainer: apkawa <apkawa@gmail.com>
+Build-Depends: debhelper (>= 7), python (>=2.5)
+Standards-Version: 3.8.0
+Homepage: http://code.google.com/p/uimge/
+
+Package: uimge
+Architecture: any
+Depends: ${python:Depends} python (>=2.5)
+Description: Python picture uploader to different imagehostings
+
+	
