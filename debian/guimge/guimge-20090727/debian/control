@@ -7,6 +7,6 @@ Standards-Version: 3.7.3
 Homepage: 
 
 Package: guimge
-Architecture: any
+Architecture: all
 Depends: ${python:Depends} python (>=2.5), ${uimge:Depends} uimge
 Description: gtk picture uploader to different imagehostings written on python

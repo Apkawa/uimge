@@ -7,7 +7,7 @@ Standards-Version: 3.8.0
 Homepage: http://code.google.com/p/uimge/
 
 Package: uimge
-Architecture: any
+Architecture: all
 Depends: ${python:Depends} python (>=2.6)
 Description: Python picture uploader to different imagehostings
 
