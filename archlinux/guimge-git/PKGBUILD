@@ -1,8 +1,8 @@
 # Contributor: Apkawa <apkawa@gmail.com>
 
 pkgname=guimge-git
-pkgver=20090727
-pkgrel=2
+pkgver=20090830
+pkgrel=1
 pkgdesc="gtk picture uploader to different imagehostings written on python"
 arch=('i686' 'x86_64')
 url="http://code.google.com/p/uimge/"

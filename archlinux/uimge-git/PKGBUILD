@@ -1,8 +1,8 @@
 # Contributor: Apkawa <apkawa@gmail.com>
 
 pkgname=uimge-git
-pkgver=20090727
-pkgrel=3
+pkgver=20090830
+pkgrel=1
 pkgdesc="Python picture uploader to different imagehostings"
 arch=('i686' 'x86_64')
 url="http://code.google.com/p/uimge/"
