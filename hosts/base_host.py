@@ -60,20 +60,23 @@ class UploaderError( Exception ):
 
 
 class Uploader:
-    USERAGENT = rchoice( USER_AGENTS_LIST )
+    USER_AGENT = rchoice( USER_AGENTS_LIST )
     __t = None
+
     def findall( self, regex, string):
         rst = findall( regex, string)
         if rst:
             return rst
         else:
             raise UploaderError( 'Error parse regex %s'%regex)
+
     def mime( self, obj):
         mime = guess_type( obj)
         if mime[0]:
             return mime[0]
         else:
             return "application/octet-stream"
+
     def check_size(self, path ):
         size = os.stat( path ).st_size
         if self.max_file_size and  size > self.max_file_size:
@@ -120,6 +123,10 @@ class Uploader:
         self.curl.setopt( pycurl.REFERER, 'http://%s/'%self.host)
         if self.headers:
             self.curl.setopt( pycurl.HTTPHEADER, self.headers.items())
+
+        if self.user_agent:
+            self.USERAGENT = self.user_agent
+
         self.curl.setopt( pycurl.USERAGENT, self.USERAGENT )
         #print self.__form.items()
         curl_post = self.curl
@@ -133,30 +140,36 @@ class Uploader:
         #print curl.getinfo(pycurl.TOTAL_TIME)
         #print curl.getinfo(pycurl.EFFECTIVE_URL)
         #print self.curl.getinfo(pycurl.INFO_COOKIELIST)
+
     def _ufopen(self, _url, _filename ):
         import tempfile, urllib
         self.__t = tempfile.NamedTemporaryFile(prefix='',suffix= _filename, delete=False )
         self.__t.write( urllib.urlopen(_url).read())
         self.__t.seek(0)
         return self.__t.name
+
     def get_src(self, debug = False):
         __src = self._body.getvalue()
         if debug:
             print __src
         return __src
+
     def get_headers(self):
         return self._headers.getvalue()
+
     def get_geturl(self):
             red_url = self.curl.getinfo(pycurl.REDIRECT_URL)
             if red_url:
                 return red_url
             else:
                 return self.curl.getinfo(pycurl.EFFECTIVE_URL)
+
     def get_filename( self, splitext=False ):
         if not splitext:
             return self.filename
         else:
             return os.path.splitext( self.filename)
+
     def get_html(self, url):
         self.curl.setopt( pycurl.URL, url)
         self.curl.unsetopt( pycurl.HTTPPOST)
@@ -169,6 +182,7 @@ class BaseHost( Uploader ):
     long_key  = ""
     host= ""
     action = ""
+    user_agent = ""
     form = {}
     headers = {}
     def __test( self, obj):

@@ -14,6 +14,7 @@ class Host( BaseHost ):
             'check_thumb':'no',
             'uploading':'1',
             }
+    user_agent = "FPUploader"
     # form = {
     #         'url':'url',
     #         'thumb_text':'',
