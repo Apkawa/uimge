@@ -1,14 +1,53 @@
 TODO: 
- Будем делать
 
+h1. Description imagehosts
+
+|_.host |_. Max. size image |_. Shelf life |_. Thumb size |_. Upload from url |_. Secret api|_. Audit|
+|_.1 |_.2 |_. 3 |_. 4 |_. 5 |_. 6|_. 7|
+|_\7. Current|
+|"savepic.ru":http://savepic.ru                 | 2 Mb      | 2 year    |   |   |   |  |
+|"funkyimg.com":http://funkyimg.com             | 2 Mb      | ?         |   |   |   |  |
+|"smages.com":http://smages.com                 | 1500 Kb   | 6 months  |   |   |   |  |
+|"radikal.ru":http://radikal.ru                 | 10 Mb     | inf       | + | + | +f|
+|"opicture.ru":http://opicture.ru               | 5000x5000 | 1 year    | + | + | + | + |
+|"ipicture.ru":http://ipicture.ru               | 5000x5000 | 1 year    | + | + | +f| + |
+|"upimg.ru":http://upimg.ru                dev  | 5 Mb      | ?         |   |   |   |   |
+|"piccy.info":http://piccy.info                 | 3 Mb      | ?         |   |   |   |   |
+|"picamatic.com":http://picamatic.com      dev  | 3 Mb      | inf       |   |   |   |   |
+|"keep4u.ru":http://keep4u.ru                   | ?         | inf       | - | - | - | + |
+|"4picture.ru":http://4picture.ru               | 5000x5000 | inf       |   |   |   |   |
+|"tinypic.com":http://tinypic.com          dev  | ?         | ?         |   |   |   |   |
+|"hostmyjpg.com":http://www.hostmyjpg.com/      | 15 Mb     | ?         |   |   |   |   |
+|"pikucha.ru":http://pikucha.ru/                | 10 Mb     | inf       |   |   |   |   |
+|"xegami.com":http://xegami.com/                | 4096 Kb   | inf       |   |   |   |   |
+|"bayimg.com":http://bayimg.com/                | ?         | ?         |   |   |   |   |
+|"imageshack.us":http://www.imageshack.us/      | 1.5 Mb    | ?         |   |   |   |   |
+|"imgby.com":http://imgby.com/                  | 2 Mb      | ?         |   |   |   |   |
+|"zikuka.ru":http://zikuka.ru/                  | 5 Mb,     | ?         | . | . | ? | + |
+|"xpichost.net":http://xpichost.net             | ?         | ?         | + | + | - | + |
+|"itrash.ru":http://itrash.ru                   |           |           |   |   |   |
+|"image-bits.ro":http://image-bits.ro           |           |           |   |   |   |
+|"imageban.ru":http://imageban.ru               |           |           |   |   | + |
+|"pixhost.org":http://www.pixhost.org/          | 5 Mb      | ?         | . | . | . | + |
+|"picfront.org":http://www.picfront.org/        | 8 Mb      | ?         | . | . | ? |
+|"fastpic.ru":http://fastpic.ru                 | 2 Mb      | inf       | . | . | + | . |
+|"pictureshack.ru":http://pictureshack.ru       | 11 Mb     | inf       | . | . | + | . |
+|_\7. Expected to add|
+|"directupload.net":http://directupload.net/    | 4 Mb      | ?         | . | . | ? |
+|"pixshock.net":http://pixshock.net/            | 5 Mb      | 1 year    |
+|"example.org":http://example.org               | .         | .         | . | . | . | . |
+
+
+Будем делать
 http://imageup.ru/ 2Mb
 http://onlinedisk.ru/ 5Mb
 http://xtupload.com/ ?
 http://picatom.com/ 3Mb
 
  Look
-* http://directupload.net/
-* http://pic.co.ua/ru/
+ http://directupload.net/
+ http://pic.co.ua/ru/
+ http://10pix.ru/
 http://depositimages.com/
 http://imageban.ru/
 http://twinpix.nu/
