@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
-from base_host import *
-class Host(BaseHost):
+import base
+class Host(base.BaseHost):
     dev_mode = True
     max_file_size = 500000000
     short_key = 'tp'
@@ -41,14 +41,14 @@ addresses
         import urllib
         __src = urllib.urlopen( 'http://%s'%self.host).read()
         __form = {
-            'UPLOAD_IDENTIFIER': findall('name="UPLOAD_IDENTIFIER" id="uid" value="(.*?)"',__src)[0] ,
-            'upk': findall( 'name="upk" value="(.*?)"', __src)[0],
+            'UPLOAD_IDENTIFIER': self.findall('name="UPLOAD_IDENTIFIER" id="uid" value="(.*?)"',__src)[0] ,
+            'upk': self.findall( 'name="upk" value="(.*?)"', __src)[0],
             }
-        self.action = findall('<form action="(http://s\d.tinypic.com/upload.php)"',__src)[0]
+        self.action = self.findall('<form action="(http://s\d.tinypic.com/upload.php)"',__src)[0]
         self.form.update( __form)
     def postload(self):
         __src = self.get_src(True)
-        key = dict( findall('name="(pic|ival)" value="(.*?)"', __src))
+        key = dict( self.findall('name="(pic|ival)" value="(.*?)"', __src))
         key.update( {'type': self.get_filename( splitext=True )[1]})
         self.img_url = 'http://i%(ival)s.tinypic.com/%(pic)s%(type)s'%(key)
         self.img_thumb_url = 'http://i%(ival)s.tinypic.com/%(pic)s_th%(type)s'%( key)

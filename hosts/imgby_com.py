@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
-from base_host import *
-class Host(BaseHost):
+import base
+class Host(base.BaseHost):
     short_key = 'ib'
     long_key  = 'imgby'
     host='imgby.com'
@@ -18,7 +18,7 @@ class Host(BaseHost):
     def postload(self ):
         _src = self.get_src()
         _regx = r'\[img\]http://imgby.com/thumbs/(.+?)\[/img\]'
-        _url = findall(_regx ,_src)[0]
+        _url = self.findall(_regx ,_src)[0]
         self.img_url = 'http://imgby.com/%s'%_url
         self.img_thumb_url = 'http://imgby.com/thumbs/%s'%_url
 

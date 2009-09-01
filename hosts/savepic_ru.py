@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
-from base_host import *
-class Host(BaseHost):
+import base
+class Host(base.BaseHost):
     max_file_size = 2097152
     short_key = 'sp'
     long_key  = 'savepic'
@@ -22,7 +22,7 @@ class Host(BaseHost):
         return {'file':_file}
 
     def postload(self):
-        reurl = findall('\"/([\d]+?).htm\"', self.get_src() )[0]
+        reurl = self.findall('\"/([\d]+?).htm\"', self.get_src() )[0]
         ext ='png'#self.get_filename().split('.')[-1].lower()
         url,tmb = 'http://savepic.ru/%s.%s'%(reurl,ext),'http://savepic.ru/%sm.%s'%(reurl,ext)
         self.img_url = url

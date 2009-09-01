@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
-from base_host import *
-class Host(BaseHost):
+import base
+class Host(base.BaseHost):
+    dev_mode = False
     short_key = 'xp'
     long_key  = 'xpichost'
     host='xpichost.net'
@@ -20,7 +21,7 @@ class Host(BaseHost):
     def postload(self ):
         _src = self.get_src()
         _regx = r'\[img\]http://xpichost.net/pic_s/(.*?).jpg\[/img\]'
-        _url = findall(_regx ,_src)[0]
+        _url = self.findall(_regx ,_src)[0]
         filename = self.get_filename(splitext=True)[1]
         self.img_url = 'http://xpichost.net/pic_b/%s%s'%(_url, filename )
         self.img_thumb_url = 'http://xpichost.net/pic_s/%s.jpg'%_url

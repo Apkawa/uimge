@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
-from base_host import *
+import base
 #@test_host(__name__)
-class Host(BaseHost):
+class Host(base.BaseHost):
     short_key = 'hm'
     long_key  = 'hostmyjpg'
     host='hostmyjpg.com'
@@ -18,7 +18,7 @@ class Host(BaseHost):
     def postload(self ):
         _src = self.get_src()
 
-        __url = findall('\[IMG\]http://img.hostmyjpg.com/(.*?)\[/IMG\]',  _src )[0]
+        __url = self.findall('\[IMG\]http://img.hostmyjpg.com/(.*?)\[/IMG\]',  _src )[0]
         self.img_url = 'http://img.hostmyjpg.com/%s'%__url
         self.img_thumb_url = 'http://www.hostmyjpg.com/thumbs/%s'%__url
 

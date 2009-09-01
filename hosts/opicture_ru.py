@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
-from base_host import *
-class Host(BaseHost):
+import base
+class Host(base.BaseHost):
     short_key = 'o'
     long_key  = 'opicture'
     host='opicture.ru'
@@ -23,7 +23,7 @@ class Host(BaseHost):
         self.img_url = _xml.getElementsByTagName('image')[0].firstChild.data
         self.img_thumb_url =  _xml.getElementsByTagName('preview')[0].firstChild.data
 
-        #__url = findall('showTags\(.*?\'([\d]{4}/[\d]{2}/[\d]{2}/[\d]{2}/[\d]{10,}\.[\w]{2,4})\'',  )
+        #__url = self.findall('showTags\(.*?\'([\d]{4}/[\d]{2}/[\d]{2}/[\d]{2}/[\d]{10,}\.[\w]{2,4})\'',  )
         #self.img_url = 'http://opicture.ru/upload/%s'% __url[0]
         #self.img_thumb_url = 'http://opicture.ru/picture/thumbs/%s.jpg'% ''.join( __url[0].split('.')[:-1])
 

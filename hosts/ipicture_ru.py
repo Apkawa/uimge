@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
-from base_host import *
-class Host(BaseHost):
+import base
+class Host(base.BaseHost):
     short_key = 'i'
     long_key  = 'ipicture'
     host='ipicture.ru'
@@ -41,15 +41,15 @@ Connection: Keep-Alive
         return {'thumb_resize':_thumb_size,}
     def postload(self):
         from urllib import urlopen
-        __reurl=findall('http://ipicture.ru/Gallery/View/\d+.html', self.get_headers())
-        __url=findall('\[IMG\](http://.*)\[\/IMG\]', urlopen(__reurl[0]).read())
+        __reurl=self.findall('http://ipicture.ru/Gallery/View/\d+.html', self.get_headers())
+        __url=self.findall('\[IMG\](http://.*)\[\/IMG\]', urlopen(__reurl[0]).read())
         self.img_url= __url[0]
         self.img_thumb_url = __url[2]
         '''
         else:
             _src = self.get_src()
             print _src
-            self.img_url, self.img_thumb_url = findall('<(?:image|thumb)path>(.*?)</(?:image|thumb)path>', _src )
+            self.img_url, self.img_thumb_url = self.findall('<(?:image|thumb)path>(.*?)</(?:image|thumb)path>', _src )
         '''
 
 

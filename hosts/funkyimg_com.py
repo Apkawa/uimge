@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
-from base_host import *
+import base
 #@test_host(__name__)
 
-class Host( BaseHost ):
+class Host( base.BaseHost ):
     short_key = 'u'
     long_key  = 'funkyimg'
     host='funkyimg.com'
@@ -24,7 +24,7 @@ class Host( BaseHost ):
                 'url_1':_url,
                 }
     def postload(self):
-        __url=findall('\[IMG\](http://funkyimg.com/.*)\[/IMG\]\[/URL\]', self.get_src() )
+        __url=self.findall('\[IMG\](http://funkyimg.com/.*)\[/IMG\]\[/URL\]', self.get_src() )
         __url.reverse()
         self.img_url= __url[0]
         self.img_thumb_url = __url[1]

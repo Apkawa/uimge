@@ -2,7 +2,7 @@
 import pycurl
 from StringIO import StringIO
 import os
-from re import findall
+import re
 from random import choice as rchoice
 from mimetypes import guess_type
 
@@ -58,13 +58,12 @@ class UploaderError( Exception ):
     def __str__(self):
         return repr( self.value )
 
-
 class Uploader:
     USER_AGENT = rchoice( USER_AGENTS_LIST )
     __t = None
 
     def findall( self, regex, string):
-        rst = findall( regex, string)
+        rst = re.findall( regex, string)
         if rst:
             return rst
         else:
@@ -125,9 +124,9 @@ class Uploader:
             self.curl.setopt( pycurl.HTTPHEADER, self.headers.items())
 
         if self.user_agent:
-            self.USERAGENT = self.user_agent
+            self.USER_AGENT = self.user_agent
 
-        self.curl.setopt( pycurl.USERAGENT, self.USERAGENT )
+        self.curl.setopt( pycurl.USERAGENT, self.USER_AGENT )
         #print self.__form.items()
         curl_post = self.curl
         curl_post.setopt( pycurl.HTTPPOST, self.__form.items())
@@ -175,6 +174,34 @@ class Uploader:
         self.curl.unsetopt( pycurl.HTTPPOST)
         self.curl.perform()
 
+    def __test( self, obj):
+        import traceback
+        import timeit
+        def ex( func, *args):
+            try:
+                func(*args)
+            except KeyboardInterrupt:
+                os.sys.exit(1)
+            except Exception, err:
+                traceback.print_exc()
+
+        print self.host
+        t = timeit.Timer()
+        _t0 = t.timer()
+        ex(self.upload,obj)
+        ex(self.preload)
+        ex(self.send_post)
+        ex(self.postload)
+        _t1 = t.timer()
+        print "Upload time: %.3f second"%(_t1 - _t0)
+        ex( lambda x: os.sys.stdout.write("%s %s \n"%(x.img_url,x.img_thumb_url) ), self )
+
+    def test_url( self, obj="http://s41.radikal.ru/i092/0902/93/40b756930f38.png" ):
+        self.__test( obj)
+        pass
+    def test_file( self, obj="/home/apkawa/qr.png"):
+        self.__test( obj)
+
 class BaseHost( Uploader ):
     dev_mode = False
     max_file_size = None
@@ -185,32 +212,13 @@ class BaseHost( Uploader ):
     user_agent = ""
     form = {}
     headers = {}
-    def __test( self, obj):
-        import traceback
-        def ex( func, *args):
-            try:
-                func(*args)
-            except KeyboardInterrupt:
-                os.sys.exit(1)
-            except Exception, err:
-                traceback.print_exc()
 
-        print self.host
-        ex(self.upload,obj)
-        ex(self.preload)
-        ex(self.send_post)
-        ex(self.postload)
-        ex( lambda x: os.sys.stdout.write("%s %s \n"%(x.img_url,x.img_thumb_url) ), self )
-
-    def test_url( self, obj="http://s41.radikal.ru/i092/0902/93/40b756930f38.png" ):
-        self.__test( obj)
-        pass
-    def test_file( self, obj="/home/apkawa/qr.png"):
-        self.__test( obj)
     def preload(self):
         pass
+
     def postload(self):
         pass
+
 
     '''
     def self_test(self):

@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
-from base_host import *
-class Host( BaseHost):
+import base
+class Host( base.BaseHost):
     dev_mode = True
     max_file_size = 3145728
 
@@ -18,11 +18,11 @@ class Host( BaseHost):
         return {'Filedata': _file }
     def preload(self):
         import urllib
-        self.action = findall('href="(http://www.picamatic.com/.*?)"', urllib.urlopen('http://www.picamatic.com/?js&schedule').read() )[0]
+        self.action = self.findall('href="(http://www.picamatic.com/.*?)"', urllib.urlopen('http://www.picamatic.com/?js&schedule').read() )[0]
     def postload(self ):
         _src =  self.get_src()
-        self.img_url = findall( '"js-url-direct">(http://www.picamatic.com/show/.*?)</textarea>', _src)[0]
-        self.img_thumb_url = findall('&gt;&lt;img src="(http://www.picamatic.com/show/.*?)" border="0"', _src)[0]
+        self.img_url = self.findall( '"js-url-direct">(http://www.picamatic.com/show/.*?)</textarea>', _src)[0]
+        self.img_thumb_url = self.findall('&gt;&lt;img src="(http://www.picamatic.com/show/.*?)" border="0"', _src)[0]
 
 if __name__ == '__main__':
     h= Host()

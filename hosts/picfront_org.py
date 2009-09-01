@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
-from base_host import *
-class Host(BaseHost):
+import base
+class Host(base.BaseHost):
     short_key = 'pf'
     long_key  = 'picfront'
     host='picfront.org'
@@ -36,7 +36,7 @@ class Host(BaseHost):
     def postload(self ):
         _src = self.get_geturl()
         _regx = r'http://picfront.org/uploaded.php\?images=(.*)'
-        _url = findall(_regx ,_src)[0]
+        _url = self.findall(_regx ,_src)[0]
         self.img_url = 'http://www12.picfront.org/picture/%s/img/%s'%(_url, self.get_filename() )
         self.img_thumb_url = 'http://www12.picfront.org/picture/%s/thb/%s'%(_url, self.get_filename() )
 

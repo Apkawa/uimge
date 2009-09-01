@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
-from base_host import *
+import base
 #@test_host(__name__)
-class Host(BaseHost):
+class Host(base.BaseHost):
     short_key = 'xe'
     long_key  = 'xegami'
     host='xegami.com'
@@ -18,7 +18,7 @@ class Host(BaseHost):
     def postload(self ):
         _src = self.get_src()
         _regx = r'img src=\"http://xegami.com/thumbs/(.+?)\"'
-        _url = findall(_regx ,_src)[0]
+        _url = self.findall(_regx ,_src)[0]
         self.img_url = 'http://xegami.com/uploads/%s'%_url
         self.img_thumb_url = 'http://xegami.com/thumbs/%s'%_url
 

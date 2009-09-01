@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
-from base_host import *
-class Host(BaseHost):
+import base
+class Host(base.BaseHost):
     short_key = 'pc'
     long_key  = 'piccy'
     host='piccy.info'
@@ -12,8 +12,8 @@ class Host(BaseHost):
         return {'file': _file }
     def postload(self ):
         _src =  self.get_src()
-        self.img_url = findall( 'value=\"(http://.*?)\"></td>', _src)[1]
-        self.img_thumb_url = findall('src=\"(http://.*?)\" alt=\"Piccy.info', _src)[0]
+        self.img_url = self.findall( 'value=\"(http://.*?)\"></td>', _src)[1]
+        self.img_thumb_url = self.findall('src=\"(http://.*?)\" alt=\"Piccy.info', _src)[0]
 
 
 

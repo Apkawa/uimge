@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
-from base_host import *
-class Host( BaseHost ):
+import base
+class Host( base.BaseHost ):
     short_key = 'r'
     long_key  = 'radikal'
     key = { 'short':'r','long':'radikal' }
@@ -26,7 +26,7 @@ class Host( BaseHost ):
         return { 'VM': _thumb_size, }
     def postload(self):
         if self.url:
-            __url = findall('\[IMG\](http://.*.radikal.ru.*)\[/IMG\]', self.get_src() )
+            __url = self.findall('\[IMG\](http://.*.radikal.ru.*)\[/IMG\]', self.get_src() )
             self.img_url = __url[0]
             self.img_thumb_url =  __url[1]
         else:

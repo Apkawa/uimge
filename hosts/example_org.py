@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
-from base_host import *
-class Host( BaseHost ):
+import base
+class Host( base.BaseHost ):
     dev_mode = True
 
     short_key = 'ex'
@@ -22,7 +22,7 @@ class Host( BaseHost ):
     def postload(self ):
         _src = self.get_src()
         _regx = r'example'
-        _url = findall(_regx ,_src)[0]
+        _url = self.findall(_regx ,_src)[0]
         self.img_url = '%s'%_url
         self.img_thumb_url = '%s'%_url
 

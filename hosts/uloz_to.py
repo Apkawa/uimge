@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-from base_host import *
+import base
 class __Host_ul_uloz:
     short_key = 'ul'
     long_key = 'uloz'
@@ -19,7 +19,7 @@ class __Host_ul_uloz:
     def postload(self ):
         _src = self.get_src(True)
         _regx = r'example'
-        _url = findall(_regx ,_src)[0]
+        _url = self.findall(_regx ,_src)[0]
         self.img_url = '%s'%_url
         self.img_thumb_url = '%s'%_url
 

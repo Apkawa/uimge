@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
-from base_host import *
-class Host(BaseHost):
+import base
+class Host(base.BaseHost):
     short_key = 'k4'
     long_key  = 'keep4u'
     host='keep4u.ru'
@@ -17,7 +17,7 @@ class Host(BaseHost):
         return { 'preview_size': _thumb_size, }
     def postload(self ):
         _src =  self.get_src()
-        _url = findall( 'value=\"\[img\]http://keep4u.ru/imgs/b/(.*?)\[/img\]\"', _src)[0]
+        _url = self.findall( 'value=\"\[img\]http://keep4u.ru/imgs/b/(.*?)\[/img\]\"', _src)[0]
         self.img_url = 'http://keep4u.ru/imgs/b/%s'%_url
         self.img_thumb_url = 'http://keep4u.ru/imgs/s/%s'%_url 
 

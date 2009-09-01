@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
-from base_host import *
-class Host(BaseHost):
+import base
+class Host(base.BaseHost):
     short_key = 'zi'
     long_key  = 'zikuka'
     host='zikuka.ru'
@@ -41,7 +41,7 @@ class Host(BaseHost):
     def postload(self ):
         _src = self.get_src()
         _regx = r'var useLink = "http://(.*?)";'
-        _url = findall(_regx ,_src)[0]
+        _url = self.findall(_regx ,_src)[0]
         self.img_url = 'http://%s'%_url
         us = _url.split('/')
         self.img_thumb_url = 'http://%s/t%s'%('/'.join(us[:-1]), us[-1])

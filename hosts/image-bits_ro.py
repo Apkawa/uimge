@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
-from base_host import *
-class Host(BaseHost):
+import base
+class Host(base.BaseHost):
     short_key = 'ir'
     long_key  = 'imagebits'
     host='image-bits.ro'
@@ -19,7 +19,7 @@ class Host(BaseHost):
     def postload(self ):
         _src = self.get_src()
         _regx = r'src="thumb.php\?file=uploads/(.*?)" id="thumb"'
-        _url = findall(_regx ,_src)[0]
+        _url = self.findall(_regx ,_src)[0]
         self.img_url = 'http://image-bits.ro/uploads/%s'%_url
         self.img_thumb_url = 'http://image-bits.ro/thumb.php?file=uploads/%s'%_url
 

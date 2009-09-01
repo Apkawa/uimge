@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
-from base_host import *
-class Host( BaseHost ):
+import base
+class Host( base.BaseHost ):
     dev_mode = False
 
     short_key = 'ps'

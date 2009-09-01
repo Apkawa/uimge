@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-from base_host import *
+import base
 class Host:
     dev_mode = True
     short_key = 'p'
@@ -15,7 +15,7 @@ class Host:
     def postload(self):
         src = self.get_src()
         print src
-        url=findall('\<a href=\"viewer.php\?file=(.*?)\"',  src)
+        url=self.findall('\<a href=\"viewer.php\?file=(.*?)\"',  src)
 
         t = 'http://picthost.ru/images/'
         tumburl=url[0].split('.')

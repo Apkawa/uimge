@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
-from base_host import *
-class Host(BaseHost):
+import base
+class Host(base.BaseHost):
     short_key ='k'
     long_key = 'imageshack'
 
@@ -16,7 +16,7 @@ class Host(BaseHost):
     def as_file(self,_file):
         return {'fileupload': _file }
     def postload(self):
-        url=findall('value=\"(http://img.[\d]+?.imageshack.us/img[\d]+?/.*?/.*?)\"', self.get_src() )
+        url=self.findall('value=\"(http://img.[\d]+?.imageshack.us/img[\d]+?/.*?/.*?)\"', self.get_src() )
         tumburl=url[0].split('.')
         tumburl.insert(-1,'th')
         self.img_url = url[0]

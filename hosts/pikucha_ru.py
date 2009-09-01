@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
-from base_host import *
-class Host(BaseHost):
+import base
+class Host(base.BaseHost):
     max_file_size = 10485760
     short_key = 'pu'
     long_key  = 'pikucha'
@@ -19,7 +19,7 @@ class Host(BaseHost):
         return {'image': _file }
     def postload(self ):
         _src = self.get_src()
-        _url = findall('\[img\]http://pikucha.ru/([\d]{4,10})/thumbnail/(.*?)\[/img\]',_src)[0]
+        _url = self.findall('\[img\]http://pikucha.ru/([\d]{4,10})/thumbnail/(.*?)\[/img\]',_src)[0]
         self.img_url = 'http://pikucha.ru/%s/%s'%_url
         self.img_thumb_url = 'http://pikucha.ru/%s/thumbnail/%s'%_url
 
