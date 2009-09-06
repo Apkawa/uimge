@@ -34,7 +34,7 @@ class Host(base.BaseHost):
     #        'file_0':'filename="" Content-Type: application/octet-stream',
  #           'urluploadfile_0': _url}
     def postload(self ):
-        _src = self.get_geturl()
+        _src = self.response.url
         _regx = r'http://picfront.org/uploaded.php\?images=(.*)'
         _url = self.findall(_regx ,_src)[0]
         self.img_url = 'http://www12.picfront.org/picture/%s/img/%s'%(_url, self.get_filename() )

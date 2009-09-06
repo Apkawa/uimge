@@ -11,7 +11,7 @@ class Host(base.BaseHost):
     def as_file(self, _file):
         return {'file': _file }
     def postload(self ):
-        _src =  self.get_src()
+        _src =  self.response.body
         self.img_url = self.findall( 'value=\"(http://.*?)\"></td>', _src)[1]
         self.img_thumb_url = self.findall('src=\"(http://.*?)\" alt=\"Piccy.info', _src)[0]
 

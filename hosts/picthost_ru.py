@@ -13,7 +13,7 @@ class Host:
         action = 'http://picthost.ru/upload.php?url=1'
         return {'userfile[]': _url}
     def postload(self):
-        src = self.get_src()
+        src = self.response.body
         print src
         url=self.findall('\<a href=\"viewer.php\?file=(.*?)\"',  src)
 

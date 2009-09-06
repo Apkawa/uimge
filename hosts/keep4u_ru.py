@@ -16,7 +16,7 @@ class Host(base.BaseHost):
     def thumb_size(self, _thumb_size):
         return { 'preview_size': _thumb_size, }
     def postload(self ):
-        _src =  self.get_src()
+        _src =  self.response.body
         _url = self.findall( 'value=\"\[img\]http://keep4u.ru/imgs/b/(.*?)\[/img\]\"', _src)[0]
         self.img_url = 'http://keep4u.ru/imgs/b/%s'%_url
         self.img_thumb_url = 'http://keep4u.ru/imgs/s/%s'%_url 

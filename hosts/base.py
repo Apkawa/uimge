@@ -12,6 +12,7 @@ try:
 except ImportError:
     pass
 
+
 USER_AGENTS_LIST=(
          'Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.1; SV1)',
          'Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.1; SV1; .NET CLR 1.1.4322)',
@@ -61,6 +62,8 @@ class UploaderError( Exception ):
 class Uploader:
     USER_AGENT = rchoice( USER_AGENTS_LIST )
     __t = None
+    proxy = []
+    proxy_type = {}
 
     def findall( self, regex, string):
         rst = re.findall( regex, string)
@@ -80,6 +83,30 @@ class Uploader:
         size = os.stat( path ).st_size
         if self.max_file_size and  size > self.max_file_size:
             raise UploaderError( "Big file size: %ib > %ib"%( size, self.max_file_size ) )
+    def get_proxytype(self):
+        for key, val in  pycurl.__dict__.items():
+            if key.startswith("PROXYTYPE_"):
+                self.proxy_type.update( { key[ len("PROXYTYPE_"): ].lower() : val } )
+        return self.proxy_type
+
+    def set_proxy(self, proxy, port, proxy_type="http", user="", passwd=""):
+        proxy_type_dict = self.get_proxytype()
+        _proxy_type = proxy_type_dict.get( proxy_type.lower() )
+        self.proxy.append( (pycurl.HTTPPROXYTUNNEL,1))
+
+        # self.proxy.append( ( pycurl.PROXY, proxy) )
+        if type(port) == int:
+            self.proxy.append( ( pycurl.PROXY, "%s:%i"%( proxy, port ) ) )
+        else:
+            raise UploaderError("proxy value is not int")
+
+        if proxy_type:
+            self.proxy.append( ( pycurl.PROXYTYPE, _proxy_type ) )
+        else:
+            raise UploaderError("\"%s\" is not correct PROXYTYPE"% proxy_type )
+
+        if user:
+            self.proxy.append( ( pycurl.PROXYUSERPWD, "%s:%s"%(user, passwd) ))
 
     def upload(self, obj):
         obj = str(obj)
@@ -111,12 +138,15 @@ class Uploader:
         self._headers = StringIO()
 
         self.curl = pycurl.Curl()
+
         self.curl.setopt( pycurl.FOLLOWLOCATION, 1)
-        #self.curl.setopt(pycurl.TIMEOUT, 20)
+        self.curl.setopt( pycurl.TIMEOUT, 60)
         self.curl.setopt( pycurl.MAXREDIRS, 2)
         self.curl.setopt( pycurl.WRITEFUNCTION, self._body.write)
         self.curl.setopt( pycurl.HEADERFUNCTION, self._headers.write)
+        self.curl.setopt( pycurl.NOSIGNAL, 1)
         self.curl.setopt( pycurl.URL, self.action )
+
         if self.__dict__.get('cookie'):
             self.curl.setopt( pycurl.COOKIE, self.cookie )
         self.curl.setopt( pycurl.REFERER, 'http://%s/'%self.host)
@@ -127,11 +157,29 @@ class Uploader:
             self.USER_AGENT = self.user_agent
 
         self.curl.setopt( pycurl.USERAGENT, self.USER_AGENT )
+
         #print self.__form.items()
         curl_post = self.curl
         curl_post.setopt( pycurl.HTTPPOST, self.__form.items())
-        curl_post.perform()
+        if self.proxy:
+            for arg in self.proxy:
+                print arg
+                self.curl.setopt( *arg )
+        # curl_post.perform()
+        multi = pycurl.CurlMulti()
+        multi.add_handle( curl_post )
+        num_handles = 1
+        while num_handles:
+            while 1:
+                ret, num_handles = multi.perform()
+                if ret != pycurl.E_CALL_MULTI_PERFORM:
+                    break
+            multi.select(1.0)
+
+
         self.http_code = curl_post.getinfo(pycurl.HTTP_CODE)
+        if self.http_code in (404, 500):
+            raise UploaderError("%s %s error"%( self.host, self.http_code) )
         #TODO: сделать как результат объект `responce`
         #типа `self.responce.url` и `self.responce.body`
         if self.__t:
@@ -139,6 +187,13 @@ class Uploader:
         #print curl.getinfo(pycurl.TOTAL_TIME)
         #print curl.getinfo(pycurl.EFFECTIVE_URL)
         #print self.curl.getinfo(pycurl.INFO_COOKIELIST)
+        # __url = self.curl.getinfo(pycurl.REDIRECT_URL)
+        dict_response = {
+                "body": self._body.getvalue(),
+                "headers": self._headers.getvalue(),
+                "url": self.curl.getinfo(pycurl.EFFECTIVE_URL),
+                }
+        self.response = type("responce",(), dict_response )
 
     def _ufopen(self, _url, _filename ):
         import tempfile, urllib
@@ -146,23 +201,6 @@ class Uploader:
         self.__t.write( urllib.urlopen(_url).read())
         self.__t.seek(0)
         return self.__t.name
-
-    def get_src(self, debug = False):
-        __src = self._body.getvalue()
-        if debug:
-            print __src
-        return __src
-
-    def get_headers(self):
-        return self._headers.getvalue()
-
-    def get_geturl(self):
-            red_url = self.curl.getinfo(pycurl.REDIRECT_URL)
-            if red_url:
-                return red_url
-            else:
-                return self.curl.getinfo(pycurl.EFFECTIVE_URL)
-
     def get_filename( self, splitext=False ):
         if not splitext:
             return self.filename
@@ -188,6 +226,7 @@ class Uploader:
         print self.host
         t = timeit.Timer()
         _t0 = t.timer()
+        # self.set_proxy( proxy="127.0.0.1", port=9050, proxy_type= "socks5" )
         ex(self.upload,obj)
         ex(self.preload)
         ex(self.send_post)
@@ -239,7 +278,7 @@ class BaseHost( Uploader ):
     def thumb_size(self, _thumb_size):
         return { 'thumb_size': _thumb_size, }
     def postload(self ):
-        _src = self.get_src()
+        _src = self.response.body
         _regx = r'example'
         _url = findall(_regx ,_src)[0]
         self.img_url = '%s'%_url

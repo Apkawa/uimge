@@ -16,7 +16,7 @@ class Host(base.BaseHost):
     def as_file(self, _file):
         return {'userfile0': _file }
     def postload(self ):
-        _src = self.get_src()
+        _src = self.response.body
 
         __url = self.findall('\[IMG\]http://img.hostmyjpg.com/(.*?)\[/IMG\]',  _src )[0]
         self.img_url = 'http://img.hostmyjpg.com/%s'%__url

@@ -17,7 +17,7 @@ class Host( base.BaseHost ):
     def as_file(self, _file):
         return {'userfile': _file }
     def postload(self ):
-        _src = self.get_src()
+        _src = self.response.body
         _regx = r'\[IMG\]http://www.pictureshack\.ru/images/(.*?)\[/IMG\]'
         _url = self.findall(_regx ,_src)[0]
         self.img_url = 'http://www.pictureshack.ru/images/%s'%_url

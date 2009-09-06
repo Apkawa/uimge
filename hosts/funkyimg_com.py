@@ -24,7 +24,7 @@ class Host( base.BaseHost ):
                 'url_1':_url,
                 }
     def postload(self):
-        __url=self.findall('\[IMG\](http://funkyimg.com/.*)\[/IMG\]\[/URL\]', self.get_src() )
+        __url=self.findall('\[IMG\](http://funkyimg.com/.*)\[/IMG\]\[/URL\]', self.response.body )
         __url.reverse()
         self.img_url= __url[0]
         self.img_thumb_url = __url[1]

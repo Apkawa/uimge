@@ -19,7 +19,7 @@ class Host(base.BaseHost):
     def thumb_size(self, _thumb_size):
         return { 'thsize': _thumb_size, }
     def postload(self ):
-        _src = self.get_src()
+        _src = self.response.body
         _regx = r'\[img\]http://xpichost.net/pic_s/(.*?).jpg\[/img\]'
         _url = self.findall(_regx ,_src)[0]
         filename = self.get_filename(splitext=True)[1]

@@ -13,7 +13,7 @@ class Host(base.BaseHost):
     def as_file(self, _file):
         return {'file': _file , '""':self.get_filename() }
     def postload(self ):
-        _src = self.get_src()
+        _src = self.response.body
         _regx = r'href=\\"http:\\/\\/itrash.ru\\/idb\\/(.*?)\\/o(.*?).html\\"'
         _url = self.findall(_regx ,_src,)[0]
         self.img_url = 'http://itrash.ru/idb/%s/o%s'%(_url)

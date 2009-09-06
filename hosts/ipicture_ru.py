@@ -41,21 +41,16 @@ Connection: Keep-Alive
         return {'thumb_resize':_thumb_size,}
     def postload(self):
         from urllib import urlopen
-        __reurl=self.findall('http://ipicture.ru/Gallery/View/\d+.html', self.get_headers())
+        __reurl=self.findall('http://ipicture.ru/Gallery/View/\d+.html', self.response.headers)
         __url=self.findall('\[IMG\](http://.*)\[\/IMG\]', urlopen(__reurl[0]).read())
         self.img_url= __url[0]
         self.img_thumb_url = __url[2]
         '''
         else:
-            _src = self.get_src()
+            _src = self.response.body
             print _src
             self.img_url, self.img_thumb_url = self.findall('<(?:image|thumb)path>(.*?)</(?:image|thumb)path>', _src )
         '''
-
-
-
-
-
 
 if __name__ == '__main__':
     h= Host()

@@ -28,7 +28,7 @@ class Host( base.BaseHost ):
     def as_file(self, _file):
         return {'file1': _file }
     def postload(self ):
-        url = self.findall( r'<thumbpath>http://(i\d).fastpic.ru/thumb/(\d{4}/\d{4,5}/.+?).jpeg</thumbpath>', self.get_src() )[0]
+        url = self.findall( r'<thumbpath>http://(i\d).fastpic.ru/thumb/(\d{4}/\d{4,5}/.+?).jpeg</thumbpath>', self.response.body )[0]
         self.img_url = 'http://%s.fastpic.ru/big/%s%s'%(url[0],url[1], self.get_filename( splitext=True)[1] )
         self.img_thumb_url = 'http://%s.fastpic.ru/thumb/%s.jpeg'%url
 

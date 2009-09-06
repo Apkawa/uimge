@@ -18,7 +18,7 @@ class Host(base.BaseHost):
     def as_file(self, _file):
         return {'image': _file }
     def postload(self ):
-        _src = self.get_src()
+        _src = self.response.body
         _url = self.findall('\[img\]http://pikucha.ru/([\d]{4,10})/thumbnail/(.*?)\[/img\]',_src)[0]
         self.img_url = 'http://pikucha.ru/%s/%s'%_url
         self.img_thumb_url = 'http://pikucha.ru/%s/thumbnail/%s'%_url

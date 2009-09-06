@@ -17,7 +17,7 @@ class Host(base.BaseHost):
     #def thumb_size(self, _thumb_size):
     #    return { 'thumb_size': _thumb_size, }
     def postload(self ):
-        _src = self.get_src()
+        _src = self.response.body
         _regx = r'src="thumb.php\?file=uploads/(.*?)" id="thumb"'
         _url = self.findall(_regx ,_src)[0]
         self.img_url = 'http://image-bits.ro/uploads/%s'%_url

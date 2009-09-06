@@ -16,7 +16,7 @@ class Host(base.BaseHost):
     def as_file(self, _file):
         return {'fileup': _file }
     def postload(self ):
-        _src = self.get_src()
+        _src = self.response.body
         _regx = r'\[img\]http://imgby.com/thumbs/(.+?)\[/img\]'
         _url = self.findall(_regx ,_src)[0]
         self.img_url = 'http://imgby.com/%s'%_url

@@ -119,6 +119,7 @@ class Uimge:
 
     current_host=None
     proxy_type = ['socks','http']
+
     def __init__(self, host=None, obj=None, proxy=None, proxy_port=None, proxy_type=None):
         if host:
             self.set_host( host )
@@ -126,14 +127,17 @@ class Uimge:
             self.set_proxy( proxy, proxy_port, proxy_type)
         if obj:
             self.upload(obj)
+
     def set_host(self, host):
         if Hosts.hosts_dict.get(host.key):
             self.current_host=host
             return self.current_host
         else:
             raise Exception( 'Host not is class')
+
     def set_proxy(self, proxy, proxy_port, proxy_type):
         pass
+
     def upload(self,obj):
         if not self.current_host:
             raise Exception('Not select host')
@@ -154,10 +158,13 @@ class Uimge:
         except ( IndexError,KeyError,IndexError ):
             raise UimgeError('Uimge: upload error %s'%obj)
 
+
     def get_thumb_url( self ):
         return self.img_thumb_url
+
     def get_img_url( self):
         return self.img_url
+
     def get_urls( self):
         return self.img_url, self.img_thumb_url
 

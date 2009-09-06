@@ -22,7 +22,7 @@ class Host(base.BaseHost):
         return {'file':_file}
 
     def postload(self):
-        reurl = self.findall('\"/([\d]+?).htm\"', self.get_src() )[0]
+        reurl = self.findall('\"/([\d]+?).htm\"', self.response.body )[0]
         ext ='png'#self.get_filename().split('.')[-1].lower()
         url,tmb = 'http://savepic.ru/%s.%s'%(reurl,ext),'http://savepic.ru/%sm.%s'%(reurl,ext)
         self.img_url = url

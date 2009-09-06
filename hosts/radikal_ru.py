@@ -24,14 +24,16 @@ class Host( base.BaseHost ):
         return {'URLF': _url }
     def thumb_size(self, _thumb_size):
         return { 'VM': _thumb_size, }
+
     def postload(self):
+        _src = self.response.body
         if self.url:
-            __url = self.findall('\[IMG\](http://.*.radikal.ru.*)\[/IMG\]', self.get_src() )
+            __url = self.findall('\[IMG\](http://.*.radikal.ru.*)\[/IMG\]', _src )
             self.img_url = __url[0]
             self.img_thumb_url =  __url[1]
         else:
             from xml.dom import minidom
-            _xml = minidom.parseString( self.get_src() )
+            _xml = minidom.parseString( _src )
             self.img_url = _xml.getElementsByTagName('rurl')[0].firstChild.data
             self.img_thumb_url =  _xml.getElementsByTagName('rurlt')[0].firstChild.data
 

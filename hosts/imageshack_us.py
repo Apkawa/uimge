@@ -16,7 +16,7 @@ class Host(base.BaseHost):
     def as_file(self,_file):
         return {'fileupload': _file }
     def postload(self):
-        url=self.findall('value=\"(http://img.[\d]+?.imageshack.us/img[\d]+?/.*?/.*?)\"', self.get_src() )
+        url=self.findall('value=\"(http://img.[\d]+?.imageshack.us/img[\d]+?/.*?/.*?)\"', self.response.body )
         tumburl=url[0].split('.')
         tumburl.insert(-1,'th')
         self.img_url = url[0]

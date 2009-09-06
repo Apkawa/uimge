@@ -18,7 +18,7 @@ class Host(base.BaseHost):
         return { 'previewwidth': _thumb_size, }
     def postload(self):
         from xml.dom import minidom
-        src = self.get_src()
+        src = self.response.body
         _xml = minidom.parseString(src)
         self.img_url = _xml.getElementsByTagName('image')[0].firstChild.data
         self.img_thumb_url =  _xml.getElementsByTagName('preview')[0].firstChild.data
