@@ -144,19 +144,22 @@ class Uimge:
         try:
             img_url= None
             img_thumb_url=None
-            host = self.current_host()
-            host.upload(obj)
-            host.send_post()
-            host.postload()
-            self.img_url , self.img_thumb_url= host.img_url ,host.img_thumb_url
-            self.filename = host.filename
+            self._host = self.current_host()
+            self._host.upload(obj)
+            self._host.send_post()
+            self._host.postload()
+            self.img_url , self.img_thumb_url = self._host.img_url, self._host.img_thumb_url
+            self.filename = self._host.filename
             response = {'img_direct_url': self.img_url,
                         'img_thumb_url': self.img_thumb_url,
                         'img_file_name': self.filename,
                     }
-            return type(host.host,(dict,),{})( response )
+            return type( self._host.host,(dict,),{})( response )
         except ( IndexError,KeyError,IndexError ):
             raise UimgeError('Uimge: upload error %s'%obj)
+    def cancel(self):
+        self._host.cancel()
+
 
 
     def get_thumb_url( self ):

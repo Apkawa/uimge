@@ -5,6 +5,7 @@ import os
 import re
 from random import choice as rchoice
 from mimetypes import guess_type
+import threading
 
 try:
     import psyco
@@ -64,6 +65,7 @@ class Uploader:
     __t = None
     proxy = []
     proxy_type = {}
+    stop = False
 
     def findall( self, regex, string):
         rst = re.findall( regex, string)
@@ -169,11 +171,14 @@ class Uploader:
         multi = pycurl.CurlMulti()
         multi.add_handle( curl_post )
         num_handles = 1
+        self.stop = False
         while num_handles:
             while 1:
                 ret, num_handles = multi.perform()
                 if ret != pycurl.E_CALL_MULTI_PERFORM:
                     break
+                if self.stop:
+                    raise UploaderError("Upload cancel")
             multi.select(1.0)
 
 
@@ -194,6 +199,8 @@ class Uploader:
                 "url": self.curl.getinfo(pycurl.EFFECTIVE_URL),
                 }
         self.response = type("responce",(), dict_response )
+    def cancel(self):
+        self.stop = True
 
     def _ufopen(self, _url, _filename ):
         import tempfile, urllib
