@@ -253,6 +253,9 @@ class UimgeApp:
                 self.outprint( delim = self.opt.out_delim )
             except UimgeError:
                 self.error( _('File %s uploading error')%f )
+            except KeyboardInterrupt:
+                self.error( _("Upload process aborted\n") )
+                os.sys.exit(1)
 
     def read_filelist(self, _list):
         if _list:
