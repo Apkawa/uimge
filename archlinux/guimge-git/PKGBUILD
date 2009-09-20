@@ -1,9 +1,9 @@
 # Contributor: Apkawa <apkawa@gmail.com>
 
 pkgname=guimge-git
-pkgver=20090830
+pkgver=20090920
 pkgrel=1
-pkgdesc="gtk picture uploader to different imagehostings written on python"
+pkgdesc="gtk picture uploader to various imagehostings written on python"
 arch=('i686' 'x86_64')
 url="http://code.google.com/p/uimge/"
 license=('GPL')
@@ -29,13 +29,8 @@ build() {
   msg "Starting make..."
 
   cp -r ${srcdir}/${_gitname} ${srcdir}/${_gitname}-build
-  cd ${srcdir}/${_gitname}-build/uimgepy
+  cd ${srcdir}/${_gitname}-build/guimge
   
   #install guimge gui
-  cd ${srcdir}/${_gitname}-build/guimge
-  mkdir $startdir/pkg/usr/share/{guimge,pixmaps,applications} -p
-  cp guimge.glade guimge.desktop icons $startdir/pkg/usr/share/guimge/ -r
-  ln -s  /usr/share/guimge/icons/guimge.png $startdir/pkg/usr/share/pixmaps/
-  ln -s  /usr/share/guimge/guimge.desktop $startdir/pkg/usr/share/applications/
-  install -Dm755 guimge.py $startdir/pkg/usr/bin/guimge
+  python setup.py build -f install -f --root $startdir/pkg --prefix=/usr || return 1
 }
