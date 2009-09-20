@@ -1,24 +1,19 @@
-#from distutils.core import setup
-from setuptools import setup
+from setuptools import setup, find_packages
 import uimge
 
 import os
 
-_platform = os.sys.platform
-if _platform != 'win32':
-  _lang_path = '/usr/share/locale/%(lang)s/LC_MESSAGES'
-else:
-  _prefix = sys.prefix
-  _lang_path = os.path.join(_prefix,'share\\locale\\%(lang)s\\LC_MESSAGES' )
+_prefix = os.sys.prefix
+_lang_path = os.path.join( _prefix,'share','locale','%(lang)s','LC_MESSAGES' )
 
 setup(name='uimge',
       version = uimge.VERSION,
-      description='uimge - uploader on 14 imagehosting',
+      description='uimge - this various imagehostings picture uploader',
       author='Apkawa',
       author_email='apkawa@gmail.com',
       url='http://code.google.com/p/uimge/',
       download_url = 'http://github.com/Apkawa/uimge/',
-      packages=['uimge','uimge.hosts'],
+      packages=find_packages(),
       license='GPLv3',
       data_files=[
           ( _lang_path%{'lang':'en'} ,['uimge/locale/en/LC_MESSAGES/uimge.mo']),
@@ -29,6 +24,4 @@ setup(name='uimge',
             'uimge = uimge:main'
         ]
         }
-
-
      )
