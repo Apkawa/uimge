@@ -25,6 +25,7 @@ import optparse
 from sys import argv,exit,stderr,stdout
 import gettext
 import inspect
+from hosts.base import UploaderError
 
 VERSION = '0.07.8.0'
 
@@ -100,7 +101,7 @@ class UimgeError( Exception):
     def __init__(self, value):
         self.value = value
     def __str__(self):
-        return repr( self.value)
+        return repr( "%s\n"%self.value )
 
 class Uimge:
     '''
@@ -140,7 +141,7 @@ class Uimge:
 
     def upload(self,obj):
         if not self.current_host:
-            raise Exception('Not select host')
+            raise UimgeError('Not select host')
         try:
             img_url= None
             img_thumb_url=None
@@ -155,12 +156,11 @@ class Uimge:
                         'img_file_name': self.filename,
                     }
             return type( self._host.host,(dict,),{})( response )
-        except ( IndexError,KeyError,IndexError ):
+        except ( IndexError,KeyError,IndexError, UploaderError  ):
             raise UimgeError('Uimge: upload error %s'%obj)
+
     def cancel(self):
         self._host.cancel()
-
-
 
     def get_thumb_url( self ):
         return self.img_thumb_url
