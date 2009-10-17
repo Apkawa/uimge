@@ -33,7 +33,13 @@ class Host( base.BaseHost ):
             self.img_thumb_url =  __url[1]
         else:
             from xml.dom import minidom
-            _xml = minidom.parseString( _src )
+            from xml.parsers.expat import ExpatError
+
+            try:
+                _xml = minidom.parseString( _src )
+            except ExpatError:
+                self.error()
+
             self.img_url = _xml.getElementsByTagName('rurl')[0].firstChild.data
             self.img_thumb_url =  _xml.getElementsByTagName('rurlt')[0].firstChild.data
 

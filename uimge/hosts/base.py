@@ -1,10 +1,13 @@
 # -*- coding: utf-8 -*-
 import pycurl
 from StringIO import StringIO
+
 import os
 import re
+
 from random import choice as rchoice
 from mimetypes import guess_type
+
 import threading
 
 try:
@@ -218,6 +221,9 @@ class Uploader:
         self.curl.setopt( pycurl.URL, url)
         self.curl.unsetopt( pycurl.HTTPPOST)
         self.curl.perform()
+
+    def error(self, msg="Error"):
+        raise UploaderError( msg )
 
     def __test( self, obj):
         import traceback
