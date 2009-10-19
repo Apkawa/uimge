@@ -1,7 +1,7 @@
 # Contributor: Apkawa <apkawa@gmail.com>
 
 pkgname=guimge-git
-pkgver=20090920
+pkgver=20091019
 pkgrel=1
 pkgdesc="gtk picture uploader to various imagehostings written on python"
 arch=('i686' 'x86_64')
@@ -12,8 +12,8 @@ depends=('python' 'uimge-git' 'pygtk' 'gtk')
 source=( )
 md5sums=( )
 
-_gitname="uimge"
-_gitroot="git://github.com/Apkawa/uimge.git"
+_gitname="guimge"
+_gitroot="git://github.com/Apkawa/guimge.git"
 build() {
   cd ${srcdir}
   msg "Connecting to $_gitroot GIT server...."
@@ -29,8 +29,8 @@ build() {
   msg "Starting make..."
 
   cp -r ${srcdir}/${_gitname} ${srcdir}/${_gitname}-build
-  cd ${srcdir}/${_gitname}-build/guimge
+  cd ${srcdir}/${_gitname}-build/
   
   #install guimge gui
-  python setup.py build -f install -f --root $startdir/pkg --prefix=/usr || return 1
+  python setup.py build -f install -f --root $pkgdir --prefix=/usr || return 1
 }
