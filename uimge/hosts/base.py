@@ -88,6 +88,7 @@ class Uploader:
         size = os.stat( path ).st_size
         if self.max_file_size and  size > self.max_file_size:
             raise UploaderError( "Big file size: %ib > %ib"%( size, self.max_file_size ) )
+
     def get_proxytype(self):
         for key, val in  pycurl.__dict__.items():
             if key.startswith("PROXYTYPE_"):
@@ -113,21 +114,24 @@ class Uploader:
         if user:
             self.proxy.append( ( pycurl.PROXYUSERPWD, "%s:%s"%(user, passwd) ))
 
+    def isurl(self, string):
+        return not not [True for s in 'http://','ftp://','https://' if string.startswith(s) ]
+
     def upload(self, obj):
         obj = str(obj)
         self.__form = self.form.copy()
         url = False
 
-        if obj.startswith('http://'):
-            self.filename = obj.split('/')[-1]
-            if self.__dict__.get('as_url'):
+        self.filename = os.path.split( obj )[1]
+
+        if self.isurl(obj):
+            if self.as_url:
                 self.__form.update( self.as_url( obj ) )
                 url = True
             else:
                 path = self._ufopen( obj, self.filename)
         else:
             path = obj
-            self.filename = os.path.split( obj )[1]
 
         if not url:
             self.check_size( path )
@@ -135,8 +139,6 @@ class Uploader:
                     ( pycurl.FORM_FILE, path , pycurl.FORM_CONTENTTYPE, self.mime( path ) )
                 ))
 
-        if self.__dict__.get('thumb_size'):
-            self.__form.update( self.thumb_size( str(self.__thumb_size) ) )
 
     def send_post(self):
         self._body = StringIO()
@@ -202,6 +204,7 @@ class Uploader:
                 "url": self.curl.getinfo(pycurl.EFFECTIVE_URL),
                 }
         self.response = type("responce",(), dict_response )
+
     def cancel(self):
         self.stop = True
 
@@ -211,6 +214,7 @@ class Uploader:
         self.__t.write( urllib.urlopen(_url).read())
         self.__t.seek(0)
         return self.__t.name
+
     def get_filename( self, splitext=False ):
         if not splitext:
             return self.filename
@@ -264,6 +268,9 @@ class BaseHost( Uploader ):
     user_agent = ""
     form = {}
     headers = {}
+
+    as_file = None
+    as_url  = None
 
     def preload(self):
         pass

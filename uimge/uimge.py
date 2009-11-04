@@ -120,6 +120,13 @@ class Uimge:
 
     current_host=None
     proxy_type = ['socks','http']
+    options = dict(
+                    proxy      = False,
+                    proxy_port = None,
+                    proxy_type = None,
+                    thumb      = False,
+                    thumb_size = 200,
+                    )
 
     def __init__(self, host=None, obj=None, proxy=None, proxy_port=None, proxy_type=None):
         if host:
@@ -128,6 +135,8 @@ class Uimge:
             self.set_proxy( proxy, proxy_port, proxy_type)
         if obj:
             self.upload(obj)
+    def setup(self, **kwargs):
+        self.options.update( kwargs)
 
     def set_host(self, host):
         if Hosts.hosts_dict.get(host.key):
@@ -136,28 +145,72 @@ class Uimge:
         else:
             raise Exception( 'Host not is class')
 
-    def set_proxy(self, proxy, proxy_port, proxy_type):
-        pass
+    def make_thumb(self, obj, size):
+        import Image
+        #FIXME: make crossplatform
+        thumb_path = '/tmp/imgtmb'
+        tmb = Image.open( obj)
+        tmb.thumbnail( (size, size), Image.ANTIALIAS)
+        tmb.save( thumb_path,'JPEG')
+        del tmb
+        return thumb_path
+
+    def _ufopen(self, _url, _filename ):
+        '''Open url and save in tempfile'''
+        import tempfile, urllib
+        __t = tempfile.NamedTemporaryFile(prefix='',suffix= _filename, delete=False )
+        __t.write( urllib.urlopen(_url).read())
+        __t.seek(0)
+        return __t.name, __t
+
+    def _uploaded(self, obj, host):
+        host.upload(obj)
+        host.send_post()
+        host.postload()
+        res =  host.img_url, host.img_thumb_url, host.filename
+        del host
+        return res
 
     def upload(self,obj):
         if not self.current_host:
             raise UimgeError('Not select host')
         try:
+            self.filepath = obj
             img_url= None
             img_thumb_url=None
-            self._host = self.current_host()
-            self._host.upload(obj)
-            self._host.send_post()
-            self._host.postload()
-            self.img_url , self.img_thumb_url = self._host.img_url, self._host.img_thumb_url
-            self.filename = self._host.filename
+            temp_obj = None
+
+            host = self.current_host()
+            self.filename = os.path.split( obj )[1]
+            if not self.options.get('thumb'):
+                if not host.as_url and self.isurl( obj):
+                     obj, temp_obj = self._ufopen( obj,  self.filename)
+                self.img_url , self.img_thumb_url, self.filename = self._uploaded( obj, host)
+            else:
+                #FIXME: сделать проверку всех протоколов
+                if self.isurl(obj):
+                     obj, temp_obj = self._ufopen( obj, self.filename)
+                thumb_obj = self.make_thumb( obj, self.options.get( 'thumb_size') )
+                self.img_url , self.img_thumb_url, self.filename = self._uploaded( obj, host)
+                self.img_thumb_url = self._uploaded( thumb_obj, host)[0]
+
             response = {'img_direct_url': self.img_url,
                         'img_thumb_url': self.img_thumb_url,
                         'img_file_name': self.filename,
+                        'img_file_path': self.filepath,
                     }
-            return type( self._host.host,(dict,),{})( response )
-        except ( IndexError,KeyError,IndexError, UploaderError  ):
-            raise UimgeError('Uimge: upload error %s'%obj)
+            if temp_obj:
+                os.remove(temp_obj.name)
+            del host, temp_obj
+            return type( self.current_host.host,(dict,),{})( response )
+        except ( IndexError,KeyError,IndexError, UploaderError  ) as e:
+            raise UimgeError('Uimge: upload error %s'%obj )
+    def clear(self):
+        '''delete temp file and temp obj'''
+        pass
+    def isurl(self, string):
+        return not not [True for s in 'http://','ftp://','https://' if string.startswith(s) ]
+
 
     def cancel(self):
         self._host.cancel()
@@ -241,6 +294,8 @@ class UimgeApp:
     def main(self, _argv):
         self.parseopt(_argv)
         self._uimge.set_host( self.Imagehosts.get(self.opt.check) )# , self.opt.thumb_size)
+        if self.opt.thumb_size:
+            self._uimge.setup( thumb=True, thumb_size=self.opt.thumb_size)
         self.read_filelist( self.opt.filelist )
         self.objects.extend( self.arguments )
         self.out.set_rules( key=self.opt.out, usr=self.opt.out_usr )
@@ -287,13 +342,13 @@ class UimgeApp:
                 short_key = '--'+short_key
             group_1.add_option(short_key,'--'+ long_key,
                     action='store_const', const=key, dest='check',
-                    help='%s %s'%(_('Upload to'),host.host))
+                    help='%s http://%s'%(_('Upload to'),host.host))
 
         parser.add_option_group(group_1)
 
         # Additional options
         group_2 = optparse.OptionGroup(parser, _('Additional options'))
-        group_2.add_option('-t','--thumb_size', type="int", action='store', default=200, dest='thumb_size', \
+        group_2.add_option('-t','--thumb_size', type="int", action='store', default=None, dest='thumb_size', \
                            help=_('Set thumbinal size. Default = 200px (work only on radikal.ru and keep4u.ru) '))
         group_2.add_option('-f','--file', action='store', default=None, dest='filelist', \
                            help=_('Upload image from list'))
