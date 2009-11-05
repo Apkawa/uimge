@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 import base
 class Host(base.BaseHost):
+    dev_mode = True
     short_key = 'zi'
     long_key  = 'zikuka'
     host='zikuka.ru'

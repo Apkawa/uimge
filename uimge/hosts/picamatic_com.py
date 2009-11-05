@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 import base
 class Host( base.BaseHost):
-    dev_mode = True
+    dev_mode = False
     max_file_size = 3145728
 
     short_key ='pm'

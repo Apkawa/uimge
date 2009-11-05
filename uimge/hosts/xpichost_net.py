@@ -15,6 +15,7 @@ class Host(base.BaseHost):
     def as_file(self, _file):
         return {'apic': _file }
     def as_url(self, _url):
+        self.action = 'http://xpichost.net/upload_url.php'
         return {'url': _url}
     def thumb_size(self, _thumb_size):
         return { 'thsize': _thumb_size, }

@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 import base
 class Host(base.BaseHost):
+    dev_mode = True
     short_key = 'k4'
     long_key  = 'keep4u'
     host='keep4u.ru'

@@ -26,6 +26,7 @@ from sys import argv,exit,stderr,stdout
 import gettext
 import inspect
 from hosts.base import UploaderError
+from tempfile import NamedTemporaryFile
 
 VERSION = '0.07.8.0'
 
@@ -39,6 +40,11 @@ try:
     psyco.full()
 except ImportError:
     pass
+
+try:
+    import Image
+except ImportError:
+    Image = None
 
 class Outprint:
     def __init__(self):
@@ -124,8 +130,11 @@ class Uimge:
                     proxy      = False,
                     proxy_port = None,
                     proxy_type = None,
+                    #
                     thumb      = False,
                     thumb_size = 200,
+
+
                     )
 
     def __init__(self, host=None, obj=None, proxy=None, proxy_port=None, proxy_type=None):
@@ -146,19 +155,21 @@ class Uimge:
             raise Exception( 'Host not is class')
 
     def make_thumb(self, obj, size):
-        import Image
-        #FIXME: make crossplatform
-        thumb_path = '/tmp/imgtmb'
-        tmb = Image.open( obj)
-        tmb.thumbnail( (size, size), Image.ANTIALIAS)
-        tmb.save( thumb_path,'JPEG')
-        del tmb
-        return thumb_path
+        if Image:
+            #FIXME: make crossplatform
+            thumb = NamedTemporaryFile( prefix='thumb_')
+            tmb = Image.open( obj)
+            tmb.thumbnail( (size, size), Image.ANTIALIAS)
+            tmb.save( thumb.file,'JPEG')
+            del tmb
+            return thumb.name, thumb
+        else:
+            print "Not installed pil"
 
     def _ufopen(self, _url, _filename ):
         '''Open url and save in tempfile'''
-        import tempfile, urllib
-        __t = tempfile.NamedTemporaryFile(prefix='',suffix= _filename, delete=False )
+        import urllib
+        __t = NamedTemporaryFile(prefix='',suffix= _filename )
         __t.write( urllib.urlopen(_url).read())
         __t.seek(0)
         return __t.name, __t
@@ -179,20 +190,21 @@ class Uimge:
             img_url= None
             img_thumb_url=None
             temp_obj = None
+            thumb_obj = None
 
             host = self.current_host()
             self.filename = os.path.split( obj )[1]
+            # thumb option
             if not self.options.get('thumb'):
                 if not host.as_url and self.isurl( obj):
                      obj, temp_obj = self._ufopen( obj,  self.filename)
                 self.img_url , self.img_thumb_url, self.filename = self._uploaded( obj, host)
             else:
-                #FIXME: сделать проверку всех протоколов
                 if self.isurl(obj):
                      obj, temp_obj = self._ufopen( obj, self.filename)
-                thumb_obj = self.make_thumb( obj, self.options.get( 'thumb_size') )
+                thumb_path, thumb_obj = self.make_thumb( obj, self.options.get( 'thumb_size') )
                 self.img_url , self.img_thumb_url, self.filename = self._uploaded( obj, host)
-                self.img_thumb_url = self._uploaded( thumb_obj, host)[0]
+                self.img_thumb_url = self._uploaded( thumb_path, host)[0]
 
             response = {'img_direct_url': self.img_url,
                         'img_thumb_url': self.img_thumb_url,
@@ -200,15 +212,23 @@ class Uimge:
                         'img_file_path': self.filepath,
                     }
             if temp_obj:
-                os.remove(temp_obj.name)
-            del host, temp_obj
+                temp_obj.close()
+            if thumb_obj:
+                thumb_obj.close()
+
+#            del host, temp_obj, thumb_obj
             return type( self.current_host.host,(dict,),{})( response )
+
         except ( IndexError,KeyError,IndexError, UploaderError  ) as e:
             raise UimgeError('Uimge: upload error %s'%obj )
+
     def clear(self):
-        '''delete temp file and temp obj'''
+        '''Featres:
+        delete temp file and temp obj'''
         pass
+
     def isurl(self, string):
+        ''' Return True if then url else False '''
         return not not [True for s in 'http://','ftp://','https://' if string.startswith(s) ]
 
 
@@ -274,7 +294,7 @@ def host_test_all(option, opt_str, value, parser, *args, **kwargs):
         h.test_url()
         print '--'
     for H in Hosts.dev_hosts_dict.values():
-        print H.key, H.host
+        print H.key, 'http://', H.host
         print '--'
     os.sys.exit(1)
 
@@ -348,10 +368,15 @@ class UimgeApp:
 
         # Additional options
         group_2 = optparse.OptionGroup(parser, _('Additional options'))
-        group_2.add_option('-t','--thumb_size', type="int", action='store', default=None, dest='thumb_size', \
-                           help=_('Set thumbinal size. Default = 200px (work only on radikal.ru and keep4u.ru) '))
-        group_2.add_option('-f','--file', action='store', default=None, dest='filelist', \
-                           help=_('Upload image from list'))
+        if Image:
+            group_2.add_option('-t','--thumb_size',
+                                type="int", action='store', default=None, dest='thumb_size',
+                                help=_('Set thumbinal size. (Used PIL)'))
+
+        group_2.add_option('-f','--file',
+                            action='store', default=None, dest='filelist', \
+                            help=_('Upload image from list'))
+
         parser.add_option_group(group_2)
 
         group_3 = optparse.OptionGroup(parser, _('Output options'))

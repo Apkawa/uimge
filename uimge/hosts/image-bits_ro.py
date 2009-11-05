@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 import base
 class Host(base.BaseHost):
+    dev_mode = True
+
     short_key = 'ir'
     long_key  = 'imagebits'
     host='image-bits.ro'

@@ -209,8 +209,9 @@ class Uploader:
         self.stop = True
 
     def _ufopen(self, _url, _filename ):
-        import tempfile, urllib
-        self.__t = tempfile.NamedTemporaryFile(prefix='',suffix= _filename, delete=False )
+        import urllib
+        from tempfile import NamedTemporaryFile
+        self.__t = NamedTemporaryFile(prefix='',suffix= _filename, delete=False )
         self.__t.write( urllib.urlopen(_url).read())
         self.__t.seek(0)
         return self.__t.name
@@ -240,7 +241,7 @@ class Uploader:
             except Exception, err:
                 traceback.print_exc()
 
-        print self.host
+        print 'http://%s'%self.host
         t = timeit.Timer()
         _t0 = t.timer()
         # self.set_proxy( proxy="127.0.0.1", port=9050, proxy_type= "socks5" )
