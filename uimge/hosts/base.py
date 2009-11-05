@@ -198,12 +198,17 @@ class Uploader:
         #print curl.getinfo(pycurl.EFFECTIVE_URL)
         #print self.curl.getinfo(pycurl.INFO_COOKIELIST)
         # __url = self.curl.getinfo(pycurl.REDIRECT_URL)
+        return self.get_response()
+
+    def get_response(self):
         dict_response = {
                 "body": self._body.getvalue(),
                 "headers": self._headers.getvalue(),
                 "url": self.curl.getinfo(pycurl.EFFECTIVE_URL),
                 }
         self.response = type("responce",(), dict_response )
+        return self.response
+
 
     def cancel(self):
         self.stop = True
@@ -226,6 +231,7 @@ class Uploader:
         self.curl.setopt( pycurl.URL, url)
         self.curl.unsetopt( pycurl.HTTPPOST)
         self.curl.perform()
+        self.get_response()
 
     def error(self, msg="Error"):
         raise UploaderError( msg )
