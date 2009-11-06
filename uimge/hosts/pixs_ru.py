@@ -6,7 +6,7 @@ class Host( base.BaseHost ):
     short_key = 'px'
     long_key = 'pixs'
     host='pixs.ru'
-    max_file_size = 5*(1024*1024) #5Mb
+    max_file_size = 4*(1024*1024) #5Mb
 
     action = 'http://%s/redirects/upload.php'%host
 

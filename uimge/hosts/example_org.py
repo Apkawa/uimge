@@ -8,17 +8,25 @@ class Host( base.BaseHost ):
     host='example.org'
     max_file_size = 5*(1024*1024) #5Mb
 
-    action = 'http://example.org/upload'
+    action = 'http://%s/upload'%host
+
+    #headers = {}
+    #user_agent = "string"
+
     form = {
             'Submit': '',
             }
 
     def as_file(self, _file):
-        return {'image': _file }
+        return {
+                'image': _file,
+                }
+
     def as_url(self, _url):
-        return {'url': _url}
-    def thumb_size(self, _thumb_size):
-        return { 'thumb_size': _thumb_size, }
+        return {
+                'url': _url,
+                }
+
     def postload(self ):
         _src = self.response.body
         _regx = r'example'
