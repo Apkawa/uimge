@@ -138,6 +138,7 @@ class Uploader:
             self.__form.update( self.as_file(
                     ( pycurl.FORM_FILE, path , pycurl.FORM_CONTENTTYPE, self.mime( path ) )
                 ))
+            #print self.__form
 
 
     def send_post(self):

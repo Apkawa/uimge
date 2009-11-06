@@ -21,30 +21,24 @@
     site project http://wiki.github.com/Apkawa/uimge
 '''
 import os
-import optparse
 from sys import argv,exit,stderr,stdout
-import gettext
 import inspect
 from hosts.base import UploaderError
 from tempfile import NamedTemporaryFile
 
 VERSION = '0.07.8.0'
 
-try:
-    gettext.install('uimge',unicode=True)
-except IOError:
-    gettext.install('uimge', localedir = 'locale',unicode=True)
 
 try:
     import psyco
     psyco.full()
 except ImportError:
     pass
-
 try:
     import Image
-except ImportError:
+except:
     Image = None
+
 
 class Outprint:
     def __init__(self):
@@ -109,6 +103,22 @@ class UimgeError( Exception):
     def __str__(self):
         return repr( "%s\n"%self.value )
 
+
+def make_thumb(obj, size):
+    if Image:
+        #FIXME: make crossplatform
+        tmb = Image.open( obj)
+        tmb.thumbnail( (size, size), Image.ANTIALIAS)
+        thumb = NamedTemporaryFile(
+                prefix='thumb_',
+                suffix= '.png')
+        tmb.save( thumb.file,'PNG')
+        thumb.seek(0)
+        del tmb
+        return thumb.name, thumb
+    else:
+        print "Not installed pil"
+
 class Uimge:
     '''
     Usage:
@@ -133,6 +143,7 @@ class Uimge:
                     #
                     thumb      = False,
                     thumb_size = 200,
+                    thumb_func = make_thumb,
 
 
                     )
@@ -154,17 +165,6 @@ class Uimge:
         else:
             raise Exception( 'Host not is class')
 
-    def make_thumb(self, obj, size):
-        if Image:
-            #FIXME: make crossplatform
-            thumb = NamedTemporaryFile( prefix='thumb_')
-            tmb = Image.open( obj)
-            tmb.thumbnail( (size, size), Image.ANTIALIAS)
-            tmb.save( thumb.file,'JPEG')
-            del tmb
-            return thumb.name, thumb
-        else:
-            print "Not installed pil"
 
     def _ufopen(self, _url, _filename ):
         '''Open url and save in tempfile'''
@@ -183,8 +183,13 @@ class Uimge:
         return res
 
     def upload(self,obj):
+        '''
+        upload( fb ) -> dict response
+        '''
+
         if not self.current_host:
             raise UimgeError('Not select host')
+
         try:
             self.filepath = obj
             img_url= None
@@ -202,7 +207,9 @@ class Uimge:
             else:
                 if self.isurl(obj):
                      obj, temp_obj = self._ufopen( obj, self.filename)
-                thumb_path, thumb_obj = self.make_thumb( obj, self.options.get( 'thumb_size') )
+
+                thumb_path, thumb_obj = self.options['thumb_func']( obj, self.options.get( 'thumb_size') )
+
                 self.img_url , self.img_thumb_url, self.filename = self._uploaded( obj, host)
                 self.img_thumb_url = self._uploaded( thumb_path, host)[0]
 
@@ -243,6 +250,9 @@ class Uimge:
 
     def get_urls( self):
         return self.img_url, self.img_thumb_url
+
+
+
 
 class Hosts:
     '''
@@ -286,7 +296,7 @@ def get_hosts():
 
 get_hosts()
 
-def host_test_all(option, opt_str, value, parser, *args, **kwargs):
+def host_test_all(option=None, opt_str=None, value=None, parser=None, *args, **kwargs):
     u = Uimge()
     for H in Hosts.hosts_dict.values():
         h = H()
@@ -299,116 +309,11 @@ def host_test_all(option, opt_str, value, parser, *args, **kwargs):
     os.sys.exit(1)
 
 
-
-class UimgeApp:
-    "Класс cli приложения"
-    def __init__(self):
-        self.out = Outprint()
-        self.outprint_rules = self.out.outprint_rules
-        self._uimge = Uimge()
-        self.Imagehosts = Hosts.hosts_dict
-        self.key_hosts = '|'.join(['-'+i.split('_')[0] for i in self.Imagehosts.keys()])
-        self.version = 'uimge-'+VERSION
-        self.usage = _('python %%prog [%s] picture')%self.key_hosts
-        self.objects = []
-    def main(self, _argv):
-        self.parseopt(_argv)
-        self._uimge.set_host( self.Imagehosts.get(self.opt.check) )# , self.opt.thumb_size)
-        if self.opt.thumb_size:
-            self._uimge.setup( thumb=True, thumb_size=self.opt.thumb_size)
-        self.read_filelist( self.opt.filelist )
-        self.objects.extend( self.arguments )
-        self.out.set_rules( key=self.opt.out, usr=self.opt.out_usr )
-        #print self.objects
-        for f in self.objects:
-            #_p = self.Progress()
-            #_p.start()
-            try:
-                self._uimge.upload( f )
-                self.outprint( delim = self.opt.out_delim )
-            except UimgeError:
-                self.error( _('File %s uploading error')%f )
-            except KeyboardInterrupt:
-                self.error( _("Upload process aborted\n") )
-                os.sys.exit(1)
-
-    def read_filelist(self, _list):
-        if _list:
-            #print _list
-            f = open( _list,'r')
-            self.objects.extend( [ i[:-1] for i in f.xreadlines()] )
-            f.close()
-            return True
-        return False
-    def outprint(self, delim='\n',):
-        img_url = self._uimge.img_url
-        img_thumb_url = self._uimge.img_thumb_url
-        filename = self._uimge.filename
-        delim = delim.replace( '\\n','\n')
-        _out = self.out.get_out( img_url, img_thumb_url, filename )
-        stdout.write( _out )
-        stdout.write( delim)
-    def error( self, msg):
-        os.sys.stderr.write( msg )
-    def parseopt(self, argv):
-        parser = optparse.OptionParser(usage=self.usage, version=self.version)
-        # Major options
-        group_1 = optparse.OptionGroup(parser, _('Major options'))
-        for key, host in self.Imagehosts.iteritems():
-            short_key, long_key = host.short_key, host.long_key
-            if len( short_key) == 1:
-                short_key='-'+short_key
-            else:# len( short_key ) >= 2:
-                short_key = '--'+short_key
-            group_1.add_option(short_key,'--'+ long_key,
-                    action='store_const', const=key, dest='check',
-                    help='%s http://%s'%(_('Upload to'),host.host))
-
-        parser.add_option_group(group_1)
-
-        # Additional options
-        group_2 = optparse.OptionGroup(parser, _('Additional options'))
-        if Image:
-            group_2.add_option('-t','--thumb_size',
-                                type="int", action='store', default=None, dest='thumb_size',
-                                help=_('Set thumbinal size. (Used PIL)'))
-
-        group_2.add_option('-f','--file',
-                            action='store', default=None, dest='filelist', \
-                            help=_('Upload image from list'))
-
-        parser.add_option_group(group_2)
-
-        group_3 = optparse.OptionGroup(parser, _('Output options'))
-        for key in sorted(self.outprint_rules):
-            _short_key, _long_key = key.split('_')
-            #if key != 'usr_user-out':
-            group_3.add_option('--'+ _short_key,'--'+ _long_key,
-                        const=key, action='store_const',
-                        default=None, dest='out',
-                        help= self.outprint_rules[key].get('desc') or key )
-        group_3.add_option('--usr','--user-out', action='store',
-                    default=None, dest='out_usr',
-                    help=_( 'Set user output #url# - original image, #tmb# - preview image, #file# - filename   Sample: [URL=#url#][IMG]#tmb#[/IMG][/URL]' ))
-        group_3.add_option('-d','--delimiter', action='store',
-                    default='\n', dest='out_delim',
-                    help=_( 'Set delimiter. Default - "\\n"' ) )
-        group_3.add_option('--test', action='callback',callback= host_test_all,  help=optparse.SUPPRESS_HELP )
-
-        parser.add_option_group(group_3)
-
-        self.opt, self.arguments = parser.parse_args(args=argv)
-        #print self.opt, self.arguments
-        if self.opt.check == None:
-            print _('No major option! Enter option [%s]...')%self.key_hosts
-            parser.print_help()
-            exit()
-
-
 def main():
-    u = UimgeApp()
-    u.main(argv[1:])
+    pass
+
 
 if __name__ == '__main__':
+    host_test_all()
     main()
-    #host_test_all()
+
