@@ -1,5 +1,5 @@
 from setuptools import setup, find_packages
-import uimge
+from uimge import uimge
 
 import os
 
