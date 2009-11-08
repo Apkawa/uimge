@@ -21,12 +21,12 @@
     site project http://wiki.github.com/Apkawa/uimge
 '''
 import os
-from sys import argv,exit,stderr,stdout
+import gettext
 import inspect
 from hosts.base import UploaderError
 from tempfile import NamedTemporaryFile
 
-VERSION = '0.07.8.0'
+VERSION = '0.07.12.0'
 
 
 try:
@@ -34,10 +34,16 @@ try:
     psyco.full()
 except ImportError:
     pass
+
 try:
     import Image
 except:
     Image = None
+
+try:
+    gettext.install('uimge',unicode=True)
+except IOError:
+    gettext.install('uimge', localedir = 'locale',unicode=True)
 
 
 class Outprint:
@@ -95,7 +101,6 @@ class Outprint:
             return '%s'%img_url
         else:
             return self.rule%({'img_url': img_url, 'img_thumb_url': img_thumb_url ,'filename': filename })
-
 
 class UimgeError( Exception):
     def __init__(self, value):

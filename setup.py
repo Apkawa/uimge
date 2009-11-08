@@ -21,7 +21,7 @@ setup(name='uimge',
           ],
       entry_points = {
         'console_scripts':[
-            'uimge = uimge:main'
+            'uimge = uimgecli:main'
         ]
         }
      )
