@@ -6,7 +6,7 @@ class Host( base.BaseHost ):
     short_key = 'fp'
     long_key = 'fastpic'
     host='fastpic.ru'
-    max_file_size = 2*(1024*1024) #2Mb
+    max_file_size = 5*(1024*1024) #5Mb
 
     action = 'http://fastpic.ru/upload?api=1'
     form = {

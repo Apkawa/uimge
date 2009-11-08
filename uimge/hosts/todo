@@ -43,6 +43,7 @@ http://imageup.ru/ 2Mb
 http://onlinedisk.ru/ 5Mb
 http://xtupload.com/ ?
 http://picatom.com/ 3Mb
+http://sun.anime-last.info/
 
  Look
  http://pixs.ru/ 
@@ -60,11 +61,11 @@ http://fotky.com.ua/
 in http://zenden.ws/imageuploader
 
 
-* add http://sharepix.ru/ - slow
-* add http://avoreg.ru/
-* add http://www.ii4.ru/
-* add http://picbite.com/
-* http://www.glowfoto.com/
+http://sharepix.ru/
+http://avoreg.ru/
+http://www.ii4.ru/
+http://picbite.com/
+http://www.glowfoto.com/
 
 List image hostings
 http://forum.ru-board.com/topic.cgi?forum=11&topic=4219#1
@@ -73,14 +74,14 @@ Epic FAIL
 
 http://getpic.ru/
 http://hfimg.com/
-   * http://up.li.ru/
-   * http://www.imagevenue.com/
-   * http://xs.to/
-   * http://www.images-hosting.com/ - error php in page
-   * http://paintedover.com/
-   * http://imghost.extra.by/
-   * http://www.imgspot.com/
-   * http://www.pixhost.org/
+http://up.li.ru/
+http://www.imagevenue.com/
+http://xs.to/
+http://www.images-hosting.com/ - error php in page
+http://paintedover.com/
+http://imghost.extra.by/
+http://www.imgspot.com/
+http://www.pixhost.org/
 http://imgdb.ru/
 
 
@@ -88,28 +89,4 @@ http://imgdb.ru/
 Current
 ############################################
 
-* http://fastpic.ru/ - хостинг от торрентсов
-    --zi, --zikuka      Залить на zikuka.ru
-    --xp, --xpichost    Залить на xpichost.net
-    --xe, --xegami      Залить на xegami.com
-    --up, --upimg       Залить на upimg.ru
-    -u, --funkyimg      Залить на funkyimg.com
-    --tp, --tinypic     Залить на tinypic.com
-    --sp, --savepic     Залить на savepic.ru
-    -s, --smages        Залить на smages.com
-    -r, --radikal       Залить на radikal.ru
-    --pu, --pikucha     Залить на pikucha.ru
-    --pm, --picamatic   Залить на picamatic.com
-    --pf, --picfront    Залить на picfront.org
-    --pc, --piccy       Залить на piccy.info
-    -p, --picthost      Залить на picthost.ru
-    -o, --opicture      Залить на opicture.ru
-    -k, --imageshack    Залить на imageshack.us
-    --k4, --keep4u      Залить на keep4u.ru
-    --it, --itrash      Залить на itrash.ru
-    --ir, --imagebits   Залить на image-bits.ro
-    --ib, --imgby       Залить на imgby.com
-    -i, --ipicture      Залить на ipicture.ru
-    --hm, --hostmyjpg   Залить на hostmyjpg.com
-    --ba, --bayimg      Залить на bayimg.com
 
