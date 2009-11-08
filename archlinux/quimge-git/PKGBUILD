@@ -1,0 +1,35 @@
+# Contributor: Apkawa <apkawa@gmail.com>
+
+pkgname=quimge-git
+pkgver=20091107
+pkgrel=3
+pkgdesc="PyQt GUI for uimge - picture uploader to different imagehostings"
+arch=('i686' 'x86_64')
+url="http://code.google.com/p/quimge/"
+license=('GPL')
+makedepends=('git')
+depends=('python' 'uimge-git' 'pyqt' 'qt')
+source=( )
+md5sums=( )
+
+_gitname="quimge"
+_gitroot="git://github.com/Apkawa/quimge.git"
+build() {
+  cd ${srcdir}
+  msg "Connecting to $_gitroot GIT server...."
+
+  if [ -d ${srcdir}/$_gitname ] ; then
+  cd $_gitname && git pull origin
+  msg "The local files are updated."
+  else
+  git clone $_gitroot
+  fi
+
+  msg "GIT checkout done or server timeout"
+  msg "Starting make..."
+
+  cp -r ${srcdir}/${_gitname} ${srcdir}/${_gitname}-build
+  cd ${srcdir}/${_gitname}-build/
+  python setup.py build -f install -f --root $startdir/pkg --prefix=/usr || return 1
+
+}
