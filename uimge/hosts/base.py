@@ -158,11 +158,16 @@ class Uploader:
         if self.__dict__.get('cookie'):
             self.curl.setopt( pycurl.COOKIE, self.cookie )
         self.curl.setopt( pycurl.REFERER, 'http://%s/'%self.host)
+
         if self.headers:
             self.curl.setopt( pycurl.HTTPHEADER, self.headers.items())
 
         if self.user_agent:
             self.USER_AGENT = self.user_agent
+
+        if self.http_auth:
+            self.curl.setopt( pycurl.HTTPAUTH, pycurl.HTTPAUTH_BASIC )
+            self.curl.setopt( pycurl.USERPWD, ":".join(self.http_auth) )
 
         self.curl.setopt( pycurl.USERAGENT, self.USER_AGENT )
 
@@ -274,6 +279,7 @@ class BaseHost( Uploader ):
     host= ""
     action = ""
     user_agent = ""
+    http_auth = ()
     form = {}
     headers = {}
 
