@@ -9,35 +9,42 @@ h1. Options.
   -h, --help            show this help message and exit
 
   Major options:
-    --ba, --bayimg      Upload to bayimg.com
-    --hm, --hostmyjpg   Upload to hostmyjpg.com
-    -i, --ipicture      Upload to ipicture.ru
-    --ib, --imgby       Upload to imgby.com
-    --ir, --imagebits   Upload to image-bits.ro
-    --it, --itrash      Upload to itrash.ru
-    --k4, --keep4u      Upload to keep4u.ru
-    -k, --imageshack    Upload to imageshack.us
-    -o, --opicture      Upload to opicture.ru
-    -p, --picthost      Upload to picthost.ru
-    --pc, --piccy       Upload to piccy.info
-    --pf, --picfront    Upload to picfront.org
-    --pm, --picamatic   Upload to picamatic.com
-    --pu, --pikucha     Upload to pikucha.ru
-    -r, --radikal       Upload to radikal.ru
-    -s, --smages        Upload to smages.com
-    --sp, --savepic     Upload to savepic.ru
-    --tp, --tinypic     Upload to tinypic.com
-    -u, --funkyimg      Upload to funkyimg.com
-    --up, --upimg       Upload to upimg.ru
-    --xe, --xegami      Upload to xegami.com
-    --xp, --xpichost    Upload to xpichost.net
-    --zi, --zikuka      Upload to zikuka.ru
-
+    --ib, --imgby       Upload to http://imgby.com
+    --ps, --pictureshack
+                        Upload to http://pictureshack.ru
+    --im, --itmages     Upload to http://itmages.ru
+    --pc, --piccy       Upload to http://piccy.info
+    --c2n, --clip2net   Upload to http://clip2net.com
+    --j1, --jpg1        Upload to http://jpg1.ru
+    --pu, --pikucha     Upload to http://pikucha.ru
+    --pf, --picfront    Upload to http://picfront.org
+    -u, --funkyimg      Upload to http://funkyimg.com
+    --it, --itrash      Upload to http://itrash.ru
+    --sp, --savepic     Upload to http://savepic.ru
+    -i, --ipicture      Upload to http://ipicture.ru
+    -s, --smages        Upload to http://smages.com
+    --xe, --xegami      Upload to http://xegami.com
+    -k, --imageshack    Upload to http://imageshack.us
+    -r, --radikal       Upload to http://radikal.ru
+    --xt, --xtupload    Upload to http://xtupload.com
+    --iu, --imageup     Upload to http://imageup.ru
+    --px, --pixs        Upload to http://pixs.ru
+    --fp, --fastpic     Upload to http://fastpic.ru
+    -o, --opicture      Upload to http://opicture.ru
+    --ig, --imgur       Upload to http://imgur.com
+    --pm, --picamatic   Upload to http://picamatic.com
+    --al, --anime-last  Upload to http://sun.anime-last.info
+    --10p, --10pix      Upload to http://10pix.ru
+    --xp, --xpichost    Upload to http://xpichost.net
+    --pb, --picbox      Upload to http://picbox.su
+    -p, --picthost      Upload to http://picthost.ru
+    --ba, --bayimg      Upload to http://bayimg.com
+    --om, --omploader   Upload to http://omploader.org
+    --hm, --hostmyjpg   Upload to http://hostmyjpg.com
 
   Additional options:
     -t THUMB_SIZE, --thumb_size=THUMB_SIZE
-                        Set thumbinal size. Default = 200px (work only on
-                        radikal.ru and keep4u.ru)
+                        Set thumbinal size. (Used PIL)
     -f FILELIST, --file=FILELIST
                         Upload image from list
 
@@ -56,18 +63,6 @@ h1. Options.
 </pre>
 
 h1. Installation.
-# In Arch Linux:
-* use yaourt
-
-   <code> yaourt -S uimge-git </code>
-
-* use AUR
-
-  ## go to "Uimge in AUR":http://aur.archlinux.org/packages.php?ID=22033
-  ## get PKGBUILD and save
-  ## <code>makepkg</code>
-  ## <code>pacman -U *.pkg.*</code>
-
 # In other Operating System
 * get tarball
 * unpack
