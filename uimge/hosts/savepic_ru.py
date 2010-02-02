@@ -5,11 +5,11 @@ class Host(base.BaseHost):
     short_key = 'sp'
     long_key  = 'savepic'
     host='savepic.ru'
-    action = 'http://savepic.ru/search.php'
+    action = 'http://savepic.ru/index.php'
     form = {'MAX_FILE_SIZE': '2097152',
              'email': '',
              'flip': '0',
-             'font1': 'comic_bold',
+             'font1': 'decor',
              'font2': '20',
              'mini': '300x225',
              'note': '',
@@ -22,7 +22,8 @@ class Host(base.BaseHost):
         return {'file':_file}
 
     def postload(self):
-        reurl = self.findall('\"/([\d]+?).htm\"', self.response.body )[0]
+        body = self.response.body
+        reurl = self.findall('\"/([\d]+?).htm\"', body )[0]
         ext ='png'#self.get_filename().split('.')[-1].lower()
         url,tmb = 'http://savepic.ru/%s.%s'%(reurl,ext),'http://savepic.ru/%sm.%s'%(reurl,ext)
         self.img_url = url

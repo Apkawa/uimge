@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 import base
-#@test_host(__name__)
 class Host(base.BaseHost):
+    dev_mode = True
     short_key = 'xe'
     long_key  = 'xegami'
     host='xegami.com'

@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 import base
 class Host(base.BaseHost):
-    dev_mode = False
+    dev_mode = True
     short_key = 'xp'
     long_key  = 'xpichost'
     host='xpichost.net'
