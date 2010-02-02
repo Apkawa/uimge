@@ -12,11 +12,10 @@ class Host(base.BaseHost):
 
     def as_file(self, _file):
         return { 'file1': _file }
-    def as_url(self, _url):
-        return { 'url1': _url }
+    #def as_url(self, _url):
+    #    return { 'url1': _url }
     def postload(self ):
         _src = self.response.body
-
         __url = self.findall('\[img\]http://omploader.org/t(.*?)\[/img\]',  _src )[0]
         self.img_url = 'http://omploader.org/v%s'%__url
         self.img_thumb_url = 'http://omploader.org/t%s'%__url

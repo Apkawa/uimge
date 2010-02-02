@@ -18,10 +18,9 @@ class Host( base.BaseHost ):
 
     def postload(self ):
         _src = self.response.body
-        _url = self.findall("\[IMG\]http://www.imageup.ru/(.*?)\[/IMG\]" ,_src)[1]
-	_thumb = self.findall("\[IMG\]http://www.imageup.ru/(.*?)\[/IMG\]" ,_src)[0]
-        self.img_url = 'http://www.imageup.ru/%s'%_url
-        self.img_thumb_url = 'http://www.imageup.ru/%s'%_thumb
+        _url = self.findall("\[IMG\]http://www.imageup.ru/(.*?)\[/IMG\]" ,_src)
+        self.img_url = 'http://www.imageup.ru/%s'%_url[0]
+        self.img_thumb_url = 'http://www.imageup.ru/%s'%_url[0 if len(_url) == 1 else 1]
 
 if __name__ == '__main__':
     h= Host()
