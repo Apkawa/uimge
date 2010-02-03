@@ -109,15 +109,14 @@ class UimgeApp:
         group_3.add_option('--test', action='callback',callback= host_test_all,  help=optparse.SUPPRESS_HELP )
 
         parser.add_option_group(group_3)
-        if argv:
-            self.opt, self.arguments = parser.parse_args(args=argv)
-            #print self.opt, self.arguments
-            if self.opt.check:
-                print _('No major option! Enter option [%s]...')%self.key_hosts
-                parser.print_help()
-                exit(1)
-        else:
-            print "Uimge - picture uploader to %i imagehostings"%len(self.Imagehosts)
+        self.opt, self.arguments = parser.parse_args(args=argv)
+        #print self.opt, self.arguments
+        if not self.opt.check:
+            print _('No major option! Enter host_key option...')
+            parser.print_help()
+            exit(1)
+        elif not self.arguments:
+            print _('Not found arguments! File or url')
             parser.print_help()
             exit(1)
 
