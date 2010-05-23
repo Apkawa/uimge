@@ -4,7 +4,7 @@ class Host( base.BaseHost ):
     dev_mode = False
 
     short_key = 'al'
-    long_key = 'anime-last'
+    long_key = 'anime_last'
     host='sun.anime-last.info'
     max_file_size = 3145728 #3Mb
 

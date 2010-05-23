@@ -296,22 +296,11 @@ def get_hosts():
                         hosts_obj.update({ host_key : obj })
                     else:
                         dev_hosts.update({ host_key : obj })
-    setattr( Hosts, 'hosts_dict', hosts_obj )
-    setattr( Hosts, 'dev_hosts_dict', dev_hosts )
+    setattr(Hosts, 'hosts_dict', hosts_obj)
+    setattr(Hosts, 'dev_hosts_dict', dev_hosts)
 
 get_hosts()
 
-def host_test_all(option=None, opt_str=None, value=None, parser=None, *args, **kwargs):
-    u = Uimge()
-    for H in Hosts.hosts_dict.values():
-        h = H()
-        h.test_file()
-        h.test_url()
-        print '--'
-    for H in Hosts.dev_hosts_dict.values():
-        print H.key, 'http://', H.host
-        print '--'
-    os.sys.exit(1)
 
 
 def main():

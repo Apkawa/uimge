@@ -5,7 +5,8 @@ class Host(base.BaseHost):
     short_key = 'pu'
     long_key  = 'pikucha'
     host='pikucha.ru'
-    action = 'http://pikucha.ru/upload'
+    action = 'http://m.pikucha.ru/uplaod'
+
 
     form = {
             'MAX_FILE_SIZE':'10485760',

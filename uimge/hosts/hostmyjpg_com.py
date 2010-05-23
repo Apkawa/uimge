@@ -2,6 +2,7 @@
 import base
 #@test_host(__name__)
 class Host(base.BaseHost):
+    dev_mode = True
     short_key = 'hm'
     long_key  = 'hostmyjpg'
     host='hostmyjpg.com'

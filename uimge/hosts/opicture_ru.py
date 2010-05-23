@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 import base
 class Host(base.BaseHost):
+    dev_mode = True
     short_key = 'o'
     long_key  = 'opicture'
     host='opicture.ru'

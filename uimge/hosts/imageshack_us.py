@@ -5,7 +5,7 @@ class Host(base.BaseHost):
     long_key = 'imageshack'
 
     host='imageshack.us'
-    action = 'http://imageshack.us/'
+    action = 'http://post.imageshack.us/'
     form = {
             'uploadtype': 'on',
             'Submit':'"host it!"'
@@ -19,7 +19,11 @@ class Host(base.BaseHost):
 #        return {'url': _file }
     def postload(self):
         _src = self.response.body
-        url=self.findall('value=\"(http://img.[\d]+?.imageshack.us/img[\d]+?/.*?/.*?)\"', _src )
+        '''
+        http://img413.imageshack.us/img413/2970/20281668.th.png
+        [IMG]http://img571.imageshack.us/img571/2408/40074625.png[/IMG][/URL]
+        '''
+        url=self.findall('\]\[IMG\](http://img.[\d]+?.imageshack.us/img[\d]+?/.*?/.*?)\[/IMG\]\[/URL\]', _src )
         tumburl=url[0].split('.')
         tumburl.insert(-1,'th')
         self.img_url = url[0]
