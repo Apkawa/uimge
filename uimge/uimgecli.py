@@ -3,7 +3,7 @@
 
 import gettext
 import os
-from uimge import Uimge, UimgeError, Outprint, Hosts, VERSION, host_test_all
+from uimge import Uimge, UimgeError, Outprint, Hosts, VERSION #, host_test_all
 
 try:
     gettext.install('uimge',unicode=True)
@@ -106,7 +106,7 @@ class UimgeApp:
         group_3.add_option('-d','--delimiter', action='store',
                     default='\n', dest='out_delim',
                     help=_( 'Set delimiter. Default - "\\n"' ) )
-        group_3.add_option('--test', action='callback',callback= host_test_all,  help=optparse.SUPPRESS_HELP )
+        #group_3.add_option('--test', action='callback',callback= host_test_all,  help=optparse.SUPPRESS_HELP )
 
         parser.add_option_group(group_3)
         self.opt, self.arguments = parser.parse_args(args=argv)
