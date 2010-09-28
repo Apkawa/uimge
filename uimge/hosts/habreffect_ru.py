@@ -21,7 +21,7 @@ class Host( base.BaseHost ):
 
     def postload(self ):
         uri_path = urlsplit(self.response.url).path
-        self.img_url = 'http://habreffect.ru/files/%s'%uri_path
+        self.img_url = 'http://habreffect.ru/files%s'%uri_path
         self.img_thumb_url = self.img_url
 
 if __name__ == '__main__':
