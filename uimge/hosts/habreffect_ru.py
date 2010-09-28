@@ -7,7 +7,7 @@ class Host( base.BaseHost ):
     short_key = 'hr'
     long_key = 'habreffect'
     host='habreffect.ru'
-    #max_file_size = 5*(1024*1024) #5Mb
+    max_file_size = 5*(1024*1024) #5Mb
 
     action = 'http://%s/upload.php'%host
     form = {
