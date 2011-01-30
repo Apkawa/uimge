@@ -21,6 +21,7 @@ class Host( base.BaseHost):
         self.action = self.findall('href="(http://www.picamatic.com/.*?)"', urllib.urlopen('http://www.picamatic.com/?js&schedule').read() )[0]
     def postload(self ):
         _src =  self.response.body
+        print _src
         self.img_url = self.findall( '"js-url-direct">(http://www.picamatic.com/show/.*?)</textarea>', _src)[0]
         self.img_thumb_url = self.findall('&gt;&lt;img src="(http://www.picamatic.com/show/.*?)" border="0"', _src)[0]
 
