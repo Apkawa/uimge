@@ -1,10 +1,15 @@
-#!/usr/bin/python
+#!/usr/bin/python2
 # -*- coding: utf-8 -*-
+import os
 
 from helpers import BaseHostCase
 
+TEST_ROOT = os.path.dirname(os.path.abspath(__file__))
+FIXTURES_ROOT = os.path.join(TEST_ROOT, 'fixtures')
+print FIXTURES_ROOT
+
 class TestHostsUpload(BaseHostCase):
-    fixtures = ['/home/apkawa/Code/uimge/uimge/tests/fixtures/qr.png', 'http://s41.radikal.ru/i092/0902/93/40b756930f38.png']
+    fixtures = [os.path.join(FIXTURES_ROOT,'1.gif'), 'http://habreffect.ru/files/fa8/4a8042f57/1.gif']
 
     def test_ib_imgby(self):
         """
@@ -181,7 +186,7 @@ class TestHostsUpload(BaseHostCase):
         for f in self.fixtures:
             self._run_host('pm_picamatic', f)
 
-class TestDevHostsUpload(BaseHostCase):
+class __TestDevHostsUpload(BaseHostCase):
     fixtures = ['/home/apkawa/Code/uimge/uimge/tests/fixtures/qr.png', 'http://s41.radikal.ru/i092/0902/93/40b756930f38.png']
 
     def test_xe_xegami(self):

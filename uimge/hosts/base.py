@@ -57,18 +57,25 @@ USER_AGENTS_LIST=(
          'Opera/9.60 (Windows NT 5.1; U; en) Presto/2.1.1',
          )
 
-class UploaderError( Exception ):
+class UploaderError(Exception):
     def __init__(self, value):
         self.value = value
     def __str__(self):
         return repr( self.value )
 
-class Uploader:
-    USER_AGENT = rchoice( USER_AGENTS_LIST )
+class Uploader(object):
+    USER_AGENT = rchoice(USER_AGENTS_LIST)
     __t = None
+    __curl = None
     proxy = []
     proxy_type = {}
     stop = False
+
+    def __init__(self):
+        self.__curl = None
+        self._body = StringIO()
+        self._headers = StringIO()
+
 
     def findall( self, regex, string):
         rst = re.findall( regex, string)
@@ -140,47 +147,54 @@ class Uploader:
                 ))
             #print self.__form
 
-
-    def send_post(self):
-        self._body = StringIO()
-        self._headers = StringIO()
-
-        self.curl = pycurl.Curl()
-
-        self.curl.setopt( pycurl.FOLLOWLOCATION, 1)
-        self.curl.setopt( pycurl.TIMEOUT, 60)
-        self.curl.setopt( pycurl.MAXREDIRS, 2)
-        self.curl.setopt( pycurl.WRITEFUNCTION, self._body.write)
-        self.curl.setopt( pycurl.HEADERFUNCTION, self._headers.write)
-        self.curl.setopt( pycurl.NOSIGNAL, 1)
-        self.curl.setopt( pycurl.URL, self.action )
-
+    def get_curl(self):
+        curl = pycurl.Curl()
+        curl.setopt(pycurl.FOLLOWLOCATION, 1)
+        curl.setopt(pycurl.TIMEOUT, 60)
+        curl.setopt(pycurl.MAXREDIRS, 2)
+        curl.setopt(pycurl.WRITEFUNCTION, self._body.write)
+        curl.setopt(pycurl.HEADERFUNCTION, self._headers.write)
+        curl.setopt(pycurl.NOSIGNAL, 1)
         if self.__dict__.get('cookie'):
-            self.curl.setopt( pycurl.COOKIE, self.cookie )
-        self.curl.setopt( pycurl.REFERER, 'http://%s/'%self.host)
+            self.curl.setopt(pycurl.COOKIE, self.cookie)
+        curl.setopt( pycurl.REFERER, 'http://%s/'%self.host)
 
         if self.headers:
-            self.curl.setopt( pycurl.HTTPHEADER, self.headers.items())
+            curl.setopt( pycurl.HTTPHEADER, self.headers.items())
 
         if self.user_agent:
-            self.USER_AGENT = self.user_agent
+            USER_AGENT = self.user_agent
 
         if self.http_auth:
-            self.curl.setopt( pycurl.HTTPAUTH, pycurl.HTTPAUTH_BASIC )
-            self.curl.setopt( pycurl.USERPWD, ":".join(self.http_auth) )
+            curl.setopt( pycurl.HTTPAUTH, pycurl.HTTPAUTH_BASIC )
+            curl.setopt( pycurl.USERPWD, ":".join(self.http_auth) )
 
-        self.curl.setopt( pycurl.USERAGENT, self.USER_AGENT )
+        curl.setopt( pycurl.USERAGENT, self.USER_AGENT )
+        return curl
 
-        #print self.__form.items()
+    '''
+    @property
+    def curl(self):
+        if not self.__curl:
+            self.__curl = self.get_curl()
+        return self.__curl
+    '''
+
+    def send_post(self):
+        self.curl = self.get_curl()
+        self.curl.setopt( pycurl.URL, self.action )
         curl_post = self.curl
-        curl_post.setopt( pycurl.HTTPPOST, self.__form.items())
+        curl_post.setopt(pycurl.HTTPPOST, self.__form.items())
         if self.proxy:
             for arg in self.proxy:
                 print arg
                 self.curl.setopt( *arg )
         # curl_post.perform()
         multi = pycurl.CurlMulti()
-        multi.add_handle( curl_post )
+        try:
+            multi.add_handle( curl_post )
+        except pycurl.error:
+            pass
         num_handles = 1
         self.stop = False
         while num_handles:
@@ -191,7 +205,6 @@ class Uploader:
                 if self.stop:
                     raise UploaderError("Upload cancel")
             multi.select(1.0)
-
 
         self.http_code = curl_post.getinfo(pycurl.HTTP_CODE)
         if self.http_code in (404, 500):
@@ -204,7 +217,8 @@ class Uploader:
         #print curl.getinfo(pycurl.EFFECTIVE_URL)
         #print self.curl.getinfo(pycurl.INFO_COOKIELIST)
         # __url = self.curl.getinfo(pycurl.REDIRECT_URL)
-        return self.get_response()
+        responce = self.get_response()
+        return responce
 
     def get_response(self):
         dict_response = {
@@ -234,10 +248,10 @@ class Uploader:
             return os.path.splitext( self.filename)
 
     def get_html(self, url):
-        self.curl.setopt( pycurl.URL, url)
-        self.curl.unsetopt( pycurl.HTTPPOST)
+        self.curl.setopt(pycurl.URL, url)
+        self.curl.unsetopt(pycurl.HTTPPOST)
         self.curl.perform()
-        self.get_response()
+        return self.get_response()
 
     def error(self, msg="Error"):
         raise UploaderError( msg )
@@ -271,7 +285,7 @@ class Uploader:
     def test_file( self, obj="/home/apkawa/qr.png"):
         self.__test( obj)
 
-class BaseHost( Uploader ):
+class BaseHost(Uploader):
     dev_mode = False
     max_file_size = None
     short_key = ""

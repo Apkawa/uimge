@@ -28,10 +28,11 @@ class Host( base.BaseHost ):
 
     def postload(self ):
         _src = self.response.body
-        _regx = r'\[IMG\]http://img.pixs.ru/storage/([\d]/[\d]/[\d]/[\w.]+?)\.[\w]{2,4}\[/IMG\]'
+        _regx = r'\[IMG\]http://i.pixs.ru/storage/([\d]/[\d]/[\d]/[\w._]+?)\.[\w]{2,4}\[/IMG\]'
+#[IMG]http://i.pixs.ru/storage/7/2/0/1gif_6227590_1615720.gif[/IMG]
         _url = self.findall(_regx ,_src)[0]
-        self.img_url = 'http://img.pixs.ru/storage/%s%s'%(_url, self.get_filename(splitext=True)[1] )
-        self.img_thumb_url = 'http://img.pixs.ru/thumbs/%s.jpg'%_url
+        self.img_url = 'http://i.pixs.ru/storage/%s%s'%(_url, self.get_filename(splitext=True)[1] )
+        self.img_thumb_url = 'http://i.pixs.ru/thumbs/%s.jpg'%_url
 
 if __name__ == '__main__':
     h= Host()

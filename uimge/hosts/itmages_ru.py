@@ -2,6 +2,7 @@
 import base
 #@test_host(__name__)
 class Host(base.BaseHost):
+    #TODO fix CSRF
     short_key = 'im'
     long_key  = 'itmages'
     host='itmages.ru'
@@ -12,9 +13,15 @@ class Host(base.BaseHost):
 
     def as_file(self, _file):
         return {'img': _file }
-    def postload(self ):
-        _src = self.response.body
 
+    def preload(self):
+        resp = self.get_html('http://%s'%self.host)
+        print resp.body
+        token = self.findall(r'value="(\w+)" name="token"', resp.body)[0]
+        print token
+
+    def postload(self):
+        _src = self.response.body
         __url = self.findall('\[img\]http://itmages.ru/src/view/(.*?)\[/img\]',  _src )[0]
         self.img_url = 'http://itmages.ru/src/view/%s'%__url
         self.img_thumb_url = 'http://itmages.ru/src/preview/%s'%__url

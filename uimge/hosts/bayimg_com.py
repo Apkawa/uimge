@@ -15,10 +15,10 @@ class Host( base.BaseHost ):
         return {'file': _file }
     def postload(self ):
         _src = self.response.body
-        _regx = r'img src="http://bayimg.com/thumb/(.+?)"'
+        _regx = r'img src="http://thumbs.bayimg.com/(.+?)"'
         _url = self.findall(_regx ,_src)[0]
-        self.img_url = 'http://bayimg.com/image/%s'%_url
-        self.img_thumb_url = 'http://bayimg.com/thumb/%s'%_url
+        self.img_url = 'http://image.bayimg.com/%s'%_url
+        self.img_thumb_url = 'http://thumbs.bayimg.com/%s'%_url
 
 if __name__ == '__main__':
     h= Host()
