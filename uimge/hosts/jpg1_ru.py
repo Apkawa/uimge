@@ -7,14 +7,18 @@ class Host( base.BaseHost ):
 
     action = 'http://%s/upload/'%host
 
+    form = {
+            'optsize':'resample',
+            }
+
     def as_file(self, _file):
         return {
                 'imgfile': _file,
+                
                 }
 
     def postload(self ):
         _src = self.response.body
-        print _src
         _url = self.findall("\[img=(.*?)\]\[" ,_src)[0]
         self.img_url = '%s'%_url
         self.img_thumb_url = '%s_th.jpg'%_url

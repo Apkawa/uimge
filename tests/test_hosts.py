@@ -30,13 +30,6 @@ class TestHostsUpload(BaseHostCase):
         for f in self.fixtures:
             self._run_host('ps_pictureshack', f)
 
-    def test_im_itmages(self):
-        """
-        TestHostsUpload.test_im_itmages http://itmages.ru
-        """
-        for f in self.fixtures:
-            self._run_host('im_itmages', f)
-
     def test_sp_savepic(self):
         """
         TestHostsUpload.test_sp_savepic http://savepic.ru
@@ -99,13 +92,6 @@ class TestHostsUpload(BaseHostCase):
         """
         for f in self.fixtures:
             self._run_host('r_radikal', f)
-
-    def test_xt_xtupload(self):
-        """
-        TestHostsUpload.test_xt_xtupload http://xtupload.com
-        """
-        for f in self.fixtures:
-            self._run_host('xt_xtupload', f)
 
     def test_iu_imageup(self):
         """
@@ -201,6 +187,13 @@ class TestDevHostsUpload(BaseHostCase):
         for f in self.fixtures:
             self._run_host('k4_keep4u', f)
 
+    def test_im_itmages(self):
+        """
+        TestDevHostsUpload.test_im_itmages http://itmages.ru
+        """
+        for f in self.fixtures:
+            self._run_host('im_itmages', f)
+
     def test_i_ipicture(self):
         """
         TestDevHostsUpload.test_i_ipicture http://ipicture.ru
@@ -215,12 +208,12 @@ class TestDevHostsUpload(BaseHostCase):
         for f in self.fixtures:
             self._run_host('zi_zikuka', f)
 
-    def test_hr_habreffect(self):
+    def test_pc_piccy(self):
         """
-        TestDevHostsUpload.test_hr_habreffect http://habreffect.ru
+        TestDevHostsUpload.test_pc_piccy http://piccy.info
         """
         for f in self.fixtures:
-            self._run_host('hr_habreffect', f)
+            self._run_host('pc_piccy', f)
 
     def test_o_opicture(self):
         """
@@ -250,6 +243,13 @@ class TestDevHostsUpload(BaseHostCase):
         for f in self.fixtures:
             self._run_host('hm_hostmyjpg', f)
 
+    def test_hr_habreffect(self):
+        """
+        TestDevHostsUpload.test_hr_habreffect http://habreffect.ru
+        """
+        for f in self.fixtures:
+            self._run_host('hr_habreffect', f)
+
     def test_s_smages(self):
         """
         TestDevHostsUpload.test_s_smages http://smages.com
@@ -264,12 +264,12 @@ class TestDevHostsUpload(BaseHostCase):
         for f in self.fixtures:
             self._run_host('ir_imagebits', f)
 
-    def test_pc_piccy(self):
+    def test_xt_xtupload(self):
         """
-        TestDevHostsUpload.test_pc_piccy http://piccy.info
+        TestDevHostsUpload.test_xt_xtupload http://xtupload.com
         """
         for f in self.fixtures:
-            self._run_host('pc_piccy', f)
+            self._run_host('xt_xtupload', f)
 
     def test_xp_xpichost(self):
         """

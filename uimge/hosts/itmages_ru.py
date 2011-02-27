@@ -3,6 +3,7 @@ import base
 #@test_host(__name__)
 class Host(base.BaseHost):
     #TODO fix CSRF
+    dev_mode = True
     short_key = 'im'
     long_key  = 'itmages'
     host='itmages.ru'
