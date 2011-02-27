@@ -170,7 +170,6 @@ class Uimge:
         else:
             raise Exception( 'Host not is class')
 
-
     def _ufopen(self, _url, _filename ):
         '''Open url and save in tempfile'''
         import urllib
@@ -187,7 +186,7 @@ class Uimge:
         del host
         return res
 
-    def upload(self,obj):
+    def upload(self, obj):
         '''
         upload( fb ) -> dict response
         '''
@@ -195,6 +194,7 @@ class Uimge:
         if not self.current_host:
             raise UimgeError('Not select host')
 
+        self.img_url = self.img_thumb_url = self.filename = None
         try:
             self.filepath = obj
             img_url= None
@@ -263,7 +263,7 @@ class Hosts:
     '''
     `hosts_dict` - dict hosts '`short_key`_`long_key`': hostclassobj
     '''
-    pass
+    hosts_dict = {}
 
 def get_hosts():
     hosts = 'hosts'

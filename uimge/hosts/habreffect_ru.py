@@ -1,8 +1,10 @@
 # -*- coding: utf-8 -*-
 import base
 from urlparse import urlsplit
+import urllib
+
 class Host( base.BaseHost ):
-    dev_mode = False
+    dev_mode = True
 
     short_key = 'hr'
     long_key = 'habreffect'
@@ -18,8 +20,11 @@ class Host( base.BaseHost ):
         return {
                 'file': _file,
                 }
+    def preload(self):
+        cookie = urllib.urlopen('http://%s'%self.host).headers['set-cookie']
+        self.cookie = cookie
 
-    def postload(self ):
+    def postload(self):
         uri_path = urlsplit(self.response.url).path
         self.img_url = 'http://habreffect.ru/files%s'%uri_path
         self.img_thumb_url = self.img_url
@@ -27,4 +32,5 @@ class Host( base.BaseHost ):
 if __name__ == '__main__':
     h= Host()
     h.test_file()
+    h= Host()
     h.test_url()

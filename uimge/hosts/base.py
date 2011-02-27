@@ -76,7 +76,6 @@ class Uploader(object):
         self._body = StringIO()
         self._headers = StringIO()
 
-
     def findall( self, regex, string):
         rst = re.findall( regex, string)
         if rst:
@@ -155,12 +154,12 @@ class Uploader(object):
         curl.setopt(pycurl.WRITEFUNCTION, self._body.write)
         curl.setopt(pycurl.HEADERFUNCTION, self._headers.write)
         curl.setopt(pycurl.NOSIGNAL, 1)
-        if self.__dict__.get('cookie'):
-            self.curl.setopt(pycurl.COOKIE, self.cookie)
+        if getattr(self, 'cookie', None):
+            curl.setopt(pycurl.COOKIE, self.cookie)
         curl.setopt( pycurl.REFERER, 'http://%s/'%self.host)
 
         if self.headers:
-            curl.setopt( pycurl.HTTPHEADER, self.headers.items())
+            curl.setopt(pycurl.HTTPHEADER, self.headers.items())
 
         if self.user_agent:
             USER_AGENT = self.user_agent
@@ -171,14 +170,6 @@ class Uploader(object):
 
         curl.setopt( pycurl.USERAGENT, self.USER_AGENT )
         return curl
-
-    '''
-    @property
-    def curl(self):
-        if not self.__curl:
-            self.__curl = self.get_curl()
-        return self.__curl
-    '''
 
     def send_post(self):
         self.curl = self.get_curl()
@@ -256,10 +247,10 @@ class Uploader(object):
     def error(self, msg="Error"):
         raise UploaderError( msg )
 
-    def __test( self, obj):
+    def __test(self, obj):
         import traceback
         import timeit
-        def ex( func, *args):
+        def ex(func, *args):
             try:
                 func(*args)
             except KeyboardInterrupt:
@@ -277,13 +268,13 @@ class Uploader(object):
         ex(self.postload)
         _t1 = t.timer()
         print "Upload time: %.3f second"%(_t1 - _t0)
-        ex( lambda x: os.sys.stdout.write("%s %s \n"%(x.img_url,x.img_thumb_url) ), self )
+        ex(lambda x: os.sys.stdout.write("%s %s \n"%(x.img_url,x.img_thumb_url)), self)
 
-    def test_url( self, obj="http://s41.radikal.ru/i092/0902/93/40b756930f38.png" ):
-        self.__test( obj)
-        pass
-    def test_file( self, obj="/home/apkawa/qr.png"):
-        self.__test( obj)
+    def test_url(self, obj="http://img16.imageshack.us/img16/1039/0xpr0dx75474fb6.jpg"):
+        self.__test(obj)
+
+    def test_file(self, obj="/home/apkawa/qr.png"):
+        self.__test(obj)
 
 class BaseHost(Uploader):
     dev_mode = False
@@ -307,30 +298,4 @@ class BaseHost(Uploader):
         pass
 
 
-    '''
-    def self_test(self):
-        _url = 'http://s41.radikal.ru/i092/0902/93/40b756930f38.png'
-        if os.sys.platform != 'win32':
-            _file = '/home/apkawa/1237325744193.jpg'
-        else:
-            _file = 'C:\\1.jpg'
-
-        ex(self.upload,_url)
-        print self.get_urls()
-        print '--'
-
-    def as_file(self, _file):
-        return {'image': _file }
-    def as_url(self, _url):
-        return {'url': _url}
-    def thumb_size(self, _thumb_size):
-        return { 'thumb_size': _thumb_size, }
-    def postload(self ):
-        _src = self.response.body
-        _regx = r'example'
-        _url = findall(_regx ,_src)[0]
-        self.img_url = '%s'%_url
-        self.img_thumb_url = '%s'%_url
-        return True
-    '''
 
