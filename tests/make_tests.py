@@ -7,16 +7,19 @@ from helpers import TEST_DIR, FIXTURES, uimge
 # Генератор тестов. использует exec
 ################################
 HEAD = \
-'''#!/usr/bin/python
+'''#!/usr/bin/python2
 # -*- coding: utf-8 -*-
 
+import os
 from helpers import BaseHostCase
+TEST_ROOT = os.path.dirname(os.path.abspath(__file__))
+FIXTURES_ROOT = os.path.join(TEST_ROOT, 'fixtures')
 '''
 def make_test():
     class_template = \
 '''
 class Test{0}(BaseHostCase):
-    fixtures = {1}
+    fixtures = [os.path.join(FIXTURES_ROOT,'1.gif'), 'http://habreffect.ru/files/fa8/4a8042f57/1.gif']
 '''
     methods_template = \
 '''
@@ -30,17 +33,13 @@ class Test{0}(BaseHostCase):
 
     for_eval = []
     for_eval.append(HEAD)
-    for classname, fixtures in (
-                ('HostsUpload', FIXTURES),
-                ):
-        for_eval.append(class_template.format(classname, fixtures))
+    for classname in ('HostsUpload',):
+        for_eval.append(class_template.format(classname))
         for host, host_obj in uimge.Hosts.hosts_dict.iteritems():
             for_eval.append(methods_template.format(host, host_obj.host, classname))
 
-    for classname, fixtures in (
-                ('DevHostsUpload', FIXTURES),
-                ):
-        for_eval.append(class_template.format(classname, fixtures))
+    for classname in ('DevHostsUpload', ):
+        for_eval.append(class_template.format(classname))
         for host, host_obj in uimge.Hosts.dev_hosts_dict.iteritems():
             if host != 'ex_example':
                 for_eval.append(methods_template.format(host, host_obj.host, classname))
@@ -52,7 +51,6 @@ def save_test(string, filename):
     filepath = os.path.join(TEST_DIR, filename)
     with open(filepath, 'wb') as f:
         f.write(string)
-
 
 
 if __name__ == "__main__":

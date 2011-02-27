@@ -13,34 +13,29 @@ h1. Options.
     --ps, --pictureshack
                         Upload to http://pictureshack.ru
     --im, --itmages     Upload to http://itmages.ru
-    --pc, --piccy       Upload to http://piccy.info
-    --c2n, --clip2net   Upload to http://clip2net.com
+    --hr, --habreffect  Upload to http://habreffect.ru
     --j1, --jpg1        Upload to http://jpg1.ru
-    --pu, --pikucha     Upload to http://pikucha.ru
-    --pf, --picfront    Upload to http://picfront.org
-    -u, --funkyimg      Upload to http://funkyimg.com
-    --it, --itrash      Upload to http://itrash.ru
+    --al, --anime_last  Upload to http://sun.anime-last.info
     --sp, --savepic     Upload to http://savepic.ru
-    -i, --ipicture      Upload to http://ipicture.ru
+    --10p, --10pix      Upload to http://10pix.ru
+    --it, --itrash      Upload to http://itrash.ru
+    --pf, --picfront    Upload to http://picfront.org
+    --c2n, --clip2net   Upload to http://clip2net.com
     -s, --smages        Upload to http://smages.com
-    --xe, --xegami      Upload to http://xegami.com
     -k, --imageshack    Upload to http://imageshack.us
     -r, --radikal       Upload to http://radikal.ru
     --xt, --xtupload    Upload to http://xtupload.com
     --iu, --imageup     Upload to http://imageup.ru
     --px, --pixs        Upload to http://pixs.ru
     --fp, --fastpic     Upload to http://fastpic.ru
-    -o, --opicture      Upload to http://opicture.ru
+    --pu, --pikucha     Upload to http://pikucha.ru
     --ig, --imgur       Upload to http://imgur.com
-    --pm, --picamatic   Upload to http://picamatic.com
-    --al, --anime-last  Upload to http://sun.anime-last.info
-    --10p, --10pix      Upload to http://10pix.ru
-    --xp, --xpichost    Upload to http://xpichost.net
     --pb, --picbox      Upload to http://picbox.su
+    -u, --funkyimg      Upload to http://funkyimg.com
     -p, --picthost      Upload to http://picthost.ru
     --ba, --bayimg      Upload to http://bayimg.com
     --om, --omploader   Upload to http://omploader.org
-    --hm, --hostmyjpg   Upload to http://hostmyjpg.com
+    --pm, --picamatic   Upload to http://picamatic.com
 
   Additional options:
     -t THUMB_SIZE, --thumb_size=THUMB_SIZE

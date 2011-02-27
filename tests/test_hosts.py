@@ -1,12 +1,10 @@
 #!/usr/bin/python2
 # -*- coding: utf-8 -*-
+
 import os
-
 from helpers import BaseHostCase
-
 TEST_ROOT = os.path.dirname(os.path.abspath(__file__))
 FIXTURES_ROOT = os.path.join(TEST_ROOT, 'fixtures')
-print FIXTURES_ROOT
 
 class TestHostsUpload(BaseHostCase):
     fixtures = [os.path.join(FIXTURES_ROOT,'1.gif'), 'http://habreffect.ru/files/fa8/4a8042f57/1.gif']
@@ -88,13 +86,6 @@ class TestHostsUpload(BaseHostCase):
         for f in self.fixtures:
             self._run_host('c2n_clip2net', f)
 
-    def test_s_smages(self):
-        """
-        TestHostsUpload.test_s_smages http://smages.com
-        """
-        for f in self.fixtures:
-            self._run_host('s_smages', f)
-
     def test_k_imageshack(self):
         """
         TestHostsUpload.test_k_imageshack http://imageshack.us
@@ -165,6 +156,13 @@ class TestHostsUpload(BaseHostCase):
         for f in self.fixtures:
             self._run_host('p_picthost', f)
 
+    def test_pa_pixam(self):
+        """
+        TestHostsUpload.test_pa_pixam http://pix.am
+        """
+        for f in self.fixtures:
+            self._run_host('pa_pixam', f)
+
     def test_ba_bayimg(self):
         """
         TestHostsUpload.test_ba_bayimg http://bayimg.com
@@ -174,7 +172,7 @@ class TestHostsUpload(BaseHostCase):
 
     def test_om_omploader(self):
         """
-        TestHostsUpload.test_om_omploader http://omploader.org
+        TestHostsUpload.test_om_omploader http://ompldr.org
         """
         for f in self.fixtures:
             self._run_host('om_omploader', f)
@@ -186,8 +184,8 @@ class TestHostsUpload(BaseHostCase):
         for f in self.fixtures:
             self._run_host('pm_picamatic', f)
 
-class __TestDevHostsUpload(BaseHostCase):
-    fixtures = ['/home/apkawa/Code/uimge/uimge/tests/fixtures/qr.png', 'http://s41.radikal.ru/i092/0902/93/40b756930f38.png']
+class TestDevHostsUpload(BaseHostCase):
+    fixtures = [os.path.join(FIXTURES_ROOT,'1.gif'), 'http://habreffect.ru/files/fa8/4a8042f57/1.gif']
 
     def test_xe_xegami(self):
         """
@@ -217,19 +215,12 @@ class __TestDevHostsUpload(BaseHostCase):
         for f in self.fixtures:
             self._run_host('zi_zikuka', f)
 
-    def test_pc_piccy(self):
+    def test_hr_habreffect(self):
         """
-        TestDevHostsUpload.test_pc_piccy http://piccy.info
-        """
-        for f in self.fixtures:
-            self._run_host('pc_piccy', f)
-
-    def test_ir_imagebits(self):
-        """
-        TestDevHostsUpload.test_ir_imagebits http://image-bits.ro
+        TestDevHostsUpload.test_hr_habreffect http://habreffect.ru
         """
         for f in self.fixtures:
-            self._run_host('ir_imagebits', f)
+            self._run_host('hr_habreffect', f)
 
     def test_o_opicture(self):
         """
@@ -258,6 +249,27 @@ class __TestDevHostsUpload(BaseHostCase):
         """
         for f in self.fixtures:
             self._run_host('hm_hostmyjpg', f)
+
+    def test_s_smages(self):
+        """
+        TestDevHostsUpload.test_s_smages http://smages.com
+        """
+        for f in self.fixtures:
+            self._run_host('s_smages', f)
+
+    def test_ir_imagebits(self):
+        """
+        TestDevHostsUpload.test_ir_imagebits http://image-bits.ro
+        """
+        for f in self.fixtures:
+            self._run_host('ir_imagebits', f)
+
+    def test_pc_piccy(self):
+        """
+        TestDevHostsUpload.test_pc_piccy http://piccy.info
+        """
+        for f in self.fixtures:
+            self._run_host('pc_piccy', f)
 
     def test_xp_xpichost(self):
         """
