@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 import base
-class Host( base.BaseHost ):
+class Host(base.BaseHost):
     dev_mode = True
 
     short_key = 'ex'
@@ -11,6 +11,7 @@ class Host( base.BaseHost ):
     action = 'http://%s/upload'%host
 
     #headers = {}
+    #cookie = ''
     #user_agent = "string"
 
     form = {
@@ -27,7 +28,7 @@ class Host( base.BaseHost ):
                 'url': _url,
                 }
 
-    def postload(self ):
+    def postload(self):
         _src = self.response.body
         _regx = r'example'
         _url = self.findall(_regx ,_src)[0]

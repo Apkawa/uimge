@@ -250,6 +250,7 @@ class Uploader(object):
     def __test(self, obj):
         import traceback
         import timeit
+        inst = self.__class__()
         def ex(func, *args):
             try:
                 func(*args)
@@ -262,18 +263,21 @@ class Uploader(object):
         t = timeit.Timer()
         _t0 = t.timer()
         # self.set_proxy( proxy="127.0.0.1", port=9050, proxy_type= "socks5" )
-        ex(self.upload,obj)
-        ex(self.preload)
-        ex(self.send_post)
-        ex(self.postload)
+        
+        ex(inst.upload,obj)
+        ex(inst.preload)
+        ex(inst.send_post)
+        ex(inst.postload)
         _t1 = t.timer()
         print "Upload time: %.3f second"%(_t1 - _t0)
-        ex(lambda x: os.sys.stdout.write("%s %s \n"%(x.img_url,x.img_thumb_url)), self)
+        ex(lambda x: os.sys.stdout.write("%s %s \n"%(x.img_url,x.img_thumb_url)), inst)
 
     def test_url(self, obj="http://img16.imageshack.us/img16/1039/0xpr0dx75474fb6.jpg"):
+        print "Upload url %s"%obj
         self.__test(obj)
 
     def test_file(self, obj="/home/apkawa/qr.png"):
+        print "Upload file %s"%obj
         self.__test(obj)
 
 class BaseHost(Uploader):
